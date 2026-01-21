@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useCreateReport } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Search, MapPin, Briefcase, Loader2, ArrowRight } from "lucide-react";
+import { Search, MapPin, Briefcase, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLoadScript, Autocomplete } from "@react-google-maps/api";
+
+const libraries: ("places")[] = ["places"];
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -13,6 +16,25 @@ export default function Home() {
   
   const [address, setAddress] = useState("");
   const [businessType, setBusinessType] = useState("");
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API_KEY || "",
+    libraries,
+  });
+
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    autocompleteRef.current = autocomplete;
+  };
+
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current !== null) {
+      const place = autocompleteRef.current.getPlace();
+      if (place.formatted_address) {
+        setAddress(place.formatted_address);
+      }
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,14 +99,30 @@ export default function Home() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
               <div className="relative group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors" />
-                <input
-                  type="text"
-                  placeholder="Enter specific address (e.g., 210 S Desplaines St, Chicago)"
-                  className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-secondary/50 focus:ring-1 focus:ring-secondary/50 transition-all"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors z-10" />
+                {isLoaded ? (
+                  <Autocomplete
+                    onLoad={onLoad}
+                    onPlaceChanged={onPlaceChanged}
+                  >
+                    <input
+                      type="text"
+                      placeholder="Enter specific address"
+                      className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-secondary/50 focus:ring-1 focus:ring-secondary/50 transition-all"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </Autocomplete>
+                ) : (
+                  <input
+                    type="text"
+                    placeholder={loadError ? "Address (Maps loading failed)" : "Loading maps..."}
+                    className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none transition-all"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    disabled={!loadError}
+                  />
+                )}
               </div>
 
               <div className="relative group">
