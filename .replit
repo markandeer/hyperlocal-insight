@@ -40,3 +40,8 @@ waitForPort = 5000
 
 [agent]
 integrations = ["javascript_openai_ai_integrations:2.0.0"]
+
+[userenv]
+
+[userenv.shared]
+VITE_GOOGLE_API_KEY = "AIzaSyBP7R3sbBD6ZS8qI_H_8MW3lA5bwSAFsm0"
