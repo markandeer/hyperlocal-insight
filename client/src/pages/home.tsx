@@ -53,19 +53,19 @@ export default function Home() {
           >
             <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md">
               <span className="text-xs font-bold uppercase tracking-widest text-secondary">
-                AI-Powered Market Intelligence
+                Creative Brilliance + AI Strategy
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight">
-              Unlock Your <br />
+            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight uppercase tracking-tighter">
+              Hyper Local <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-white to-primary neon-text">
-                Local Potential
+                Marketing AI
               </span>
             </h1>
             
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-              Get instant, deep-dive market analysis for any location. Understand your TAM, demographics, and local opportunities in seconds.
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto font-medium">
+              We connect businesses with their local customers by fusing creative brilliance with strategy and AI technology.
             </p>
           </motion.div>
 
