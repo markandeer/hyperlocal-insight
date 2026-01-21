@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useCreateReport } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
@@ -32,6 +32,8 @@ export default function Home() {
       const place = autocompleteRef.current.getPlace();
       if (place.formatted_address) {
         setAddress(place.formatted_address);
+      } else if (place.name) {
+        setAddress(place.name);
       }
     }
   };
@@ -99,7 +101,7 @@ export default function Home() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
               <div className="relative group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors z-10" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors z-20" />
                 {isLoaded ? (
                   <Autocomplete
                     onLoad={onLoad}
@@ -120,7 +122,7 @@ export default function Home() {
                     className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none transition-all"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    disabled={!loadError}
+                    disabled={!loadError && !isLoaded}
                   />
                 )}
               </div>
