@@ -4,14 +4,44 @@ import { Layout } from "@/components/Layout";
 import { MarketFunnelChart } from "@/components/MarketFunnelChart";
 import { DemographicsChart } from "@/components/DemographicsChart";
 import { InfoCard } from "@/components/InfoCard";
-import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target } from "lucide-react";
+import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnalysisData } from "@shared/schema";
+import { Button } from "@/components/ui/button";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { useRef } from "react";
 
 export default function ReportPage() {
   const [, params] = useRoute("/report/:id");
   const id = parseInt(params?.id || "0");
   const { data: report, isLoading, error } = useReport(id);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const downloadPDF = async () => {
+    if (!reportRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#030303" // Match app background
+      });
+      
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width, canvas.height]
+      });
+      
+      pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(`market-report-${report?.businessType.toLowerCase().replace(/\s+/g, "-")}.pdf`);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -39,7 +69,6 @@ export default function ReportPage() {
   }
 
   // Cast the generic JSONB data to our strongly typed schema
-  // In a real app we might want to validate this at runtime again
   const analysis = report.data as unknown as AnalysisData;
 
   const containerVariants = {
@@ -77,111 +106,124 @@ export default function ReportPage() {
               <span>{report.address}</span>
             </div>
           </div>
-          <div className="text-right">
-             <div className="text-sm text-muted-foreground">Generated on</div>
-             <div className="font-medium text-white">
-               {new Date(report.createdAt || "").toLocaleDateString(undefined, { 
-                 year: 'numeric', month: 'long', day: 'numeric' 
-               })}
-             </div>
+          <div className="flex flex-col items-end gap-4">
+            <div className="text-right">
+               <div className="text-sm text-muted-foreground">Generated on</div>
+               <div className="font-medium text-white">
+                 {new Date(report.createdAt || "").toLocaleDateString(undefined, { 
+                   year: 'numeric', month: 'long', day: 'numeric' 
+                 })}
+               </div>
+            </div>
+            <Button 
+              onClick={downloadPDF}
+              variant="outline" 
+              className="gap-2 bg-white/5 border-white/10 hover:bg-white/10"
+              data-testid="button-download-pdf"
+            >
+              <Download className="w-4 h-4" />
+              Download PDF
+            </Button>
           </div>
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-8"
-        >
-          {/* Market Size Section */}
-          <motion.section variants={itemVariants}>
-            <MarketFunnelChart data={analysis.marketSize} />
-          </motion.section>
+        <div ref={reportRef} className="space-y-8 bg-[#030303]">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-8"
+          >
+            {/* Market Size Section */}
+            <motion.section variants={itemVariants}>
+              <MarketFunnelChart data={analysis.marketSize} />
+            </motion.section>
 
-          {/* Demographics Section */}
-          <motion.section variants={itemVariants}>
-            <DemographicsChart data={analysis.demographics} />
-            <div className="glass-card p-6 mt-6 rounded-xl">
-              <h4 className="font-bold mb-2 flex items-center gap-2 text-white">
-                <Users className="w-4 h-4 text-secondary" />
-                Demographic Insights
-              </h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {analysis.demographics.description}
-              </p>
-            </div>
-          </motion.section>
+            {/* Demographics Section */}
+            <motion.section variants={itemVariants}>
+              <DemographicsChart data={analysis.demographics} />
+              <div className="glass-card p-6 mt-6 rounded-xl">
+                <h4 className="font-bold mb-2 flex items-center gap-2 text-white">
+                  <Users className="w-4 h-4 text-secondary" />
+                  Demographic Insights
+                </h4>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {analysis.demographics.description}
+                </p>
+              </div>
+            </motion.section>
 
-          {/* Grid Section for Psychographics, Weather, Traffic */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            {/* Psychographics */}
-            <motion.div variants={itemVariants} className="h-full">
-              <InfoCard title="Customer Profile" icon={Target} color="primary">
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Lifestyle</span>
-                    <p>{analysis.psychographics.lifestyle}</p>
-                  </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Interests</span>
-                    <div className="flex flex-wrap gap-2">
-                      {analysis.psychographics.interests.map((tag) => (
-                        <span key={tag} className="px-2 py-1 bg-primary/10 rounded-md text-xs font-medium text-primary-foreground/80">
-                          {tag}
-                        </span>
-                      ))}
+            {/* Grid Section for Psychographics, Weather, Traffic */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              {/* Psychographics */}
+              <motion.div variants={itemVariants} className="h-full">
+                <InfoCard title="Customer Profile" icon={Target} color="primary">
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Lifestyle</span>
+                      <p>{analysis.psychographics.lifestyle}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Interests</span>
+                      <div className="flex flex-wrap gap-2">
+                        {analysis.psychographics.interests.map((tag) => (
+                          <span key={tag} className="px-2 py-1 bg-primary/10 rounded-md text-xs font-medium text-primary-foreground/80">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Buying Behavior</span>
+                      <p>{analysis.psychographics.buyingBehavior}</p>
                     </div>
                   </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Buying Behavior</span>
-                    <p>{analysis.psychographics.buyingBehavior}</p>
-                  </div>
-                </div>
-              </InfoCard>
-            </motion.div>
+                </InfoCard>
+              </motion.div>
 
-            {/* Weather & Seasonality */}
-            <motion.div variants={itemVariants} className="h-full">
-              <InfoCard title="Weather Impact" icon={Sun} color="orange">
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Seasonal Trends</span>
-                    <p>{analysis.weather.seasonalTrends}</p>
+              {/* Weather & Seasonality */}
+              <motion.div variants={itemVariants} className="h-full">
+                <InfoCard title="Weather Impact" icon={Sun} color="orange">
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Seasonal Trends</span>
+                      <p>{analysis.weather.seasonalTrends}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Business Impact</span>
+                      <p>{analysis.weather.impactOnBusiness}</p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Business Impact</span>
-                    <p>{analysis.weather.impactOnBusiness}</p>
-                  </div>
-                </div>
-              </InfoCard>
-            </motion.div>
+                </InfoCard>
+              </motion.div>
 
-            {/* Traffic & Access */}
-            <motion.div variants={itemVariants} className="h-full">
-              <InfoCard title="Traffic & Access" icon={Car} color="green">
-                <div className="space-y-4">
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Patterns</span>
-                    <p>{analysis.traffic.typicalTraffic}</p>
+              {/* Traffic & Access */}
+              <motion.div variants={itemVariants} className="h-full">
+                <InfoCard title="Traffic & Access" icon={Car} color="green">
+                  <div className="space-y-4">
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Patterns</span>
+                      <p>{analysis.traffic.typicalTraffic}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Peak Hours</span>
+                      <p className="font-medium text-white">{analysis.traffic.peakHours}</p>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Challenges</span>
+                      <ul className="list-disc list-inside space-y-1">
+                        {analysis.traffic.challenges.map((challenge, i) => (
+                          <li key={i}>{challenge}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Peak Hours</span>
-                    <p className="font-medium text-white">{analysis.traffic.peakHours}</p>
-                  </div>
-                  <div>
-                    <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Challenges</span>
-                    <ul className="list-disc list-inside space-y-1">
-                      {analysis.traffic.challenges.map((challenge, i) => (
-                        <li key={i}>{challenge}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </InfoCard>
-            </motion.div>
-          </div>
-        </motion.div>
+                </InfoCard>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </Layout>
   );
