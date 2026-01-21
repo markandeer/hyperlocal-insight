@@ -5,33 +5,33 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
+  --background: 204 70% 87%;
+  --foreground: 359 66% 66%;
   
-  --card: 0 0% 3%;
-  --card-foreground: 0 0% 100%;
+  --card: 204 70% 90%;
+  --card-foreground: 359 66% 66%;
   
-  --popover: 0 0% 3%;
-  --popover-foreground: 0 0% 100%;
+  --popover: 204 70% 90%;
+  --popover-foreground: 359 66% 66%;
   
-  --primary: 270 100% 60%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 359 66% 66%;
+  --primary-foreground: 204 70% 95%;
   
-  --secondary: 180 100% 50%;
-  --secondary-foreground: 240 10% 4%;
+  --secondary: 204 70% 75%;
+  --secondary-foreground: 359 66% 40%;
   
-  --muted: 0 0% 7%;
-  --muted-foreground: 0 0% 60%;
+  --muted: 204 70% 80%;
+  --muted-foreground: 359 66% 50%;
   
-  --accent: 270 100% 60%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 359 66% 66%;
+  --accent-foreground: 204 70% 95%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 0 0% 12%;
-  --input: 0 0% 12%;
-  --ring: 270 100% 60%;
+  --border: 204 70% 80%;
+  --input: 204 70% 80%;
+  --ring: 359 66% 66%;
   
   --radius: 0.5rem;
 }
@@ -43,16 +43,15 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
-    background-image: radial-gradient(circle at 50% 0%, hsl(270 100% 15% / 0.15) 0%, transparent 50%);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight text-foreground;
   }
 }
 
 .glass-card {
-  @apply bg-[#080808]/80 backdrop-blur-md border border-white/5 shadow-2xl;
+  @apply bg-white/20 backdrop-blur-md border border-white/30 shadow-2xl;
 }
 
 .neon-glow {

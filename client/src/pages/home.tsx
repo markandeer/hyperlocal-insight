@@ -81,14 +81,14 @@ export default function Home() {
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight uppercase tracking-tighter">
+            <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight uppercase tracking-tighter text-foreground">
               Hyper Local <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-white to-primary neon-text">
+              <span className="text-primary neon-text">
                 Marketing AI
               </span>
             </h1>
             
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto font-medium">
+            <p className="text-lg text-foreground/80 max-w-lg mx-auto font-medium">
               We connect businesses with their local customers by fusing creative brilliance with strategy and AI technology.
             </p>
           </motion.div>
@@ -101,16 +101,17 @@ export default function Home() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
               <div className="relative group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors z-20" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/60 w-5 h-5 group-focus-within:text-primary transition-colors z-20" />
                 {isLoaded ? (
                   <Autocomplete
                     onLoad={onLoad}
                     onPlaceChanged={onPlaceChanged}
+                    className="w-full"
                   >
                     <input
                       type="text"
                       placeholder="Enter specific address"
-                      className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-secondary/50 focus:ring-1 focus:ring-secondary/50 transition-all"
+                      className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                     />
@@ -119,20 +120,19 @@ export default function Home() {
                   <input
                     type="text"
                     placeholder={loadError ? "Address (Maps loading failed)" : "Loading maps..."}
-                    className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none transition-all"
+                    className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none transition-all"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    disabled={!loadError && !isLoaded}
                   />
                 )}
               </div>
 
               <div className="relative group">
-                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-primary transition-colors" />
+                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/60 w-5 h-5 group-focus-within:text-primary transition-colors" />
                 <input
                   type="text"
                   placeholder="Business Type (e.g., Coffee Shop, Gym, Dentist)"
-                  className="w-full bg-black/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                  className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                   value={businessType}
                   onChange={(e) => setBusinessType(e.target.value)}
                 />
@@ -141,7 +141,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={createReport.isPending}
-                className="mt-2 w-full py-4 rounded-xl font-bold text-lg bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="mt-2 w-full py-4 rounded-xl font-bold text-lg bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:pointer-events-none flex items-center justify-center gap-2"
               >
                 {createReport.isPending ? (
                   <>
@@ -166,8 +166,8 @@ export default function Home() {
                { label: "Accuracy", value: "98%" }
              ].map((stat) => (
                <div key={stat.label}>
-                 <div className="font-display font-bold text-2xl text-white">{stat.value}</div>
-                 <div className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</div>
+                 <div className="font-display font-bold text-2xl text-foreground">{stat.value}</div>
+                 <div className="text-xs text-foreground/60 uppercase tracking-wider">{stat.label}</div>
                </div>
              ))}
           </div>
