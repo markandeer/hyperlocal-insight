@@ -44,12 +44,12 @@ export function MarketFunnelChart({ data }: { data: MarketData }) {
               className="p-4 rounded-xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors"
             >
               <div className="flex justify-between items-center mb-1">
-                <span className="font-bold text-lg" style={{ color: item.color }}>{item.name}</span>
+                <span className="font-bold text-lg text-white">{item.name}</span>
                 <span className="text-xl font-display font-bold text-white">
                   ${(item.value / 1000000).toFixed(1)}M
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground">{item.desc}</p>
+              <p className="text-xs text-white/60">{item.desc}</p>
             </motion.div>
           ))}
         </div>

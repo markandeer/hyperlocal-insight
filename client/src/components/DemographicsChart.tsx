@@ -62,7 +62,7 @@ export function DemographicsChart({ data }: { data: DemographicsData }) {
           {data.ageGroups.map((group, index) => (
             <div key={group.range} className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-              <span className="text-xs text-muted-foreground">{group.range}</span>
+              <span className="text-xs text-white/80">{group.range} ({group.percentage}%)</span>
             </div>
           ))}
         </div>
