@@ -111,7 +111,7 @@ export default function Home() {
                     <input
                       type="text"
                       placeholder="Enter specific address"
-                      className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                      className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black font-medium placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                     />
@@ -120,7 +120,7 @@ export default function Home() {
                   <input
                     type="text"
                     placeholder={loadError ? "Address (Maps loading failed)" : "Loading maps..."}
-                    className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none transition-all"
+                    className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black font-medium placeholder:text-slate-400 focus:outline-none transition-all"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
@@ -132,7 +132,7 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Business Type (e.g., Coffee Shop, Gym, Dentist)"
-                  className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                  className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black font-medium placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                   value={businessType}
                   onChange={(e) => setBusinessType(e.target.value)}
                 />

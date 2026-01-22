@@ -13,17 +13,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row font-body">
       {/* Sidebar Navigation */}
       <aside className="w-full md:w-64 border-b md:border-r border-border bg-card/30 backdrop-blur-lg p-6 flex flex-col gap-8 sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
-            <LayoutDashboard className="text-white w-6 h-6" />
-          </div>
-          <span className="font-display font-bold text-xl tracking-tight text-foreground">
-            Hyper Local AI
-          </span>
-        </div>
-
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-foreground leading-relaxed px-4">
+          <p className="text-sm text-foreground leading-relaxed px-0">
             We connect businesses with their local customers by fusing creative brilliance with strategy and AI technology.
           </p>
         </div>
