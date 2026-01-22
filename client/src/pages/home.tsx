@@ -97,11 +97,11 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="glass-card p-2 rounded-3xl"
+            className="glass-card p-2 rounded-3xl relative z-10"
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
               <div className="relative group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 group-focus-within:text-primary transition-colors z-20" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5 group-focus-within:text-primary transition-colors z-20" />
                 {isLoaded ? (
                   <Autocomplete
                     onLoad={onLoad}
@@ -111,7 +111,7 @@ export default function Home() {
                     <input
                       type="text"
                       placeholder="Enter specific address"
-                      className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                      className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
                     />
@@ -120,7 +120,7 @@ export default function Home() {
                   <input
                     type="text"
                     placeholder={loadError ? "Address (Maps loading failed)" : "Loading maps..."}
-                    className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none transition-all"
+                    className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none transition-all"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
@@ -128,11 +128,11 @@ export default function Home() {
               </div>
 
               <div className="relative group">
-                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 group-focus-within:text-primary transition-colors" />
+                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5 group-focus-within:text-primary transition-colors" />
                 <input
                   type="text"
                   placeholder="Business Type (e.g., Coffee Shop, Gym, Dentist)"
-                  className="w-full bg-white/40 border border-white/20 rounded-xl py-4 pl-12 pr-4 text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
+                  className="w-full bg-white border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-black placeholder:text-slate-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                   value={businessType}
                   onChange={(e) => setBusinessType(e.target.value)}
                 />
