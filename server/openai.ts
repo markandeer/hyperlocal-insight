@@ -14,14 +14,23 @@ export async function generateMarketAnalysis(address: string, businessType: stri
       messages: [
         {
           role: "system",
-          content: `You are an expert market analyst AI. Generate a detailed hyperlocal market analysis for a business at a specific location.
+          content: `You are an expert market analyst AI specializing in hyperlocal business intelligence. Generate a highly accurate market analysis for a "${businessType}" at "${address}".
           
+          Calculation Guidelines for TAM, SAM, SOM (5-mile radius):
+          1. TAM (Total Addressable Market): Estimate total annual spending for this business category within the 5-mile radius based on population and national/regional average spend per capita.
+          2. SAM (Serviceable Available Market): The portion of TAM that fits the specific sub-type and quality of this business, adjusted for local median income and regional demographics.
+          3. SOM (Serviceable Obtainable Market): This must be a realistic first-year revenue target. Factor in:
+             - Local competition density (how many similar businesses exist nearby?).
+             - Physical accessibility and traffic patterns of "${address}".
+             - A conservative market share (typically 1-5% in competitive areas, up to 15% in underserved areas).
+             - Address-specific advantages/limitations.
+
           Return ONLY valid JSON matching this structure:
           {
             "marketSize": {
-              "tam": { "value": number, "description": "string" }, // Total Addressable Market
-              "sam": { "value": number, "description": "string" }, // Serviceable Available Market
-              "som": { "value": number, "description": "string" }  // Serviceable Obtainable Market
+              "tam": { "value": number, "description": "string" },
+              "sam": { "value": number, "description": "string" },
+              "som": { "value": number, "description": "string" }
             },
             "demographics": {
               "population": number,
@@ -36,7 +45,7 @@ export async function generateMarketAnalysis(address: string, businessType: stri
               "description": "string"
             },
             "psychographics": {
-              "interests": ["string", "string", ...],
+              "interests": ["string", "string"],
               "lifestyle": "string",
               "buyingBehavior": "string"
             },
@@ -46,7 +55,7 @@ export async function generateMarketAnalysis(address: string, businessType: stri
             },
             "traffic": {
               "typicalTraffic": "string",
-              "challenges": ["string", "string", ...],
+              "challenges": ["string", "string"],
               "peakHours": "string"
             }
           }

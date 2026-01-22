@@ -15,16 +15,16 @@
   --popover-foreground: 359 66% 66%;
   
   --primary: 359 66% 66%;
-  --primary-foreground: 204 70% 95%;
+  --primary-foreground: 0 0% 100%;
   
   --secondary: 204 70% 75%;
   --secondary-foreground: 359 66% 40%;
   
   --muted: 204 70% 80%;
-  --muted-foreground: 359 66% 50%;
+  --muted-foreground: 0 0% 100%;
   
   --accent: 359 66% 66%;
-  --accent-foreground: 204 70% 95%;
+  --accent-foreground: 0 0% 100%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
@@ -52,6 +52,14 @@
 
 .glass-card {
   @apply bg-white/20 backdrop-blur-md border border-white/30 shadow-2xl;
+}
+
+.dark-bg-text-white {
+  @apply text-white;
+}
+
+.blue-bg-text-coral {
+  @apply text-[#e26e6d];
 }
 
 .neon-glow {

@@ -127,7 +127,7 @@ export default function ReportPage() {
           </div>
         </motion.div>
 
-        <div ref={reportRef} className="space-y-8 bg-[#030303]">
+        <div ref={reportRef} className="space-y-8 bg-[#030303] p-6 rounded-2xl">
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -142,12 +142,12 @@ export default function ReportPage() {
             {/* Demographics Section */}
             <motion.section variants={itemVariants}>
               <DemographicsChart data={analysis.demographics} />
-              <div className="glass-card p-6 mt-6 rounded-xl">
+              <div className="bg-white/5 border border-white/10 p-6 mt-6 rounded-xl">
                 <h4 className="font-bold mb-2 flex items-center gap-2 text-white">
                   <Users className="w-4 h-4 text-secondary" />
                   Demographic Insights
                 </h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <p className="text-white text-sm leading-relaxed">
                   {analysis.demographics.description}
                 </p>
               </div>
@@ -159,23 +159,23 @@ export default function ReportPage() {
               {/* Psychographics */}
               <motion.div variants={itemVariants} className="h-full">
                 <InfoCard title="Customer Profile" icon={Target} color="primary">
-                  <div className="space-y-4">
+                  <div className="space-y-4 text-white">
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Lifestyle</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Lifestyle</span>
                       <p>{analysis.psychographics.lifestyle}</p>
                     </div>
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Interests</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Interests</span>
                       <div className="flex flex-wrap gap-2">
                         {analysis.psychographics.interests.map((tag) => (
-                          <span key={tag} className="px-2 py-1 bg-primary/10 rounded-md text-xs font-medium text-primary-foreground/80">
+                          <span key={tag} className="px-2 py-1 bg-white/10 rounded-md text-xs font-medium text-white">
                             {tag}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-primary/80 font-semibold mb-1 block">Buying Behavior</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Buying Behavior</span>
                       <p>{analysis.psychographics.buyingBehavior}</p>
                     </div>
                   </div>
@@ -185,13 +185,13 @@ export default function ReportPage() {
               {/* Weather & Seasonality */}
               <motion.div variants={itemVariants} className="h-full">
                 <InfoCard title="Weather Impact" icon={Sun} color="orange">
-                  <div className="space-y-4">
+                  <div className="space-y-4 text-white">
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Seasonal Trends</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Seasonal Trends</span>
                       <p>{analysis.weather.seasonalTrends}</p>
                     </div>
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-orange-400 font-semibold mb-1 block">Business Impact</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Business Impact</span>
                       <p>{analysis.weather.impactOnBusiness}</p>
                     </div>
                   </div>
@@ -201,17 +201,17 @@ export default function ReportPage() {
               {/* Traffic & Access */}
               <motion.div variants={itemVariants} className="h-full">
                 <InfoCard title="Traffic & Access" icon={Car} color="green">
-                  <div className="space-y-4">
+                  <div className="space-y-4 text-white">
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Patterns</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Patterns</span>
                       <p>{analysis.traffic.typicalTraffic}</p>
                     </div>
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Peak Hours</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Peak Hours</span>
                       <p className="font-medium text-white">{analysis.traffic.peakHours}</p>
                     </div>
                     <div>
-                      <span className="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-1 block">Challenges</span>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Challenges</span>
                       <ul className="list-disc list-inside space-y-1">
                         {analysis.traffic.challenges.map((challenge, i) => (
                           <li key={i}>{challenge}</li>

@@ -101,7 +101,7 @@ export default function Home() {
           >
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-2">
               <div className="relative group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/60 w-5 h-5 group-focus-within:text-primary transition-colors z-20" />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 group-focus-within:text-primary transition-colors z-20" />
                 {isLoaded ? (
                   <Autocomplete
                     onLoad={onLoad}
@@ -128,7 +128,7 @@ export default function Home() {
               </div>
 
               <div className="relative group">
-                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/60 w-5 h-5 group-focus-within:text-primary transition-colors" />
+                <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground w-5 h-5 group-focus-within:text-primary transition-colors" />
                 <input
                   type="text"
                   placeholder="Business Type (e.g., Coffee Shop, Gym, Dentist)"
@@ -141,7 +141,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={createReport.isPending}
-                className="mt-2 w-full py-4 rounded-xl font-bold text-lg bg-primary text-primary-foreground shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="mt-2 w-full py-4 rounded-xl font-bold text-lg bg-primary text-white shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-70 disabled:pointer-events-none flex items-center justify-center gap-2"
               >
                 {createReport.isPending ? (
                   <>
@@ -167,7 +167,7 @@ export default function Home() {
              ].map((stat) => (
                <div key={stat.label}>
                  <div className="font-display font-bold text-2xl text-foreground">{stat.value}</div>
-                 <div className="text-xs text-foreground/60 uppercase tracking-wider">{stat.label}</div>
+                 <div className="text-xs text-foreground uppercase tracking-wider">{stat.label}</div>
                </div>
              ))}
           </div>
