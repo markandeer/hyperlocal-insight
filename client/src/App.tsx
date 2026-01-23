@@ -4,7 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
+import LandingPage from "@/pages/landing";
+import LocationInsightsGenerator from "@/pages/location-insights-generator";
 import ReportPage from "@/pages/report";
 import HistoryPage from "@/pages/history";
 import StrategyBuilder from "@/pages/strategy-builder";
@@ -16,7 +17,8 @@ import LocationInsightsPage from "@/pages/location-insights";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/location-insights-generator" component={LocationInsightsGenerator} />
       <Route path="/location-insights" component={LocationInsightsPage} />
       <Route path="/history" component={HistoryPage} />
       <Route path="/report/:id" component={ReportPage} />

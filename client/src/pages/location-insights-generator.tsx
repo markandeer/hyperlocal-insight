@@ -9,7 +9,7 @@ import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
 const libraries: ("places")[] = ["places"];
 
-export default function Home() {
+export default function LocationInsightsGenerator() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const createReport = useCreateReport();

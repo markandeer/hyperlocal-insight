@@ -16,6 +16,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/location-insights-generator", label: "Location Insights Generator" },
     { href: "/location-insights", label: "Location Insights" },
     { href: "/strategy-builder", label: "Strategy Builder" },
     { href: "/brand-strategy", label: "Brand Strategy" },
