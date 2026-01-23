@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { analysis_reports, type Report, type InsertReport } from "@shared/schema";
+import { analysis_reports, brand_missions, type Report, type InsertReport, type BrandMission, type InsertBrandMission } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
@@ -7,6 +7,9 @@ export interface IStorage {
   getReport(id: number): Promise<Report | undefined>;
   getReports(): Promise<Report[]>;
   updateReportName(id: number, name: string): Promise<Report>;
+  
+  createMission(mission: InsertBrandMission): Promise<BrandMission>;
+  getMissions(): Promise<BrandMission[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -41,6 +44,21 @@ export class DatabaseStorage implements IStorage {
       .returning();
     if (!report) throw new Error("Report not found");
     return report;
+  }
+
+  async createMission(insertMission: InsertBrandMission): Promise<BrandMission> {
+    const [mission] = await db
+      .insert(brand_missions)
+      .values(insertMission)
+      .returning();
+    return mission;
+  }
+
+  async getMissions(): Promise<BrandMission[]> {
+    return await db
+      .select()
+      .from(brand_missions)
+      .orderBy(desc(brand_missions.createdAt));
   }
 }
 

@@ -18,6 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/strategy-builder", label: "Strategy Builder" },
+    { href: "/brand-strategy", label: "Brand Strategy" },
     { href: "/brand-identity", label: "Brand Identity" },
     { href: "/market-reach", label: "Market Reach" },
     { href: "/history", label: "History" },

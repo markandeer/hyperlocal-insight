@@ -3,13 +3,18 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Loader2, Sparkles } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
+import { Pencil, Loader2, Sparkles, Save, Check } from "lucide-react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function StrategyBuilder() {
   const [missionInput, setMissionInput] = useState("");
   const [result, setResult] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const { toast } = useToast();
 
   const tips = [
     "1. Define your core purpose: Why does your business exist beyond making a profit?",
@@ -20,14 +25,47 @@ export default function StrategyBuilder() {
   const handleGenerate = async () => {
     if (!missionInput.trim()) return;
     setIsGenerating(true);
+    setResult("");
+    setIsSaved(false);
     try {
       const res = await apiRequest("POST", "/api/generate-mission", { input: missionInput });
       const data = await res.json();
       setResult(data.mission);
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to generate mission statement.",
+        variant: "destructive"
+      });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!result || isSaving) return;
+    setIsSaving(true);
+    try {
+      await apiRequest("POST", "/api/missions", {
+        mission: result,
+        originalInput: missionInput
+      });
+      setIsSaved(true);
+      queryClient.invalidateQueries({ queryKey: ["/api/missions"] });
+      toast({
+        title: "Success",
+        description: "Mission statement saved to Brand Strategy.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to save mission statement.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -61,7 +99,10 @@ export default function StrategyBuilder() {
               )}
               <Textarea
                 value={missionInput}
-                onChange={(e) => setMissionInput(e.target.value.slice(0, 500))}
+                onChange={(e) => {
+                  setMissionInput(e.target.value.slice(0, 500));
+                  setIsSaved(false);
+                }}
                 className="min-h-[350px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
               />
             </div>
@@ -85,9 +126,23 @@ export default function StrategyBuilder() {
             animate={{ opacity: 1, scale: 1 }}
             className="glass-card p-8 rounded-3xl relative border-2 border-primary/20"
           >
-            <button className="absolute top-4 right-4 p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-              <Pencil className="w-5 h-5" />
-            </button>
+            <div className="absolute top-4 right-4 flex gap-2">
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleSave}
+                disabled={isSaving || isSaved}
+                className={cn(
+                  "rounded-lg transition-colors",
+                  isSaved ? "bg-green-500/10 text-green-500" : "bg-primary/10 text-primary hover:bg-primary/20"
+                )}
+              >
+                {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : isSaved ? <Check className="w-5 h-5" /> : <Save className="w-5 h-5" />}
+              </Button>
+              <button className="p-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                <Pencil className="w-5 h-5" />
+              </button>
+            </div>
             <div className="flex items-start gap-4">
               <Sparkles className="w-8 h-8 text-primary shrink-0 mt-1" />
               <div className="space-y-4">

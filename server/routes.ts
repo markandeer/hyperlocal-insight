@@ -66,6 +66,28 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.post("/api/missions", async (req, res) => {
+    try {
+      const { mission, originalInput } = req.body;
+      if (!mission || !originalInput) {
+        return res.status(400).json({ message: "Mission and input are required" });
+      }
+      const savedMission = await storage.createMission({ mission, originalInput });
+      res.status(201).json(savedMission);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to save mission" });
+    }
+  });
+
+  app.get("/api/missions", async (_req, res) => {
+    try {
+      const missions = await storage.getMissions();
+      res.json(missions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch missions" });
+    }
+  });
+
   // API Routes
   app.post("/api/reports/analyze", async (req, res) => {
     try {

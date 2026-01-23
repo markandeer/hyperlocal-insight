@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import ReportPage from "@/pages/report";
 import HistoryPage from "@/pages/history";
 import StrategyBuilder from "@/pages/strategy-builder";
+import BrandStrategy from "@/pages/brand-strategy";
 import BrandIdentity from "@/pages/brand-identity";
 import MarketReach from "@/pages/market-reach";
 
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/history" component={HistoryPage} />
       <Route path="/report/:id" component={ReportPage} />
       <Route path="/strategy-builder" component={StrategyBuilder} />
+      <Route path="/brand-strategy" component={BrandStrategy} />
       <Route path="/brand-identity" component={BrandIdentity} />
       <Route path="/market-reach" component={MarketReach} />
       <Route component={NotFound} />
