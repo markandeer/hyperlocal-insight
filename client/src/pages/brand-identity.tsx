@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, Palette, Type, Box, Image as ImageIcon, X } from "lucide-react";
+import { Upload, Palette, Type, Box, Image as ImageIcon, X, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
@@ -8,7 +8,13 @@ import { Input } from "@/components/ui/input";
 
 export default function BrandIdentity() {
   const [logo, setLogo] = useState<string | null>(null);
+  const [elements, setElements] = useState<(string | null)[]>([null, null, null]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const elementInputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null)
+  ];
   const [colors, setColors] = useState([
     { name: "Primary", hex: "#e26e6d" },
     { name: "Secondary", hex: "#c6e4f9" },
@@ -24,6 +30,19 @@ export default function BrandIdentity() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogo(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleElementUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newElements = [...elements];
+        newElements[index] = reader.result as string;
+        setElements(newElements);
       };
       reader.readAsDataURL(file);
     }
@@ -67,8 +86,8 @@ export default function BrandIdentity() {
             </div>
           ) : (
             <div className="relative group max-w-md mx-auto">
-              <div className="border-2 border-primary/10 rounded-3xl p-8 bg-white/80 shadow-inner flex items-center justify-center min-h-[200px]">
-                <img src={logo} alt="Brand Logo" className="max-h-32 object-contain" />
+              <div className="border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center min-h-[200px]">
+                <img src={logo} alt="Brand Logo" className="max-h-48 w-full object-contain rounded-2xl" />
               </div>
               <Button 
                 variant="destructive" 
@@ -145,10 +164,43 @@ export default function BrandIdentity() {
       icon: Box,
       description: "Iconography, patterns, and other visual brand identifiers.",
       content: (
-        <div className="grid grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="aspect-square bg-white/50 rounded-2xl border-2 border-primary/5 flex items-center justify-center border-dashed">
-              <Box className="w-8 h-8 text-primary/20" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[0, 1, 2].map((idx) => (
+            <div key={idx} className="space-y-4">
+              <input
+                type="file"
+                ref={elementInputRefs[idx]}
+                className="hidden"
+                accept="image/*"
+                onChange={(e) => handleElementUpload(idx, e)}
+              />
+              {!elements[idx] ? (
+                <div 
+                  onClick={() => elementInputRefs[idx].current?.click()}
+                  className="aspect-square bg-white/50 rounded-2xl border-2 border-primary/5 flex flex-col items-center justify-center border-dashed cursor-pointer hover:bg-white/80 transition-all group"
+                >
+                  <Plus className="w-8 h-8 text-primary/20 group-hover:scale-110 transition-transform" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mt-2">Upload Element</p>
+                </div>
+              ) : (
+                <div className="relative group aspect-square">
+                  <div className="h-full w-full border-2 border-primary/10 rounded-2xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center overflow-hidden">
+                    <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-lg" />
+                  </div>
+                  <Button 
+                    variant="destructive" 
+                    size="icon" 
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-lg"
+                    onClick={() => {
+                      const newElements = [...elements];
+                      newElements[idx] = null;
+                      setElements(newElements);
+                    }}
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>

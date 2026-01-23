@@ -17,7 +17,13 @@ export default function BrandStrategy() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
   const [logo, setLogo] = useState<string | null>(null);
+  const [elements, setElements] = useState<(string | null)[]>([null, null, null]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const elementInputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null)
+  ];
   const [colors, setColors] = useState([
     { label: "Coral Red", hex: "#e26e6d" },
     { label: "Light Blue", hex: "#c6e4f9" },
@@ -33,6 +39,19 @@ export default function BrandStrategy() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogo(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleElementUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newElements = [...elements];
+        newElements[index] = reader.result as string;
+        setElements(newElements);
       };
       reader.readAsDataURL(file);
     }
@@ -682,13 +701,13 @@ export default function BrandStrategy() {
                   </Card>
                 ) : (
                   <div className="relative group max-w-md mx-auto">
-                    <Card className="border-2 border-primary/10 rounded-3xl p-12 bg-white/80 flex items-center justify-center">
-                      <img src={logo} alt="Logo Preview" className="max-h-32 object-contain" />
+                    <Card className="border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 flex items-center justify-center overflow-hidden">
+                      <img src={logo} alt="Logo Preview" className="max-h-48 w-full object-contain rounded-2xl" />
                     </Card>
                     <Button 
                       variant="destructive" 
                       size="icon" 
-                      className="absolute -top-2 -right-2 rounded-full"
+                      className="absolute -top-2 -right-2 rounded-full shadow-lg"
                       onClick={() => setLogo(null)}
                     >
                       <X className="w-4 h-4" />
@@ -744,10 +763,43 @@ export default function BrandStrategy() {
                   <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">4. Brand Elements</h2>
                   <div className="h-px flex-1 bg-primary/10" />
                 </div>
-                <div className="grid grid-cols-3 gap-6">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="aspect-square rounded-3xl bg-[#f0f9ff]/30 border-2 border-primary/10 border-dashed flex items-center justify-center">
-                      <Plus className="w-8 h-8 text-primary/20" />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[0, 1, 2].map(idx => (
+                    <div key={idx} className="space-y-4">
+                      <input
+                        type="file"
+                        ref={elementInputRefs[idx]}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={(e) => handleElementUpload(idx, e)}
+                      />
+                      {!elements[idx] ? (
+                        <div 
+                          onClick={() => elementInputRefs[idx].current?.click()}
+                          className="aspect-square rounded-3xl bg-[#f0f9ff]/30 border-2 border-primary/10 border-dashed flex flex-col items-center justify-center cursor-pointer hover:bg-[#f0f9ff]/50 transition-all group"
+                        >
+                          <Plus className="w-8 h-8 text-primary/20 group-hover:scale-110 transition-transform" />
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mt-2">Upload Element</p>
+                        </div>
+                      ) : (
+                        <div className="relative group aspect-square">
+                          <Card className="h-full w-full border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 flex items-center justify-center overflow-hidden shadow-inner">
+                            <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-xl" />
+                          </Card>
+                          <Button 
+                            variant="destructive" 
+                            size="icon" 
+                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-lg"
+                            onClick={() => {
+                              const newElements = [...elements];
+                              newElements[idx] = null;
+                              setElements(newElements);
+                            }}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
