@@ -47,15 +47,15 @@ export default function HistoryPage() {
 
   return (
     <Layout>
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8 bg-[#c6e4f9] min-h-[calc(100vh-80px)]">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-display font-bold text-white mb-2">Analysis History</h1>
-            <p className="text-muted-foreground">Archive of your generated market reports.</p>
+            <h1 className="text-5xl md:text-6xl font-display font-bold text-primary mb-2 uppercase tracking-tighter">Analysis History</h1>
+            <p className="text-primary/60 italic font-medium">Archive of your generated market reports.</p>
           </div>
           <Link href="/">
-            <button className="px-4 py-2 bg-primary/10 text-primary rounded-lg font-medium hover:bg-primary/20 transition-colors border border-primary/20">
-              New Analysis
+            <button className="px-8 py-4 bg-[#f0f9ff]/50 text-primary rounded-2xl font-bold uppercase tracking-widest text-sm hover:bg-[#f0f9ff]/80 transition-all border-2 border-primary/5 shadow-lg shadow-primary/5">
+              New <br />Analysis
             </button>
           </Link>
         </div>
@@ -65,22 +65,22 @@ export default function HistoryPage() {
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
         ) : !reports || reports.length === 0 ? (
-          <div className="text-center py-20 glass-card rounded-2xl">
-            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-muted-foreground" />
+          <div className="text-center py-20 glass-card rounded-3xl border-2 border-primary/5 bg-[#f0f9ff]">
+            <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-8 h-8 text-primary/40" />
             </div>
-            <h3 className="text-xl font-bold mb-2">No Reports Yet</h3>
-            <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+            <h3 className="text-2xl font-bold text-primary mb-2 uppercase tracking-tight">No Reports Yet</h3>
+            <p className="text-primary/60 italic max-w-sm mx-auto mb-8 font-medium">
               Start by generating your first hyper-local market analysis for any business location.
             </p>
             <Link href="/">
-              <button className="px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-xl font-bold shadow-lg shadow-primary/20">
+              <button className="px-10 py-5 bg-primary text-white rounded-2xl font-bold text-xl shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all uppercase tracking-widest hover:scale-105 active:scale-95">
                 Create First Report
               </button>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {reports.map((report, index) => (
               <div key={report.id} className="relative group">
                 <Link href={`/report/${report.id}`}>
@@ -88,42 +88,43 @@ export default function HistoryPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="glass-card p-6 rounded-2xl cursor-pointer hover:border-primary/30 hover:bg-white/5 transition-all duration-300 h-full relative overflow-hidden"
+                    className="glass-card p-6 rounded-3xl cursor-pointer border-2 border-primary/5 bg-[#f0f9ff] hover:border-primary/30 shadow-xl shadow-primary/5 transition-all duration-300 h-full relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ArrowRight className="w-5 h-5 text-secondary -translate-x-2 group-hover:translate-x-0 transition-transform" />
+                      <ArrowRight className="w-5 h-5 text-primary/40 -translate-x-2 group-hover:translate-x-0 transition-transform" />
                     </div>
 
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-6">
                       <button
                         onClick={(e) => handleEditClick(e, report.id, report.name)}
-                        className="p-1.5 rounded-md hover:bg-primary/20 text-primary transition-colors z-20"
+                        className="p-1.5 rounded-full hover:bg-primary/10 text-primary transition-all z-20"
                       >
                         <Pencil className="w-4 h-4" />
                       </button>
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/10">
-                        <Briefcase className="w-3 h-3" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/50 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">
+                        <Briefcase className="w-3 h-3 text-primary" />
                         {report.businessType}
                       </span>
                     </div>
 
-                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-1 group-hover:text-primary transition-colors pr-6">
+                    <h3 className="text-2xl font-bold text-primary mb-3 line-clamp-2 uppercase tracking-tight leading-tight">
                       {report.name || report.address}
                     </h3>
                     
-                    {report.name && (
-                      <p className="text-xs text-muted-foreground mb-2 line-clamp-1">
+                    <div className="flex items-center gap-2 text-primary/60 mb-6 px-1 italic">
+                      <MapPin className="w-4 h-4 shrink-0 text-primary" />
+                      <p className="text-sm font-medium line-clamp-1">
                         {report.address}
                       </p>
-                    )}
+                    </div>
                     
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground mt-4 pt-4 border-t border-white/5">
-                      <div className="flex items-center gap-1.5">
+                    <div className="mt-auto pt-4 border-t border-primary/5 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-primary/40 uppercase tracking-widest">
                         <Calendar className="w-3.5 h-3.5" />
                         {new Date(report.createdAt || "").toLocaleDateString()}
                       </div>
-                      <div className="flex items-center gap-1.5 ml-auto">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         Completed
                       </div>
                     </div>
