@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateBackground } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -425,26 +425,9 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     if (!report) return res.status(404).send("Report not found");
 
     try {
-      const prompt = `Generate real-time business insights for a ${report.businessType} located at ${report.address}. 
-      Return a JSON object with:
-      1. weather: { temp: string, condition: string, impact: string (how it affects this specific business) }
-      2. traffic: { status: string (Light/Moderate/Heavy), delay: string, notablePatterns: string }
-      3. news: array of 3 objects { title: string, source: string, summary: string, date: string (must be within last 7 days) }
-      
-      Ensure news items are realistic for the location or industry and no more than one week old.`;
-
-      const response = await generateMarketAnalysis(report.address, report.businessType); // Reusing analyzer for JSON structure
-      // Note: In a real app we'd have a separate live generator, but for this demo 
-      // we'll simulate the live response structure using the analyzer proxy
-      res.json({
-        weather: { temp: "72°F", condition: "Partly Cloudy", impact: "Favorable conditions for local foot traffic." },
-        traffic: { status: "Moderate", delay: "5 mins", notablePatterns: "Construction on Main St may affect morning deliveries." },
-        news: [
-          { title: "Local Business Awards Announced", source: "City Times", summary: "Local entrepreneurs recognized for innovation.", date: "2 days ago" },
-          { title: "New Transit Route Proposed", source: "Metro News", summary: "Increased access to downtown district expected.", date: "4 days ago" },
-          { title: "Seasonal Festival Kicks Off", source: "Events Weekly", summary: "High attendance expected this weekend.", date: "Today" }
-        ]
-      });
+      const { generateLiveInsights } = await import("./openai");
+      const insights = await generateLiveInsights(report.address, report.businessType);
+      res.json(insights);
     } catch (error) {
       console.error("Live insights error:", error);
       res.status(500).send("Failed to generate live insights");

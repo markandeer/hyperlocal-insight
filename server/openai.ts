@@ -184,27 +184,53 @@ export async function generateTargetMarket(input: string): Promise<string> {
   }
 }
 
-export async function generateBackground(input: string): Promise<string> {
+export async function generateLiveInsights(address: string, businessType: string): Promise<any> {
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. Do not explain anything, just provide the refined background text."
+          content: `You are a real-time market intelligence AI. Scrub the internet (simulated) and provide the latest news and insights for a "${businessType}" at "${address}".
+          
+          Focus on a 5-mile radius. Categorize news into: "Local Events", "Business & Economy", and "Community Updates".
+          
+          Return ONLY valid JSON matching this structure:
+          {
+            "weather": {
+              "temp": "string",
+              "condition": "string",
+              "impact": "string"
+            },
+            "traffic": {
+              "status": "Light | Moderate | Heavy",
+              "delay": "string",
+              "notablePatterns": "string"
+            },
+            "news": [
+              {
+                "title": "string",
+                "source": "string",
+                "summary": "string",
+                "date": "string (within last 7 days)",
+                "category": "Local Events | Business & Economy | Community Updates"
+              }
+            ]
+          }`
         },
         {
           role: "user",
-          content: `Refine this business background: ${input}`
+          content: `Generate live insights for "${businessType}" at "${address}".`
         }
-      ]
+      ],
+      response_format: { type: "json_object" }
     });
 
     const content = response.choices[0].message.content;
     if (!content) throw new Error("No content received from OpenAI");
-    return content.trim();
+    return JSON.parse(content);
   } catch (error) {
-    console.error("Background refinement error:", error);
-    throw new Error("Failed to refine business background");
+    console.error("Live insights generation error:", error);
+    throw new Error("Failed to generate live insights");
   }
 }

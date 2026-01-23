@@ -24,6 +24,7 @@ interface LiveInsight {
     source: string;
     summary: string;
     date: string;
+    category: string;
   }>;
 }
 
@@ -258,7 +259,7 @@ export default function LiveInsights() {
 
                   {/* News Feed - 5 Mile Radius */}
                   <motion.div
-                    className="glass-card p-6 rounded-3xl border-2 border-primary/5 bg-white shadow-xl"
+                    className="glass-card p-6 rounded-3xl border-2 border-primary/5 bg-white shadow-xl md:col-span-3"
                   >
                     <div className="flex items-center gap-3 mb-6">
                       <div className="p-3 rounded-2xl bg-[#e26e6d]/10 text-[#e26e6d]">
@@ -266,21 +267,41 @@ export default function LiveInsights() {
                       </div>
                       <h2 className="text-xl font-bold uppercase tracking-tight text-primary">Local News Feed</h2>
                     </div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#e26e6d]/60 mb-4 px-1">Coverage: 5 Mile Radius</p>
-                    <div className="space-y-6">
-                      {insights.news.map((item, idx) => (
-                        <div key={idx} className={idx !== 0 ? "pt-4 border-t border-primary/5" : ""}>
-                          <h3 className="font-bold text-sm mb-1 leading-snug group cursor-pointer hover:text-[#e26e6d] transition-colors flex items-center justify-between">
-                            {item.title}
-                            <ExternalLink className="w-3 h-3 text-primary/40" />
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#e26e6d]/60 mb-6 px-1">Coverage: 5 Mile Radius • Real-time Updates</p>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      {["Local Events", "Business & Economy", "Community Updates"].map((category) => (
+                        <div key={category} className="space-y-4">
+                          <h3 className="text-xs font-black uppercase tracking-widest text-primary/40 pb-2 border-b border-primary/5">
+                            {category}
                           </h3>
-                          <div className="flex items-center gap-2 text-[10px] text-primary/40 font-bold uppercase tracking-widest">
-                            <span>{item.source}</span>
-                            <span>•</span>
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              {item.date}
-                            </div>
+                          <div className="space-y-6">
+                            {insights.news
+                              .filter(item => item.category === category || (!item.category && category === "Community Updates"))
+                              .map((item, idx) => (
+                                <div key={idx} className="group cursor-pointer">
+                                  <div className="flex items-start justify-between gap-2 mb-1">
+                                    <h4 className="font-bold text-sm leading-snug group-hover:text-[#e26e6d] transition-colors">
+                                      {item.title}
+                                    </h4>
+                                    <ExternalLink className="w-3 h-3 text-primary/20 shrink-0 group-hover:text-[#e26e6d] transition-colors" />
+                                  </div>
+                                  <p className="text-xs text-primary/60 line-clamp-2 mb-2 leading-relaxed italic">
+                                    {item.summary}
+                                  </p>
+                                  <div className="flex items-center gap-2 text-[10px] text-primary/40 font-bold uppercase tracking-widest">
+                                    <span>{item.source}</span>
+                                    <span>•</span>
+                                    <div className="flex items-center gap-1">
+                                      <Calendar className="w-3 h-3" />
+                                      {item.date}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            {insights.news.filter(item => item.category === category).length === 0 && (
+                              <p className="text-xs text-primary/30 italic">No recent updates in this category.</p>
+                            )}
                           </div>
                         </div>
                       ))}
