@@ -16,11 +16,11 @@ export default function HistoryPage() {
   const [newName, setNewName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleEditClick = (e: React.MouseEvent, id: number, currentName: string | null, address: string) => {
+  const handleEditClick = (e: React.MouseEvent, id: number, currentName: string | null) => {
     e.preventDefault();
     e.stopPropagation();
-    setEditingReport({ id, name: currentName || address });
-    setNewName(currentName || address);
+    setEditingReport({ id, name: currentName || "" });
+    setNewName(currentName || "");
   };
 
   const handleSave = async () => {
@@ -96,7 +96,7 @@ export default function HistoryPage() {
 
                     <div className="flex items-center gap-2 mb-4">
                       <button
-                        onClick={(e) => handleEditClick(e, report.id, report.name, report.address)}
+                        onClick={(e) => handleEditClick(e, report.id, report.name)}
                         className="p-1.5 rounded-md hover:bg-primary/20 text-primary transition-colors z-20"
                       >
                         <Pencil className="w-4 h-4" />
@@ -165,7 +165,7 @@ export default function HistoryPage() {
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     className="bg-white border-primary/20 text-black h-12 rounded-xl focus-visible:ring-primary/30"
-                    placeholder="Enter new name..."
+                    placeholder="Enter custom name..."
                     autoFocus
                   />
                 </div>
