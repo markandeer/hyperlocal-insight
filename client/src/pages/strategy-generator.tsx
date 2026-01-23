@@ -176,7 +176,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
   );
 }
 
-export default function StrategyBuilder() {
+export default function StrategyGenerator() {
   const missionTips = [
     "1. Define your core purpose: Why does your business exist beyond making a profit?",
     "2. Identify your target audience: Who are you serving and what problem are you solving for them?",
@@ -216,7 +216,7 @@ export default function StrategyBuilder() {
           className="text-center"
         >
           <h1 className="text-4xl md:text-5xl font-display font-bold text-primary uppercase tracking-tighter mb-4">
-            Strategy Builder
+            Strategy Generator
           </h1>
           <p className="text-xl text-primary/80 font-medium tracking-tight">Build your brand strategy foundations.</p>
         </motion.div>

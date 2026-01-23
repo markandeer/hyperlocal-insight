@@ -8,7 +8,7 @@ import LandingPage from "@/pages/landing";
 import LocationInsightsGenerator from "@/pages/location-insights-generator";
 import ReportPage from "@/pages/report";
 import HistoryPage from "@/pages/history";
-import StrategyBuilder from "@/pages/strategy-builder";
+import StrategyGenerator from "@/pages/strategy-generator";
 import BrandStrategy from "@/pages/brand-strategy";
 import BrandIdentity from "@/pages/brand-identity";
 import LiveInsights from "@/pages/live-insights";
@@ -22,7 +22,7 @@ function Router() {
       <Route path="/location-insights" component={LocationInsightsPage} />
       <Route path="/history" component={HistoryPage} />
       <Route path="/report/:id" component={ReportPage} />
-      <Route path="/strategy-builder" component={StrategyBuilder} />
+      <Route path="/strategy-generator" component={StrategyGenerator} />
       <Route path="/brand-strategy" component={BrandStrategy} />
       <Route path="/brand-identity" component={BrandIdentity} />
       <Route path="/live-insights" component={LiveInsights} />
