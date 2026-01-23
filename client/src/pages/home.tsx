@@ -76,7 +76,7 @@ export default function Home() {
             className="text-center mb-12"
           >
             <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-md">
-              <span className="text-xs font-bold uppercase tracking-widest text-secondary">
+              <span className="text-xs font-bold uppercase tracking-widest text-primary">
                 Creative Brilliance + AI Strategy
               </span>
             </div>

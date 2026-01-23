@@ -106,6 +106,19 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.patch("/api/reports/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { name } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      
+      const updatedReport = await storage.updateReportName(id, name);
+      res.json(updatedReport);
+    } catch (error) {
+      res.status(500).send("Failed to update report");
+    }
+  });
+
   // Seed on startup
   seedDatabase().catch(err => console.error("Seeding failed:", err));
 

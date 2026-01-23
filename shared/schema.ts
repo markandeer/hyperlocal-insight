@@ -4,6 +4,7 @@ import { z } from "zod";
 
 export const analysis_reports = pgTable("analysis_reports", {
   id: serial("id").primaryKey(),
+  name: text("name"), // Optional custom name for the report
   address: text("address").notNull(),
   businessType: text("business_type").notNull(),
   data: jsonb("data").notNull(), // Stores the full analysis JSON
