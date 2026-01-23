@@ -139,11 +139,12 @@ export default function BrandIdentity() {
               <div className="border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center min-h-[200px]">
                 <img src={logo} alt="Brand Logo" className="max-h-48 w-full object-contain rounded-2xl" />
               </div>
-              <div className="mt-4 flex justify-center">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
                 <Button 
                   variant="outline" 
+                  size="sm"
                   onClick={() => fileInputRef.current?.click()}
-                  className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl"
+                  className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
                 >
                   Change Logo
                 </Button>
