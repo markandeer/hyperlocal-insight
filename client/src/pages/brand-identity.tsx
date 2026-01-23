@@ -98,14 +98,37 @@ export default function BrandIdentity() {
     }
   };
 
+  const [typography, setTypography] = useState(() => {
+    const saved = localStorage.getItem("brand_typography");
+    return saved ? JSON.parse(saved) : {
+      display: { name: "Clash Display", style: "Bold" },
+      body: { name: "Inter", style: "Medium" }
+    };
+  });
+  const [editingFont, setEditingFont] = useState<'display' | 'body' | null>(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("brand_typography", JSON.stringify(typography));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+    }
+  }, [typography]);
+
   const handleColorChange = (index: number, newHex: string) => {
     const newColors = [...colors];
-    // Ensure hex starts with #
     if (!newHex.startsWith("#") && newHex.length > 0) {
       newHex = "#" + newHex;
     }
     newColors[index].hex = newHex;
     setColors(newColors);
+  };
+
+  const handleFontChange = (type: 'display' | 'body', name: string) => {
+    setTypography((prev: any) => ({
+      ...prev,
+      [type]: { ...prev[type], name }
+    }));
   };
 
   const sections = [
@@ -188,15 +211,60 @@ export default function BrandIdentity() {
       description: "Standardize your brand fonts and text hierarchies.",
       content: (
         <div className="space-y-6">
-          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5">
+          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-hidden">
             <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-4">Display Font</p>
-            <h2 className="text-4xl font-display font-bold text-primary tracking-tighter uppercase">Heading One</h2>
-            <p className="text-sm text-primary/60 mt-1 italic font-medium">Clash Display / Bold</p>
+            {editingFont === 'display' ? (
+              <Input
+                autoFocus
+                value={typography.display.name}
+                onChange={(e) => handleFontChange('display', e.target.value)}
+                onBlur={() => setEditingFont(null)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
+                className="text-4xl font-display font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20"
+              />
+            ) : (
+              <h2 className="text-4xl font-display font-bold text-primary tracking-tighter uppercase">{typography.display.name}</h2>
+            )}
+            <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.display.style}</p>
+            
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setEditingFont('display')}
+                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+              >
+                Change Font
+              </Button>
+            </div>
           </div>
-          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5">
+
+          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-hidden">
             <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-4">Body Font</p>
-            <p className="text-lg text-primary leading-relaxed font-medium">The quick brown fox jumps over the lazy dog.</p>
-            <p className="text-sm text-primary/60 mt-1 italic font-medium">Inter / Medium</p>
+            {editingFont === 'body' ? (
+              <Input
+                autoFocus
+                value={typography.body.name}
+                onChange={(e) => handleFontChange('body', e.target.value)}
+                onBlur={() => setEditingFont(null)}
+                onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
+                className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20"
+              />
+            ) : (
+              <p className="text-lg text-primary leading-relaxed font-medium">The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
+            )}
+            <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.body.style}</p>
+            
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setEditingFont('body')}
+                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+              >
+                Change Font
+              </Button>
+            </div>
           </div>
         </div>
       )
@@ -230,12 +298,12 @@ export default function BrandIdentity() {
                   <div className="h-full w-full border-2 border-primary/10 rounded-2xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center overflow-hidden">
                     <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-lg" />
                   </div>
-                  <div className="mt-2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
                     <Button 
                       variant="outline" 
                       size="sm"
                       onClick={() => elementInputRefs[idx].current?.click()}
-                      className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl text-[10px] h-7 px-2"
+                      className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
                     >
                       Change
                     </Button>

@@ -106,13 +106,28 @@ export default function BrandStrategy() {
     }
   };
 
-  const handleColorChange = (index: number, newHex: string) => {
-    const newColors = [...colors];
-    if (!newHex.startsWith("#") && newHex.length > 0) {
-      newHex = "#" + newHex;
+  useEffect(() => {
+    try {
+      localStorage.setItem("brand_typography", JSON.stringify(typography));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
     }
-    newColors[index].hex = newHex;
-    setColors(newColors);
+  }, [typography]);
+
+  const [typography, setTypography] = useState(() => {
+    const saved = localStorage.getItem("brand_typography");
+    return saved ? JSON.parse(saved) : {
+      display: { name: "Clash Display", style: "Bold" },
+      body: { name: "Inter", style: "Medium" }
+    };
+  });
+  const [editingFont, setEditingFont] = useState<'display' | 'body' | null>(null);
+
+  const handleFontChange = (type: 'display' | 'body', name: string) => {
+    setTypography(prev => ({
+      ...prev,
+      [type]: { ...prev[type], name }
+    }));
   };
 
   const { data: missions, isLoading: isLoadingMissions } = useQuery<BrandMission[]>({
@@ -837,18 +852,16 @@ export default function BrandStrategy() {
                           <Card className="h-full w-full border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 flex items-center justify-center overflow-hidden shadow-inner">
                             <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-xl" />
                           </Card>
-                          <Button 
-                            variant="destructive" 
-                            size="icon" 
-                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-lg"
-                            onClick={() => {
-                              const newElements = [...elements];
-                              newElements[idx] = null;
-                              setElements(newElements);
-                            }}
-                          >
-                            <X className="w-3 h-3" />
-                          </Button>
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => elementInputRefs[idx].current?.click()}
+                              className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                            >
+                              Change
+                            </Button>
+                          </div>
                         </div>
                       )}
                     </div>
