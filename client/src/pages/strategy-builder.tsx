@@ -14,10 +14,11 @@ interface BuilderSectionProps {
   tips: string[];
   generateEndpoint: string;
   saveEndpoint: string;
-  type: "mission" | "vision" | "value" | "target";
+  type: "mission" | "vision" | "value" | "target" | "background";
+  maxChars?: number;
 }
 
-function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, type }: BuilderSectionProps) {
+function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, type, maxChars = 500 }: BuilderSectionProps) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -36,12 +37,13 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
       if (type === "mission") setResult(data.mission);
       else if (type === "vision") setResult(data.vision);
       else if (type === "value") setResult(data.value);
-      else setResult(data.targetMarket);
+      else if (type === "target") setResult(data.targetMarket);
+      else setResult(data.background);
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
-        description: `Failed to generate ${type} profile.`,
+        description: `Failed to process ${type}.`,
         variant: "destructive"
       });
     } finally {
@@ -57,7 +59,8 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
       if (type === "mission") body = { mission: result, originalInput: input };
       else if (type === "vision") body = { vision: result, originalInput: input };
       else if (type === "value") body = { valueProposition: result, originalInput: input };
-      else body = { targetMarket: result, originalInput: input };
+      else if (type === "target") body = { targetMarket: result, originalInput: input };
+      else body = { background: result, originalInput: input };
       
       await apiRequest("POST", saveEndpoint, body);
       setIsSaved(true);
@@ -97,14 +100,14 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
             <Textarea
               value={input}
               onChange={(e) => {
-                setInput(e.target.value.slice(0, 500));
+                setInput(e.target.value.slice(0, maxChars));
                 setIsSaved(false);
               }}
               className="min-h-[350px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
             />
           </div>
           <div className="text-right text-xs text-primary/60 font-bold">
-            {input.length}/500
+            {input.length}/{maxChars}
           </div>
         </div>
 
@@ -113,7 +116,11 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
           disabled={isGenerating || !input.trim()}
           className="w-full h-14 bg-primary text-white hover:bg-primary/90 rounded-2xl font-bold text-xl shadow-lg shadow-primary/25"
         >
-          {isGenerating ? <Loader2 className="w-6 h-6 animate-spin" /> : "RESULT"}
+          {isGenerating ? (
+            <Loader2 className="w-6 h-6 animate-spin" />
+          ) : (
+            type === "background" ? "AI TRANSFORM" : "RESULT"
+          )}
         </Button>
       </div>
 
@@ -180,6 +187,12 @@ export default function StrategyBuilder() {
     "3. Identify the 'How': Where do they hang out (online and offline)? How do they prefer to be contacted?"
   ];
 
+  const backgroundTips = [
+    "1. Tell your story: Share how and why your business was started.",
+    "2. Highlight expertise: What unique experience or background do you bring to the table?",
+    "3. Show personality: Let your brand's voice and character shine through."
+  ];
+
   return (
     <Layout>
       <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-12 pb-20">
@@ -193,6 +206,23 @@ export default function StrategyBuilder() {
           </h1>
           <p className="text-xl text-primary/80 font-medium tracking-tight">Build your brand strategy foundations.</p>
         </motion.div>
+
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-primary/10" />
+            <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Business Background</h2>
+            <div className="h-px flex-1 bg-primary/10" />
+          </div>
+          <BuilderSection
+            title="Business Background"
+            label="Business Background (Max 1000 chars)"
+            tips={backgroundTips}
+            generateEndpoint="/api/generate-background"
+            saveEndpoint="/api/backgrounds"
+            type="background"
+            maxChars={1000}
+          />
+        </section>
 
         <section className="space-y-6">
           <div className="flex items-center gap-4">

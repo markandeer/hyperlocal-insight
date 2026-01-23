@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { analysis_reports, brand_missions, brand_visions, brand_values, brand_target_markets, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision, type BrandValue, type InsertBrandValue, type BrandTargetMarket, type InsertBrandTargetMarket } from "@shared/schema";
+import { analysis_reports, brand_missions, brand_visions, brand_values, brand_target_markets, brand_backgrounds, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision, type BrandValue, type InsertBrandValue, type BrandTargetMarket, type InsertBrandTargetMarket, type BrandBackground, type InsertBrandBackground } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
@@ -27,6 +27,11 @@ export interface IStorage {
   getTargetMarkets(): Promise<BrandTargetMarket[]>;
   updateTargetMarket(id: number, targetMarket: string): Promise<BrandTargetMarket>;
   deleteTargetMarket(id: number): Promise<void>;
+
+  createBackground(background: InsertBrandBackground): Promise<BrandBackground>;
+  getBackgrounds(): Promise<BrandBackground[]>;
+  updateBackground(id: number, background: string): Promise<BrandBackground>;
+  deleteBackground(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -177,6 +182,35 @@ export class DatabaseStorage implements IStorage {
 
   async deleteTargetMarket(id: number): Promise<void> {
     await db.delete(brand_target_markets).where(eq(brand_target_markets.id, id));
+  }
+
+  async createBackground(insertBackground: InsertBrandBackground): Promise<BrandBackground> {
+    const [background] = await db
+      .insert(brand_backgrounds)
+      .values(insertBackground)
+      .returning();
+    return background;
+  }
+
+  async getBackgrounds(): Promise<BrandBackground[]> {
+    return await db
+      .select()
+      .from(brand_backgrounds)
+      .orderBy(desc(brand_backgrounds.createdAt));
+  }
+
+  async updateBackground(id: number, background: string): Promise<BrandBackground> {
+    const [updated] = await db
+      .update(brand_backgrounds)
+      .set({ background })
+      .where(eq(brand_backgrounds.id, id))
+      .returning();
+    if (!updated) throw new Error("Background not found");
+    return updated;
+  }
+
+  async deleteBackground(id: number): Promise<void> {
+    await db.delete(brand_backgrounds).where(eq(brand_backgrounds.id, id));
   }
 }
 

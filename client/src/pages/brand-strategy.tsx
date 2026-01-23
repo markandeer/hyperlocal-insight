@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { BrandMission, BrandVision, BrandValue, BrandTargetMarket } from "@shared/schema";
+import { BrandMission, BrandVision, BrandValue, BrandTargetMarket, BrandBackground } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,8 +32,12 @@ export default function BrandStrategy() {
     queryKey: ["/api/target-markets"],
   });
 
+  const { data: backgrounds, isLoading: isLoadingBackgrounds } = useQuery<BrandBackground[]>({
+    queryKey: ["/api/backgrounds"],
+  });
+
   const updateMutation = useMutation({
-    mutationFn: async ({ id, content, type }: { id: number; content: string; type: 'mission' | 'vision' | 'value' | 'target' }) => {
+    mutationFn: async ({ id, content, type }: { id: number; content: string; type: 'mission' | 'vision' | 'value' | 'target' | 'background' }) => {
       let endpoint: string;
       let body: any;
       if (type === 'mission') {
@@ -45,9 +49,12 @@ export default function BrandStrategy() {
       } else if (type === 'value') {
         endpoint = `/api/values/${id}`;
         body = { valueProposition: content };
-      } else {
+      } else if (type === 'target') {
         endpoint = `/api/target-markets/${id}`;
         body = { targetMarket: content };
+      } else {
+        endpoint = `/api/backgrounds/${id}`;
+        body = { background: content };
       }
       const res = await apiRequest("PATCH", endpoint, body);
       return res.json();
@@ -57,7 +64,8 @@ export default function BrandStrategy() {
       if (variables.type === 'mission') queryKey = "/api/missions";
       else if (variables.type === 'vision') queryKey = "/api/visions";
       else if (variables.type === 'value') queryKey = "/api/values";
-      else queryKey = "/api/target-markets";
+      else if (variables.type === 'target') queryKey = "/api/target-markets";
+      else queryKey = "/api/backgrounds";
       
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       setEditingId(null);
@@ -66,12 +74,13 @@ export default function BrandStrategy() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async ({ id, type }: { id: number; type: 'mission' | 'vision' | 'value' | 'target' }) => {
+    mutationFn: async ({ id, type }: { id: number; type: 'mission' | 'vision' | 'value' | 'target' | 'background' }) => {
       let endpoint: string;
       if (type === 'mission') endpoint = `/api/missions/${id}`;
       else if (type === 'vision') endpoint = `/api/visions/${id}`;
       else if (type === 'value') endpoint = `/api/values/${id}`;
-      else endpoint = `/api/target-markets/${id}`;
+      else if (type === 'target') endpoint = `/api/target-markets/${id}`;
+      else endpoint = `/api/backgrounds/${id}`;
       
       await apiRequest("DELETE", endpoint);
     },
@@ -80,14 +89,15 @@ export default function BrandStrategy() {
       if (variables.type === 'mission') queryKey = "/api/missions";
       else if (variables.type === 'vision') queryKey = "/api/visions";
       else if (variables.type === 'value') queryKey = "/api/values";
-      else queryKey = "/api/target-markets";
+      else if (variables.type === 'target') queryKey = "/api/target-markets";
+      else queryKey = "/api/backgrounds";
       
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       toast({ title: "Deleted", description: `${variables.type.charAt(0).toUpperCase() + variables.type.slice(1)} removed.` });
     }
   });
 
-  const isLoading = isLoadingMissions || isLoadingVisions || isLoadingValues || isLoadingTargetMarkets;
+  const isLoading = isLoadingMissions || isLoadingVisions || isLoadingValues || isLoadingTargetMarkets || isLoadingBackgrounds;
 
   return (
     <Layout>
@@ -109,6 +119,107 @@ export default function BrandStrategy() {
           </div>
         ) : (
           <div className="space-y-20">
+            {/* Background Section */}
+            <section className="space-y-8">
+              <div className="flex items-center gap-4">
+                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Business Background</h2>
+                <div className="h-px flex-1 bg-primary/10" />
+              </div>
+              
+              {!backgrounds || backgrounds.length === 0 ? (
+                <div className="text-center p-12 glass-card rounded-3xl">
+                  <p className="text-primary/60 text-lg font-medium italic">No saved business background profiles yet.</p>
+                </div>
+              ) : (
+                <div className="grid gap-8">
+                  {backgrounds.map((b, i) => (
+                    <motion.div
+                      key={`background-${b.id}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <Card className="overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all rounded-3xl bg-white shadow-xl shadow-primary/5">
+                        <CardContent className="p-8 space-y-6 relative">
+                          <div className="absolute top-6 right-6 flex gap-2">
+                            {editingId === b.id ? (
+                              <>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-green-600 hover:bg-green-50"
+                                  onClick={() => updateMutation.mutate({ id: b.id, content: editValue, type: 'background' })}
+                                  disabled={updateMutation.isPending}
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary hover:bg-primary/5"
+                                  onClick={() => setEditingId(null)}
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                  onClick={() => {
+                                    setEditingId(b.id);
+                                    setEditValue(b.background);
+                                  }}
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                  onClick={() => {
+                                    if (confirm("Are you sure you want to delete this business background profile?")) {
+                                      deleteMutation.mutate({ id: b.id, type: 'background' });
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                          </div>
+
+                          <div className="flex justify-between items-start">
+                            <Quote className="w-10 h-10 text-primary/20" />
+                            <div className="flex items-center gap-2 text-xs font-bold text-primary/40 uppercase tracking-widest mr-20">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(b.createdAt || "").toLocaleDateString()}
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            {editingId === b.id ? (
+                              <Textarea
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                className="text-lg font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                              />
+                            ) : (
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12">
+                                {b.background}
+                              </p>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             {/* Target Market Section */}
             <section className="space-y-8">
               <div className="flex items-center gap-4">

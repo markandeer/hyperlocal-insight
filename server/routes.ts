@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateBackground } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -288,6 +288,66 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete target market profile");
+    }
+  });
+
+  // Business background routes
+  app.post("/api/generate-background", async (req, res) => {
+    try {
+      const { input } = req.body;
+      if (!input || typeof input !== "string") {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      const background = await generateBackground(input);
+      res.json({ background });
+    } catch (error: any) {
+      console.error("Background refinement error:", error);
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to refine business background" });
+    }
+  });
+
+  app.post("/api/backgrounds", async (req, res) => {
+    try {
+      const { background, originalInput } = req.body;
+      if (!background || !originalInput) {
+        return res.status(400).json({ message: "Background and input are required" });
+      }
+      const savedBackground = await storage.createBackground({ background, originalInput });
+      res.status(201).json(savedBackground);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to save business background" });
+    }
+  });
+
+  app.get("/api/backgrounds", async (_req, res) => {
+    try {
+      const backgrounds = await storage.getBackgrounds();
+      res.json(backgrounds);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch business backgrounds" });
+    }
+  });
+
+  app.patch("/api/backgrounds/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { background } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      const updatedBackground = await storage.updateBackground(id, background);
+      res.json(updatedBackground);
+    } catch (error) {
+      res.status(500).send("Failed to update business background");
+    }
+  });
+
+  app.delete("/api/backgrounds/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      await storage.deleteBackground(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send("Failed to delete business background");
     }
   });
 

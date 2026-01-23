@@ -183,3 +183,28 @@ export async function generateTargetMarket(input: string): Promise<string> {
     throw new Error("Failed to generate target market profile");
   }
 }
+
+export async function generateBackground(input: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. Do not explain anything, just provide the refined background text."
+        },
+        {
+          role: "user",
+          content: `Refine this business background: ${input}`
+        }
+      ]
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) throw new Error("No content received from OpenAI");
+    return content.trim();
+  } catch (error) {
+    console.error("Background refinement error:", error);
+    throw new Error("Failed to refine business background");
+  }
+}
