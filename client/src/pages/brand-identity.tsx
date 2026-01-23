@@ -1,28 +1,47 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, Palette, Type, Box, Image as ImageIcon, X, Plus } from "lucide-react";
+import { Upload, Palette, Type, Box, Image as ImageIcon, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 
 export default function BrandIdentity() {
-  const [logo, setLogo] = useState<string | null>(null);
-  const [elements, setElements] = useState<(string | null)[]>([null, null, null]);
+  const [logo, setLogo] = useState<string | null>(() => localStorage.getItem("brand_logo"));
+  const [elements, setElements] = useState<(string | null)[]>(() => {
+    const saved = localStorage.getItem("brand_elements");
+    return saved ? JSON.parse(saved) : [null, null, null];
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const elementInputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null)
   ];
-  const [colors, setColors] = useState([
-    { name: "Primary", hex: "#e26e6d" },
-    { name: "Secondary", hex: "#c6e4f9" },
-    { name: "Accent", hex: "#f0f9ff" },
-    { name: "Dark", hex: "#1a1a1a" },
-    { name: "Neutral 1", hex: "#f5f5f5" },
-    { name: "Neutral 2", hex: "#ffffff" }
-  ]);
+  const [colors, setColors] = useState(() => {
+    const saved = localStorage.getItem("brand_colors");
+    return saved ? JSON.parse(saved) : [
+      { name: "Primary", hex: "#e26e6d" },
+      { name: "Secondary", hex: "#c6e4f9" },
+      { name: "Accent", hex: "#f0f9ff" },
+      { name: "Dark", hex: "#1a1a1a" },
+      { name: "Neutral 1", hex: "#f5f5f5" },
+      { name: "Neutral 2", hex: "#ffffff" }
+    ];
+  });
+
+  useEffect(() => {
+    if (logo) localStorage.setItem("brand_logo", logo);
+    else localStorage.removeItem("brand_logo");
+  }, [logo]);
+
+  useEffect(() => {
+    localStorage.setItem("brand_elements", JSON.stringify(elements));
+  }, [elements]);
+
+  useEffect(() => {
+    localStorage.setItem("brand_colors", JSON.stringify(colors));
+  }, [colors]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,14 +108,6 @@ export default function BrandIdentity() {
               <div className="border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center min-h-[200px]">
                 <img src={logo} alt="Brand Logo" className="max-h-48 w-full object-contain rounded-2xl" />
               </div>
-              <Button 
-                variant="destructive" 
-                size="icon" 
-                className="absolute -top-2 -right-2 rounded-full shadow-lg"
-                onClick={() => setLogo(null)}
-              >
-                <X className="w-4 h-4" />
-              </Button>
               <div className="mt-4 flex justify-center">
                 <Button 
                   variant="outline" 
@@ -118,7 +129,7 @@ export default function BrandIdentity() {
       description: "Define your hex codes and preview your brand palette (6 slots).",
       content: (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {colors.map((color, idx) => (
+          {colors.map((color: any, idx: number) => (
             <div key={idx} className="space-y-3 bg-white/40 p-4 rounded-2xl border-2 border-primary/5">
               <div 
                 className="h-24 rounded-xl border-2 border-primary/5 shadow-inner transition-colors duration-300"
@@ -187,18 +198,16 @@ export default function BrandIdentity() {
                   <div className="h-full w-full border-2 border-primary/10 rounded-2xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center overflow-hidden">
                     <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-lg" />
                   </div>
-                  <Button 
-                    variant="destructive" 
-                    size="icon" 
-                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full shadow-lg"
-                    onClick={() => {
-                      const newElements = [...elements];
-                      newElements[idx] = null;
-                      setElements(newElements);
-                    }}
-                  >
-                    <X className="w-3 h-3" />
-                  </Button>
+                  <div className="mt-2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => elementInputRefs[idx].current?.click()}
+                      className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl text-[10px] h-7 px-2"
+                    >
+                      Change
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
