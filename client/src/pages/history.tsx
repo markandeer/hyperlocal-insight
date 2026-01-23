@@ -54,7 +54,7 @@ export default function HistoryPage() {
             <p className="text-primary/60 italic font-medium">Archive of your generated market reports.</p>
           </div>
           <Link href="/">
-            <button className="px-8 py-4 bg-[#f0f9ff]/50 text-primary rounded-2xl font-bold uppercase tracking-widest text-sm hover:bg-[#f0f9ff]/80 transition-all border-2 border-primary/5 shadow-lg shadow-primary/5">
+            <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold uppercase tracking-widest text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
               New <br />Analysis
             </button>
           </Link>
