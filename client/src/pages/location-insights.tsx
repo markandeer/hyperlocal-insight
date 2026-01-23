@@ -82,10 +82,10 @@ export default function LocationInsightsPage() {
           <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 w-5 h-5 group-focus-within:text-primary transition-colors" />
             <Input
-              placeholder="Search by business name..."
+              placeholder="Search by Location Name"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-white border-primary/10 h-12 rounded-xl pl-12 focus-visible:ring-primary/30 text-black font-medium"
+              className="bg-white border-primary/10 h-12 rounded-xl pl-12 focus-visible:ring-primary/30 text-black font-medium placeholder:text-slate-400"
             />
           </div>
         </div>
