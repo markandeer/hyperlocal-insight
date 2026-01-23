@@ -10,8 +10,12 @@ import { Input } from "@/components/ui/input";
 
 interface LiveInsight {
   weather: {
-    temp: string;
-    condition: string;
+    forecast: Array<{
+      date: string;
+      high: string;
+      low: string;
+      condition: string;
+    }>;
     impact: string;
   };
   traffic: {
@@ -243,12 +247,25 @@ export default function LiveInsights() {
                       <div className="p-3 rounded-2xl bg-sky-50 text-sky-500">
                         <Cloud className="w-6 h-6" />
                       </div>
-                      <h2 className="text-xl font-bold uppercase tracking-tight text-primary">Local Weather</h2>
+                      <h2 className="text-xl font-bold uppercase tracking-tight text-primary">2-Week Forecast</h2>
                     </div>
                     <div className="space-y-4">
-                      <div>
-                        <div className="text-4xl font-bold text-black">{insights?.weather?.temp || "N/A"}</div>
-                        <div className="text-primary/60 font-medium italic">{insights?.weather?.condition || "Conditions unavailable"}</div>
+                      <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                        {insights?.weather?.forecast?.map((day, i) => (
+                          <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-sky-50/50 border border-sky-100/50">
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">{day.date}</span>
+                              <span className="text-sm font-bold text-black">{day.condition}</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-sm font-black text-black">{day.high}</span>
+                              <span className="text-xs font-bold text-primary/40 ml-2">{day.low}</span>
+                            </div>
+                          </div>
+                        ))}
+                        {!insights?.weather?.forecast && (
+                          <div className="text-center py-4 text-primary/30 italic text-xs">Forecast unavailable</div>
+                        )}
                       </div>
                       <div className="pt-4 border-t border-primary/5">
                         <div className="text-xs font-bold uppercase tracking-widest text-primary/40 mb-1">Business Impact</div>

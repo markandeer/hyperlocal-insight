@@ -224,15 +224,21 @@ export async function generateLiveInsights(address: string, businessType: string
           Provide the absolute most accurate current weather, traffic, and news insights for a "${businessType}" at the EXACT location: "${address}".
           
           CRITICAL INSTRUCTIONS:
-          1. Weather Accuracy: Look up the ACTUAL current temperature for "${address}". If it is winter and the location is experiencing freezing temperatures (e.g., 0°F), you MUST reflect that. DO NOT hallucinate generic mild weather. Return the temperature in Fahrenheit.
+          1. 2-Week Weather Forecast: Provide a day-by-day weather forecast for the next 14 days for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions. DO NOT hallucinate generic mild weather; reflect current seasonal reality.
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
           
           Return ONLY valid JSON with this exact structure (do not include any other keys):
           {
             "weather": {
-              "temp": "string (e.g., 0°F)",
-              "condition": "string",
+              "forecast": [
+                {
+                  "date": "string",
+                  "high": "string",
+                  "low": "string",
+                  "condition": "string"
+                }
+              ],
               "impact": "string"
             },
             "traffic": {
