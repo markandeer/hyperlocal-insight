@@ -425,7 +425,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     if (!report) return res.status(404).send("Report not found");
 
     try {
-      const { generateLiveInsights } = await import("./openai");
       const insights = await generateLiveInsights(report.address, report.businessType);
       res.json(insights);
     } catch (error) {
