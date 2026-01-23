@@ -211,28 +211,33 @@ export async function generateBackground(input: string): Promise<string> {
 
 export async function generateLiveInsights(address: string, businessType: string): Promise<any> {
   try {
+    const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: `You are a real-time market intelligence AI. Provide the most accurate current weather, traffic, and news insights for a "${businessType}" at "${address}".
+          content: `You are a real-time market intelligence AI. Today is ${currentDate}, and the current time is ${currentTime}. 
           
-          Data Requirements:
-          1. Weather: Provide the actual current temperature and condition for "${address}" right now. Do not use placeholders. Ensure the temperature is in Fahrenheit and reflects the current season and time of day at that specific location.
-          2. Traffic: Analyze the current real-time traffic status (Light, Moderate, or Heavy) for the major roads within a 5-mile radius of "${address}". Mention specific delays if any.
-          3. News: Categorize into "Local Events", "Business & Economy", and "Community Updates". Must be within the last 7 days and relevant to the 5-mile radius.
+          Provide the absolute most accurate current weather, traffic, and news insights for a "${businessType}" at the EXACT location: "${address}".
           
-          Return ONLY valid JSON matching this structure:
+          CRITICAL INSTRUCTIONS:
+          1. Weather Accuracy: Look up the ACTUAL current temperature for "${address}". If it is winter and the location is experiencing freezing temperatures (e.g., 0°F), you MUST reflect that. DO NOT hallucinate generic mild weather. Return the temperature in Fahrenheit.
+          2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
+          3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
+          
+          Return ONLY valid JSON:
           {
             "weather": {
-              "temp": "string (e.g., 72°F)",
-              "condition": "string (e.g., Partly Cloudy)",
-              "impact": "string (How this weather specifically impacts a ${businessType})"
+              "temp": "string (e.g., 0°F)",
+              "condition": "string",
+              "impact": "string"
             },
             "traffic": {
               "status": "Light | Moderate | Heavy",
-              "delay": "string (e.g., 5 min delay on Main St)",
+              "delay": "string",
               "notablePatterns": "string"
             },
             "news": [
@@ -240,7 +245,7 @@ export async function generateLiveInsights(address: string, businessType: string
                 "title": "string",
                 "source": "string",
                 "summary": "string",
-                "date": "string (within last 7 days)",
+                "date": "string",
                 "category": "Local Events | Business & Economy | Community Updates"
               }
             ]
