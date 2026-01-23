@@ -18,11 +18,11 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-display font-bold text-primary mb-12 leading-[1.1] uppercase tracking-tighter">
-            Hyper Local<br />Marketing AI
+            Hyper Local<br />Marketing AI Insights
           </h1>
 
           <p className="max-w-3xl mx-auto text-xl sm:text-2xl md:text-3xl text-primary/80 font-medium leading-relaxed italic">
-            We connect businesses with their local customers by fusing creative brilliance with strategy and AI technology.
+            Unlock the power of our advanced insight engine to drive local business growth by fusing creative brilliance with strategy and AI technology.
           </p>
         </motion.div>
 

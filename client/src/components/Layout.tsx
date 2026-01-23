@@ -63,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Link href="/">
           <div className="flex items-center gap-3 cursor-pointer group flex-1 justify-center mr-10">
             <span className="font-display font-bold text-xl tracking-tight text-foreground text-center">
-              Hyper Local Marketing AI
+              Hyper Local Marketing AI Insights
             </span>
           </div>
         </Link>
