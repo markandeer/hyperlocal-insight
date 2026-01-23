@@ -32,6 +32,13 @@ export const brand_values = pgTable("brand_values", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const brand_target_markets = pgTable("brand_target_markets", {
+  id: serial("id").primaryKey(),
+  targetMarket: text("target_market").notNull(),
+  originalInput: text("original_input").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertReportSchema = createInsertSchema(analysis_reports).omit({ 
   id: true, 
   createdAt: true 
@@ -52,6 +59,11 @@ export const insertValueSchema = createInsertSchema(brand_values).omit({
   createdAt: true
 });
 
+export const insertTargetMarketSchema = createInsertSchema(brand_target_markets).omit({
+  id: true,
+  createdAt: true
+});
+
 export type Report = typeof analysis_reports.$inferSelect;
 export type InsertReport = z.infer<typeof insertReportSchema>;
 export type BrandMission = typeof brand_missions.$inferSelect;
@@ -60,6 +72,8 @@ export type BrandVision = typeof brand_visions.$inferSelect;
 export type InsertBrandVision = z.infer<typeof insertVisionSchema>;
 export type BrandValue = typeof brand_values.$inferSelect;
 export type InsertBrandValue = z.infer<typeof insertValueSchema>;
+export type BrandTargetMarket = typeof brand_target_markets.$inferSelect;
+export type InsertBrandTargetMarket = z.infer<typeof insertTargetMarketSchema>;
 
 // Define the structure of the AI analysis data for type safety on frontend
 export const analysisDataSchema = z.object({

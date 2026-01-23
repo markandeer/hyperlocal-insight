@@ -158,3 +158,28 @@ export async function generateValueProposition(input: string): Promise<string> {
     throw new Error("Failed to generate value proposition");
   }
 }
+
+export async function generateTargetMarket(input: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. Do not explain anything, just provide the target market profile."
+        },
+        {
+          role: "user",
+          content: `Create a target market profile for this concept: ${input}`
+        }
+      ]
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) throw new Error("No content received from OpenAI");
+    return content.trim().replace(/^"|"$/g, '');
+  } catch (error) {
+    console.error("Target market generation error:", error);
+    throw new Error("Failed to generate target market profile");
+  }
+}

@@ -14,7 +14,7 @@ interface BuilderSectionProps {
   tips: string[];
   generateEndpoint: string;
   saveEndpoint: string;
-  type: "mission" | "vision" | "value";
+  type: "mission" | "vision" | "value" | "target";
 }
 
 function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, type }: BuilderSectionProps) {
@@ -35,12 +35,13 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
       const data = await res.json();
       if (type === "mission") setResult(data.mission);
       else if (type === "vision") setResult(data.vision);
-      else setResult(data.value);
+      else if (type === "value") setResult(data.value);
+      else setResult(data.targetMarket);
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
-        description: `Failed to generate ${type} statement.`,
+        description: `Failed to generate ${type} profile.`,
         variant: "destructive"
       });
     } finally {
@@ -55,7 +56,8 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
       let body: any;
       if (type === "mission") body = { mission: result, originalInput: input };
       else if (type === "vision") body = { vision: result, originalInput: input };
-      else body = { valueProposition: result, originalInput: input };
+      else if (type === "value") body = { valueProposition: result, originalInput: input };
+      else body = { targetMarket: result, originalInput: input };
       
       await apiRequest("POST", saveEndpoint, body);
       setIsSaved(true);
@@ -172,6 +174,12 @@ export default function StrategyBuilder() {
     "3. Keep it punchy: A great value proposition should be understood in under 5 seconds."
   ];
 
+  const targetTips = [
+    "1. Define the 'Who': Be specific about demographics like age, location, and income level.",
+    "2. Understand the 'Why': What motivates their purchasing decisions? What are their core values?",
+    "3. Identify the 'How': Where do they hang out (online and offline)? How do they prefer to be contacted?"
+  ];
+
   return (
     <Layout>
       <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-12 pb-20">
@@ -185,6 +193,22 @@ export default function StrategyBuilder() {
           </h1>
           <p className="text-xl text-primary/80 font-medium tracking-tight">Build your brand strategy foundations.</p>
         </motion.div>
+
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-primary/10" />
+            <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Target Market Builder</h2>
+            <div className="h-px flex-1 bg-primary/10" />
+          </div>
+          <BuilderSection
+            title="Target Market Builder"
+            label="Target Market Concept (Max 500 chars)"
+            tips={targetTips}
+            generateEndpoint="/api/generate-target"
+            saveEndpoint="/api/target-markets"
+            type="target"
+          />
+        </section>
 
         <section className="space-y-6">
           <div className="flex items-center gap-4">

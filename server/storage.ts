@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { analysis_reports, brand_missions, brand_visions, brand_values, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision, type BrandValue, type InsertBrandValue } from "@shared/schema";
+import { analysis_reports, brand_missions, brand_visions, brand_values, brand_target_markets, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision, type BrandValue, type InsertBrandValue, type BrandTargetMarket, type InsertBrandTargetMarket } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
@@ -22,6 +22,11 @@ export interface IStorage {
   getValues(): Promise<BrandValue[]>;
   updateValue(id: number, value: string): Promise<BrandValue>;
   deleteValue(id: number): Promise<void>;
+
+  createTargetMarket(targetMarket: InsertBrandTargetMarket): Promise<BrandTargetMarket>;
+  getTargetMarkets(): Promise<BrandTargetMarket[]>;
+  updateTargetMarket(id: number, targetMarket: string): Promise<BrandTargetMarket>;
+  deleteTargetMarket(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -143,6 +148,35 @@ export class DatabaseStorage implements IStorage {
 
   async deleteValue(id: number): Promise<void> {
     await db.delete(brand_values).where(eq(brand_values.id, id));
+  }
+
+  async createTargetMarket(insertTargetMarket: InsertBrandTargetMarket): Promise<BrandTargetMarket> {
+    const [targetMarket] = await db
+      .insert(brand_target_markets)
+      .values(insertTargetMarket)
+      .returning();
+    return targetMarket;
+  }
+
+  async getTargetMarkets(): Promise<BrandTargetMarket[]> {
+    return await db
+      .select()
+      .from(brand_target_markets)
+      .orderBy(desc(brand_target_markets.createdAt));
+  }
+
+  async updateTargetMarket(id: number, targetMarket: string): Promise<BrandTargetMarket> {
+    const [updated] = await db
+      .update(brand_target_markets)
+      .set({ targetMarket })
+      .where(eq(brand_target_markets.id, id))
+      .returning();
+    if (!updated) throw new Error("Target market not found");
+    return updated;
+  }
+
+  async deleteTargetMarket(id: number): Promise<void> {
+    await db.delete(brand_target_markets).where(eq(brand_target_markets.id, id));
   }
 }
 

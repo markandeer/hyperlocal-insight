@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -228,6 +228,66 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete value proposition");
+    }
+  });
+
+  // Target market routes
+  app.post("/api/generate-target", async (req, res) => {
+    try {
+      const { input } = req.body;
+      if (!input || typeof input !== "string") {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      const targetMarket = await generateTargetMarket(input);
+      res.json({ targetMarket });
+    } catch (error: any) {
+      console.error("Target market generation error:", error);
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to generate target market profile" });
+    }
+  });
+
+  app.post("/api/target-markets", async (req, res) => {
+    try {
+      const { targetMarket, originalInput } = req.body;
+      if (!targetMarket || !originalInput) {
+        return res.status(400).json({ message: "Target market and input are required" });
+      }
+      const savedTargetMarket = await storage.createTargetMarket({ targetMarket, originalInput });
+      res.status(201).json(savedTargetMarket);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to save target market profile" });
+    }
+  });
+
+  app.get("/api/target-markets", async (_req, res) => {
+    try {
+      const targetMarkets = await storage.getTargetMarkets();
+      res.json(targetMarkets);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch target market profiles" });
+    }
+  });
+
+  app.patch("/api/target-markets/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { targetMarket } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      const updatedTargetMarket = await storage.updateTargetMarket(id, targetMarket);
+      res.json(updatedTargetMarket);
+    } catch (error) {
+      res.status(500).send("Failed to update target market profile");
+    }
+  });
+
+  app.delete("/api/target-markets/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      await storage.deleteTargetMarket(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send("Failed to delete target market profile");
     }
   });
 

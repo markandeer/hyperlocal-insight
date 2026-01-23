@@ -1,6 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { BrandMission, BrandVision, BrandValue } from "@shared/schema";
+import { BrandMission, BrandVision, BrandValue, BrandTargetMarket } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,8 +28,12 @@ export default function BrandStrategy() {
     queryKey: ["/api/values"],
   });
 
+  const { data: targetMarkets, isLoading: isLoadingTargetMarkets } = useQuery<BrandTargetMarket[]>({
+    queryKey: ["/api/target-markets"],
+  });
+
   const updateMutation = useMutation({
-    mutationFn: async ({ id, content, type }: { id: number; content: string; type: 'mission' | 'vision' | 'value' }) => {
+    mutationFn: async ({ id, content, type }: { id: number; content: string; type: 'mission' | 'vision' | 'value' | 'target' }) => {
       let endpoint: string;
       let body: any;
       if (type === 'mission') {
@@ -38,9 +42,12 @@ export default function BrandStrategy() {
       } else if (type === 'vision') {
         endpoint = `/api/visions/${id}`;
         body = { vision: content };
-      } else {
+      } else if (type === 'value') {
         endpoint = `/api/values/${id}`;
         body = { valueProposition: content };
+      } else {
+        endpoint = `/api/target-markets/${id}`;
+        body = { targetMarket: content };
       }
       const res = await apiRequest("PATCH", endpoint, body);
       return res.json();
@@ -49,7 +56,8 @@ export default function BrandStrategy() {
       let queryKey: string;
       if (variables.type === 'mission') queryKey = "/api/missions";
       else if (variables.type === 'vision') queryKey = "/api/visions";
-      else queryKey = "/api/values";
+      else if (variables.type === 'value') queryKey = "/api/values";
+      else queryKey = "/api/target-markets";
       
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       setEditingId(null);
@@ -58,11 +66,12 @@ export default function BrandStrategy() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async ({ id, type }: { id: number; type: 'mission' | 'vision' | 'value' }) => {
+    mutationFn: async ({ id, type }: { id: number; type: 'mission' | 'vision' | 'value' | 'target' }) => {
       let endpoint: string;
       if (type === 'mission') endpoint = `/api/missions/${id}`;
       else if (type === 'vision') endpoint = `/api/visions/${id}`;
-      else endpoint = `/api/values/${id}`;
+      else if (type === 'value') endpoint = `/api/values/${id}`;
+      else endpoint = `/api/target-markets/${id}`;
       
       await apiRequest("DELETE", endpoint);
     },
@@ -70,14 +79,15 @@ export default function BrandStrategy() {
       let queryKey: string;
       if (variables.type === 'mission') queryKey = "/api/missions";
       else if (variables.type === 'vision') queryKey = "/api/visions";
-      else queryKey = "/api/values";
+      else if (variables.type === 'value') queryKey = "/api/values";
+      else queryKey = "/api/target-markets";
       
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       toast({ title: "Deleted", description: `${variables.type.charAt(0).toUpperCase() + variables.type.slice(1)} removed.` });
     }
   });
 
-  const isLoading = isLoadingMissions || isLoadingVisions || isLoadingValues;
+  const isLoading = isLoadingMissions || isLoadingVisions || isLoadingValues || isLoadingTargetMarkets;
 
   return (
     <Layout>
@@ -99,6 +109,107 @@ export default function BrandStrategy() {
           </div>
         ) : (
           <div className="space-y-20">
+            {/* Target Market Section */}
+            <section className="space-y-8">
+              <div className="flex items-center gap-4">
+                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Target Market</h2>
+                <div className="h-px flex-1 bg-primary/10" />
+              </div>
+              
+              {!targetMarkets || targetMarkets.length === 0 ? (
+                <div className="text-center p-12 glass-card rounded-3xl">
+                  <p className="text-primary/60 text-lg font-medium italic">No saved target market profiles yet.</p>
+                </div>
+              ) : (
+                <div className="grid gap-8">
+                  {targetMarkets.map((t, i) => (
+                    <motion.div
+                      key={`target-${t.id}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <Card className="overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all rounded-3xl bg-white shadow-xl shadow-primary/5">
+                        <CardContent className="p-8 space-y-6 relative">
+                          <div className="absolute top-6 right-6 flex gap-2">
+                            {editingId === t.id ? (
+                              <>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-green-600 hover:bg-green-50"
+                                  onClick={() => updateMutation.mutate({ id: t.id, content: editValue, type: 'target' })}
+                                  disabled={updateMutation.isPending}
+                                >
+                                  <Check className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary hover:bg-primary/5"
+                                  onClick={() => setEditingId(null)}
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                  onClick={() => {
+                                    setEditingId(t.id);
+                                    setEditValue(t.targetMarket);
+                                  }}
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                  onClick={() => {
+                                    if (confirm("Are you sure you want to delete this target market profile?")) {
+                                      deleteMutation.mutate({ id: t.id, type: 'target' });
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                          </div>
+
+                          <div className="flex justify-between items-start">
+                            <Quote className="w-10 h-10 text-primary/20" />
+                            <div className="flex items-center gap-2 text-xs font-bold text-primary/40 uppercase tracking-widest mr-20">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(t.createdAt || "").toLocaleDateString()}
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            {editingId === t.id ? (
+                              <Textarea
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                              />
+                            ) : (
+                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12">
+                                "{t.targetMarket}"
+                              </h3>
+                            )}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             {/* Missions Section */}
             <section className="space-y-8">
               <div className="flex items-center gap-4">
