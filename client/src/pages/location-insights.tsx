@@ -57,14 +57,18 @@ export default function LocationInsightsPage() {
                         <Briefcase className="w-3 h-3" />
                         {report.businessType}
                       </span>
-                      <ArrowRight className="w-5 h-5 text-primary opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                     </div>
 
-                    <h3 className="text-xl font-bold text-black mb-2 line-clamp-1 group-hover:text-primary transition-colors">
-                      {report.name || report.address}
-                    </h3>
+                    <div className="mb-4">
+                      <Link href={`/report/${report.id}`}>
+                        <button className="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 uppercase tracking-widest text-xs flex items-center justify-center gap-2 group-hover:scale-[1.02]">
+                          Location Insights
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    </div>
                     
-                    <div className="flex items-center gap-2 text-primary/60 mb-4">
+                    <div className="flex items-center gap-2 text-primary/60 mb-4 px-1">
                       <MapPin className="w-4 h-4 shrink-0" />
                       <p className="text-xs font-medium line-clamp-1 italic">
                         {report.address}
