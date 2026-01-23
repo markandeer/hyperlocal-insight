@@ -62,7 +62,7 @@ export default function StrategyBuilder() {
               <Textarea
                 value={missionInput}
                 onChange={(e) => setMissionInput(e.target.value.slice(0, 500))}
-                className="min-h-[250px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
+                className="min-h-[350px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
               />
             </div>
             <div className="text-right text-xs text-primary/60 font-bold">
