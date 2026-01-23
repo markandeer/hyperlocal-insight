@@ -236,12 +236,12 @@ export default function LiveInsights() {
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <div className="text-4xl font-bold text-black">{insights.weather.temp}</div>
-                        <div className="text-primary/60 font-medium italic">{insights.weather.condition}</div>
+                        <div className="text-4xl font-bold text-black">{insights?.weather?.temp || "N/A"}</div>
+                        <div className="text-primary/60 font-medium italic">{insights?.weather?.condition || "Conditions unavailable"}</div>
                       </div>
                       <div className="pt-4 border-t border-primary/5">
                         <div className="text-xs font-bold uppercase tracking-widest text-primary/40 mb-1">Business Impact</div>
-                        <p className="text-sm text-primary/80 font-medium">{insights.weather.impact}</p>
+                        <p className="text-sm text-primary/80 font-medium">{insights?.weather?.impact || "No impact analysis available"}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -258,12 +258,12 @@ export default function LiveInsights() {
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${insights.traffic.status === 'Heavy' ? 'bg-red-500' : 'bg-emerald-500'}`} />
-                        <span className="font-bold text-black">{insights.traffic.status} Traffic</span>
+                        <div className={`w-2 h-2 rounded-full ${insights?.traffic?.status === 'Heavy' ? 'bg-red-500' : 'bg-emerald-500'}`} />
+                        <span className="font-bold text-black">{insights?.traffic?.status || "Unknown"} Traffic</span>
                       </div>
-                      <p className="text-sm text-primary/80 font-medium">{insights.traffic.notablePatterns}</p>
+                      <p className="text-sm text-primary/80 font-medium">{insights?.traffic?.notablePatterns || "Traffic patterns unavailable"}</p>
                       <div className="pt-4 border-t border-primary/5 text-xs text-primary/40 font-bold uppercase tracking-widest">
-                        Est. Delay: {insights.traffic.delay}
+                        Est. Delay: {insights?.traffic?.delay || "None reported"}
                       </div>
                     </div>
                   </motion.div>
@@ -287,8 +287,8 @@ export default function LiveInsights() {
                             {category}
                           </h3>
                           <div className="space-y-6">
-                            {insights.news
-                              .filter(item => item.category === category || (!item.category && category === "Community Updates"))
+                            {insights?.news
+                              ?.filter(item => item.category === category || (!item.category && category === "Community Updates"))
                               .map((item, idx) => (
                                 <div key={idx} className="group cursor-pointer">
                                   <div className="flex items-start justify-between gap-2 mb-1">
@@ -310,7 +310,7 @@ export default function LiveInsights() {
                                   </div>
                                 </div>
                               ))}
-                            {insights.news.filter(item => item.category === category).length === 0 && (
+                            {(insights?.news?.filter(item => item.category === category).length === 0 || !insights?.news) && (
                               <p className="text-xs text-primary/30 italic">No recent updates in this category.</p>
                             )}
                           </div>
