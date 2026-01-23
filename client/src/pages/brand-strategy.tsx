@@ -106,14 +106,6 @@ export default function BrandStrategy() {
     }
   };
 
-  useEffect(() => {
-    try {
-      localStorage.setItem("brand_typography", JSON.stringify(typography));
-    } catch (e) {
-      console.error("Storage quota exceeded", e);
-    }
-  }, [typography]);
-
   const [typography, setTypography] = useState(() => {
     const saved = localStorage.getItem("brand_typography");
     return saved ? JSON.parse(saved) : {
@@ -123,8 +115,25 @@ export default function BrandStrategy() {
   });
   const [editingFont, setEditingFont] = useState<'display' | 'body' | null>(null);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem("brand_typography", JSON.stringify(typography));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+    }
+  }, [typography]);
+
+  const handleColorChange = (index: number, newHex: string) => {
+    const newColors = [...colors];
+    if (!newHex.startsWith("#") && newHex.length > 0) {
+      newHex = "#" + newHex;
+    }
+    newColors[index].hex = newHex;
+    setColors(newColors);
+  };
+
   const handleFontChange = (type: 'display' | 'body', name: string) => {
-    setTypography(prev => ({
+    setTypography((prev: any) => ({
       ...prev,
       [type]: { ...prev[type], name }
     }));
