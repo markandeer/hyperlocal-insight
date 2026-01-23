@@ -2,7 +2,7 @@ import { Layout } from "@/components/Layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BrandMission, BrandVision, BrandValue, BrandTargetMarket, BrandBackground } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check } from "lucide-react";
+import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -623,6 +623,74 @@ export default function BrandStrategy() {
                 </div>
               )}
             </section>
+
+            {/* Visual Identity Sections */}
+            <div className="grid gap-20">
+              <section className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">1. Brand Logo</h2>
+                  <div className="h-px flex-1 bg-primary/10" />
+                </div>
+                <Card className="border-2 border-primary/10 rounded-3xl bg-[#f0f9ff]/30 p-12 text-center border-dashed">
+                  <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Upload className="w-8 h-8 text-primary/40" />
+                  </div>
+                  <p className="text-primary/60 font-bold uppercase tracking-widest text-sm">Upload Primary Logo</p>
+                  <Button variant="outline" className="mt-4 border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl">Choose File</Button>
+                </Card>
+              </section>
+
+              <section className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">2. Brand Colors</h2>
+                  <div className="h-px flex-1 bg-primary/10" />
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {[
+                    { label: "Coral Red", hex: "#e26e6d" },
+                    { label: "Light Blue", hex: "#c6e4f9" },
+                    { label: "Highlight", hex: "#f0f9ff" },
+                    { label: "Deep Charcoal", hex: "#1a1a1a" }
+                  ].map(c => (
+                    <div key={c.label} className="space-y-3">
+                      <div className="h-24 rounded-2xl border-2 border-primary/5 shadow-inner" style={{ background: c.hex }} />
+                      <div className="text-[10px] font-bold uppercase tracking-widest text-primary/60">{c.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">3. Typography</h2>
+                  <div className="h-px flex-1 bg-primary/10" />
+                </div>
+                <div className="grid gap-6">
+                  <div className="p-8 bg-white/50 rounded-3xl border-2 border-primary/5">
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-4">Primary Font (Display)</h4>
+                    <p className="text-4xl font-display font-bold text-primary uppercase tracking-tighter">Clash Display</p>
+                  </div>
+                  <div className="p-8 bg-white/50 rounded-3xl border-2 border-primary/5">
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-4">Secondary Font (Body)</h4>
+                    <p className="text-xl font-medium text-primary">Inter Sans-Serif</p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="space-y-8">
+                <div className="flex items-center gap-4">
+                  <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">4. Brand Elements</h2>
+                  <div className="h-px flex-1 bg-primary/10" />
+                </div>
+                <div className="grid grid-cols-3 gap-6">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="aspect-square rounded-3xl bg-[#f0f9ff]/30 border-2 border-primary/10 border-dashed flex items-center justify-center">
+                      <Plus className="w-8 h-8 text-primary/20" />
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
           </div>
         )}
       </div>
