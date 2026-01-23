@@ -17,9 +17,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/location-insights-generator", label: "Location Insights Generator" },
     { href: "/location-insights", label: "Location Insights" },
-    { href: "/strategy-builder", label: "Strategy Generator" },
     { href: "/brand-strategy", label: "Brand Strategy" },
     { href: "/brand-identity", label: "Brand Identity" },
     { href: "/live-insights", label: "Live Insights" },
