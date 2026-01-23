@@ -131,6 +131,25 @@ export default function BrandIdentity() {
     }));
   };
 
+  // Dynamically load Google Fonts
+  useEffect(() => {
+    const fontsToLoad = [typography.display.name, typography.body.name];
+    const linkId = 'dynamic-google-fonts';
+    let link = document.getElementById(linkId) as HTMLLinkElement;
+    
+    if (!link) {
+      link = document.createElement('link');
+      link.id = linkId;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+
+    const fontQuery = fontsToLoad
+      .map(font => font.replace(/\s+/g, '+'))
+      .join('|');
+    link.href = `https://fonts.googleapis.com/css2?family=${fontQuery.split('|').map(f => `${f}:wght@400;500;700`).join('&family=')}&display=swap`;
+  }, [typography]);
+
   const sections = [
     {
       id: "logo",
@@ -220,10 +239,11 @@ export default function BrandIdentity() {
                 onChange={(e) => handleFontChange('display', e.target.value)}
                 onBlur={() => setEditingFont(null)}
                 onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
-                className="text-4xl font-display font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20"
+                className="text-4xl font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20"
+                style={{ fontFamily: typography.display.name }}
               />
             ) : (
-              <h2 className="text-4xl font-display font-bold text-primary tracking-tighter uppercase">{typography.display.name}</h2>
+              <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ fontFamily: typography.display.name }}>{typography.display.name}</h2>
             )}
             <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.display.style}</p>
             
@@ -249,9 +269,10 @@ export default function BrandIdentity() {
                 onBlur={() => setEditingFont(null)}
                 onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
                 className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20"
+                style={{ fontFamily: typography.body.name }}
               />
             ) : (
-              <p className="text-lg text-primary leading-relaxed font-medium">The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
+              <p className="text-lg text-primary leading-relaxed font-medium" style={{ fontFamily: typography.body.name }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
             )}
             <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.body.style}</p>
             

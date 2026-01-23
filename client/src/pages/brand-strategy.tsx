@@ -139,6 +139,25 @@ export default function BrandStrategy() {
     }));
   };
 
+  // Dynamically load Google Fonts
+  useEffect(() => {
+    const fontsToLoad = [typography.display.name, typography.body.name];
+    const linkId = 'dynamic-google-fonts';
+    let link = document.getElementById(linkId) as HTMLLinkElement;
+    
+    if (!link) {
+      link = document.createElement('link');
+      link.id = linkId;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+
+    const fontQuery = fontsToLoad
+      .map(font => font.replace(/\s+/g, '+'))
+      .join('|');
+    link.href = `https://fonts.googleapis.com/css2?family=${fontQuery.split('|').map(f => `${f}:wght@400;500;700`).join('&family=')}&display=swap`;
+  }, [typography]);
+
   const { data: missions, isLoading: isLoadingMissions } = useQuery<BrandMission[]>({
     queryKey: ["/api/missions"],
   });
@@ -822,13 +841,62 @@ export default function BrandStrategy() {
                   <div className="h-px flex-1 bg-primary/10" />
                 </div>
                 <div className="grid gap-6">
-                  <div className="p-8 bg-white/50 rounded-3xl border-2 border-primary/5">
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-4">Primary Font (Display)</h4>
-                    <p className="text-4xl font-display font-bold text-primary uppercase tracking-tighter">Clash Display</p>
+                  <div className="p-8 bg-[#f0f9ff]/30 rounded-3xl border-2 border-primary/10 relative group overflow-hidden">
+                    <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-6">Primary Font (Display)</p>
+                    {editingFont === 'display' ? (
+                      <Input
+                        autoFocus
+                        value={typography.display.name}
+                        onChange={(e) => handleFontChange('display', e.target.value)}
+                        onBlur={() => setEditingFont(null)}
+                        onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
+                        className="text-4xl font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20"
+                        style={{ fontFamily: typography.display.name }}
+                      />
+                    ) : (
+                      <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ fontFamily: typography.display.name }}>{typography.display.name}</h2>
+                    )}
+                    <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.display.style}</p>
+                    
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setEditingFont('display')}
+                        className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                      >
+                        Change Font
+                      </Button>
+                    </div>
                   </div>
-                  <div className="p-8 bg-white/50 rounded-3xl border-2 border-primary/5">
-                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-4">Secondary Font (Body)</h4>
-                    <p className="text-xl font-medium text-primary">Inter Sans-Serif</p>
+
+                  <div className="p-8 bg-[#f0f9ff]/30 rounded-3xl border-2 border-primary/10 relative group overflow-hidden">
+                    <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-6">Secondary Font (Body)</p>
+                    {editingFont === 'body' ? (
+                      <Input
+                        autoFocus
+                        value={typography.body.name}
+                        onChange={(e) => handleFontChange('body', e.target.value)}
+                        onBlur={() => setEditingFont(null)}
+                        onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
+                        className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20"
+                        style={{ fontFamily: typography.body.name }}
+                      />
+                    ) : (
+                      <p className="text-lg text-primary leading-relaxed font-medium" style={{ fontFamily: typography.body.name }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
+                    )}
+                    <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.body.style}</p>
+                    
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setEditingFont('body')}
+                        className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                      >
+                        Change Font
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </section>
