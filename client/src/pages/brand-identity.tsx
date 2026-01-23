@@ -1,11 +1,12 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, Palette, Type, Box, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, Palette, Type, Box, Image as ImageIcon, Plus, Check, Pencil } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function BrandIdentity() {
   const { toast } = useToast();
@@ -147,7 +148,19 @@ export default function BrandIdentity() {
     const fontQuery = fontsToLoad
       .map(font => font.replace(/\s+/g, '+'))
       .join('|');
-    link.href = `https://fonts.googleapis.com/css2?family=${fontQuery.split('|').map(f => `${f}:wght@400;500;700`).join('&family=')}&display=swap`;
+    link.href = `https://fonts.googleapis.com/css2?family=${fontQuery.split('|').map((f, i) => {
+      const weight = i === 0 ? typography.display.style : typography.body.style;
+      const weightMap: Record<string, string> = {
+        'Light': '300',
+        'Regular': '400',
+        'Medium': '500',
+        'Semi-Bold': '600',
+        'Bold': '700',
+        'Extra-Bold': '800'
+      };
+      const w = weightMap[weight] || '400';
+      return `${f}:wght@${w}`;
+    }).join('&family=')}&display=swap`;
   }, [typography]);
 
   const sections = [
@@ -243,9 +256,30 @@ export default function BrandIdentity() {
                 style={{ fontFamily: typography.display.name }}
               />
             ) : (
-              <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ fontFamily: typography.display.name }}>{typography.display.name}</h2>
+              <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ fontFamily: typography.display.name, fontWeight: 
+                typography.display.style === 'Light' ? 300 :
+                typography.display.style === 'Regular' ? 400 :
+                typography.display.style === 'Medium' ? 500 :
+                typography.display.style === 'Semi-Bold' ? 600 :
+                typography.display.style === 'Bold' ? 700 : 800
+              }}>{typography.display.name}</h2>
             )}
-            <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.display.style}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <p className="text-sm text-primary/60 italic font-medium">{typography.display.style}</p>
+              <Select 
+                value={typography.display.style} 
+                onValueChange={(val) => setTypography((prev: any) => ({ ...prev, display: { ...prev.display, style: val } }))}
+              >
+                <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10">
+                  <SelectValue placeholder="Weight" />
+                </SelectTrigger>
+                <SelectContent>
+                  {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                    <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
               <Button 
@@ -272,9 +306,30 @@ export default function BrandIdentity() {
                 style={{ fontFamily: typography.body.name }}
               />
             ) : (
-              <p className="text-lg text-primary leading-relaxed font-medium" style={{ fontFamily: typography.body.name }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
+              <p className="text-lg text-primary leading-relaxed font-medium" style={{ fontFamily: typography.body.name, fontWeight: 
+                typography.body.style === 'Light' ? 300 :
+                typography.body.style === 'Regular' ? 400 :
+                typography.body.style === 'Medium' ? 500 :
+                typography.body.style === 'Semi-Bold' ? 600 :
+                typography.body.style === 'Bold' ? 700 : 800
+              }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
             )}
-            <p className="text-sm text-primary/60 mt-1 italic font-medium">{typography.body.style}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <p className="text-sm text-primary/60 italic font-medium">{typography.body.style}</p>
+              <Select 
+                value={typography.body.style} 
+                onValueChange={(val) => setTypography((prev: any) => ({ ...prev, body: { ...prev.body, style: val } }))}
+              >
+                <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10">
+                  <SelectValue placeholder="Weight" />
+                </SelectTrigger>
+                <SelectContent>
+                  {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                    <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
               <Button 
