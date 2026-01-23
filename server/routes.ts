@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights, generateBackground } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 

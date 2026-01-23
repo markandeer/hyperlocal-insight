@@ -168,7 +168,17 @@ export default function LiveInsights() {
 
                   <div className="mb-4">
                     <button 
-                      onClick={() => setSelectedReportId(report.id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedReportId(report.id);
+                        setTimeout(() => {
+                          const detailsSection = document.getElementById('insight-details');
+                          if (detailsSection) {
+                            detailsSection.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }, 100);
+                      }}
                       className="w-full py-4 bg-[#e26e6d] text-white rounded-2xl font-bold hover:opacity-90 transition-all shadow-lg shadow-[#e26e6d]/20 uppercase tracking-widest text-sm flex items-center justify-center gap-2 group-hover:scale-[1.02]"
                     >
                       View Live Insights
@@ -202,6 +212,7 @@ export default function LiveInsights() {
         <AnimatePresence>
           {selectedReportId && (
             <motion.div
+              id="insight-details"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 40 }}
