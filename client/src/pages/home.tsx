@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useCreateReport } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Search, MapPin, Briefcase, Loader2 } from "lucide-react";
+import { Search, MapPin, Briefcase, Loader2, History } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLoadScript, Autocomplete } from "@react-google-maps/api";
 
@@ -159,17 +159,26 @@ export default function Home() {
           </motion.div>
 
           {/* Decorative elements */}
-          <div className="mt-12 grid grid-cols-3 gap-4 text-center">
-             {[
-               { label: "Data Points", value: "50M+" },
-               { label: "AI Analysis", value: "Real-time" },
-               { label: "Accuracy", value: "98%" }
-             ].map((stat) => (
-               <div key={stat.label}>
-                 <div className="font-display font-bold text-2xl text-foreground">{stat.value}</div>
-                 <div className="text-xs text-foreground uppercase tracking-wider">{stat.label}</div>
-               </div>
-             ))}
+          <div className="mt-12 flex flex-col items-center gap-8">
+            <div className="grid grid-cols-3 gap-4 text-center w-full">
+               {[
+                 { label: "Data Points", value: "50M+" },
+                 { label: "AI Analysis", value: "Real-time" },
+                 { label: "Accuracy", value: "98%" }
+               ].map((stat) => (
+                 <div key={stat.label}>
+                   <div className="font-display font-bold text-2xl text-foreground">{stat.value}</div>
+                   <div className="text-xs text-foreground uppercase tracking-wider">{stat.label}</div>
+                 </div>
+               ))}
+            </div>
+
+            <Link href="/history">
+              <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-all cursor-pointer">
+                <History className="w-5 h-5" />
+                <span className="font-semibold">View Analysis History</span>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
