@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -51,6 +51,21 @@ async function seedDatabase() {
 }
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
+  // Mission statement generation
+  app.post("/api/generate-mission", async (req, res) => {
+    try {
+      const { input } = req.body;
+      if (!input || typeof input !== "string") {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      const mission = await generateMissionStatement(input);
+      res.json({ mission });
+    } catch (error: any) {
+      console.error("Mission generation error:", error);
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to generate mission statement" });
+    }
+  });
+
   // API Routes
   app.post("/api/reports/analyze", async (req, res) => {
     try {

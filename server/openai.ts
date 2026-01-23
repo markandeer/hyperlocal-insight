@@ -83,3 +83,28 @@ export async function generateMarketAnalysis(address: string, businessType: stri
     throw new Error("Failed to generate market analysis");
   }
 }
+
+export async function generateMissionStatement(input: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. Return ONLY the mission statement text."
+        },
+        {
+          role: "user",
+          content: input
+        }
+      ]
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) throw new Error("No content received from OpenAI");
+    return content.trim();
+  } catch (error) {
+    console.error("Mission generation error:", error);
+    throw new Error("Failed to generate mission statement");
+  }
+}

@@ -11,17 +11,22 @@ export default function StrategyBuilder() {
   const [result, setResult] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const tips = [
+    "1. Define your core purpose: Why does your business exist beyond making a profit?",
+    "2. Identify your target audience: Who are you serving and what problem are you solving for them?",
+    "3. Highlight your unique value: What makes your approach different or better than competitors?"
+  ];
+
   const handleGenerate = async () => {
     if (!missionInput.trim()) return;
     setIsGenerating(true);
     try {
-      // Stubbed AI call for now, could be integrated with backend later
-      setTimeout(() => {
-        setResult(`Refined Mission: To empower businesses through ${missionInput.substring(0, 50)}... and innovative AI-driven strategies that connect brands with their core communities.`);
-        setIsGenerating(false);
-      }, 1500);
+      const res = await apiRequest("POST", "/api/generate-mission", { input: missionInput });
+      const data = await res.json();
+      setResult(data.mission);
     } catch (error) {
       console.error(error);
+    } finally {
       setIsGenerating(false);
     }
   };
@@ -41,16 +46,25 @@ export default function StrategyBuilder() {
         </motion.div>
 
         <div className="glass-card p-8 rounded-3xl space-y-6">
-          <div className="space-y-2">
+          <div className="space-y-2 relative">
             <label className="text-sm font-bold uppercase tracking-widest text-primary/70 ml-1">
               Mission Statement Concept (Max 500 chars)
             </label>
-            <Textarea
-              value={missionInput}
-              onChange={(e) => setMissionInput(e.target.value.slice(0, 500))}
-              placeholder="Enter your idea here..."
-              className="min-h-[200px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
-            />
+            <div className="relative">
+              {!missionInput && (
+                <div className="absolute inset-0 p-6 pointer-events-none text-primary/40 font-medium space-y-4">
+                  <p className="font-bold text-primary/60 uppercase tracking-widest text-xs mb-2">3 Tips for Building a Mission Statement:</p>
+                  {tips.map((tip, i) => (
+                    <p key={i} className="text-sm italic">{tip}</p>
+                  ))}
+                </div>
+              )}
+              <Textarea
+                value={missionInput}
+                onChange={(e) => setMissionInput(e.target.value.slice(0, 500))}
+                className="min-h-[250px] bg-white border-primary/20 text-black rounded-2xl p-6 text-lg focus-visible:ring-primary/30"
+              />
+            </div>
             <div className="text-right text-xs text-primary/60 font-bold">
               {missionInput.length}/500
             </div>
