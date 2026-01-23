@@ -216,20 +216,23 @@ export async function generateLiveInsights(address: string, businessType: string
       messages: [
         {
           role: "system",
-          content: `You are a real-time market intelligence AI. Scrub the internet (simulated) and provide the latest news and insights for a "${businessType}" at "${address}".
+          content: `You are a real-time market intelligence AI. Provide the most accurate current weather, traffic, and news insights for a "${businessType}" at "${address}".
           
-          Focus on a 5-mile radius. Categorize news into: "Local Events", "Business & Economy", and "Community Updates".
+          Data Requirements:
+          1. Weather: Provide the actual current temperature and condition for "${address}" right now. Do not use placeholders. Ensure the temperature is in Fahrenheit and reflects the current season and time of day at that specific location.
+          2. Traffic: Analyze the current real-time traffic status (Light, Moderate, or Heavy) for the major roads within a 5-mile radius of "${address}". Mention specific delays if any.
+          3. News: Categorize into "Local Events", "Business & Economy", and "Community Updates". Must be within the last 7 days and relevant to the 5-mile radius.
           
           Return ONLY valid JSON matching this structure:
           {
             "weather": {
-              "temp": "string",
-              "condition": "string",
-              "impact": "string"
+              "temp": "string (e.g., 72°F)",
+              "condition": "string (e.g., Partly Cloudy)",
+              "impact": "string (How this weather specifically impacts a ${businessType})"
             },
             "traffic": {
               "status": "Light | Moderate | Heavy",
-              "delay": "string",
+              "delay": "string (e.g., 5 min delay on Main St)",
               "notablePatterns": "string"
             },
             "news": [
