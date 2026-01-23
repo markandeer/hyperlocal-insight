@@ -1,7 +1,7 @@
 import { useReports } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
-import { Loader2, Calendar, MapPin, Briefcase, ArrowRight, FileText, Pencil, Check, X } from "lucide-react";
+import { Loader2, Calendar, MapPin, Briefcase, ArrowRight, FileText, Pencil, Check, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -14,6 +14,16 @@ export default function LocationInsightsPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredReports = reports?.filter(report => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      (report.name?.toLowerCase() || "").includes(searchLower) ||
+      (report.businessType?.toLowerCase() || "").includes(searchLower) ||
+      (report.address?.toLowerCase() || "").includes(searchLower)
+    );
+  });
 
   const startEditing = (e: React.MouseEvent, id: number, currentName: string | null, businessType: string) => {
     e.preventDefault();
@@ -68,6 +78,18 @@ export default function LocationInsightsPage() {
           </Link>
         </div>
 
+        <div className="mb-8 max-w-md">
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40 w-5 h-5 group-focus-within:text-primary transition-colors" />
+            <Input
+              placeholder="Search by business name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-white border-primary/10 h-12 rounded-xl pl-12 focus-visible:ring-primary/30 text-black font-medium"
+            />
+          </div>
+        </div>
+
         {isLoading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -89,7 +111,7 @@ export default function LocationInsightsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {reports.map((report, index) => (
+            {filteredReports?.map((report, index) => (
               <motion.div
                 key={report.id}
                 initial={{ opacity: 0, y: 20 }}
