@@ -5,16 +5,47 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 export default function BrandStrategy() {
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
+  const [logo, setLogo] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [colors, setColors] = useState([
+    { label: "Coral Red", hex: "#e26e6d" },
+    { label: "Light Blue", hex: "#c6e4f9" },
+    { label: "Highlight", hex: "#f0f9ff" },
+    { label: "Deep Charcoal", hex: "#1a1a1a" },
+    { label: "Accent 1", hex: "#f5f5f5" },
+    { label: "Accent 2", hex: "#ffffff" }
+  ]);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogo(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleColorChange = (index: number, newHex: string) => {
+    const newColors = [...colors];
+    if (!newHex.startsWith("#") && newHex.length > 0) {
+      newHex = "#" + newHex;
+    }
+    newColors[index].hex = newHex;
+    setColors(newColors);
+  };
 
   const { data: missions, isLoading: isLoadingMissions } = useQuery<BrandMission[]>({
     queryKey: ["/api/missions"],
@@ -631,13 +662,39 @@ export default function BrandStrategy() {
                   <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">1. Brand Logo</h2>
                   <div className="h-px flex-1 bg-primary/10" />
                 </div>
-                <Card className="border-2 border-primary/10 rounded-3xl bg-[#f0f9ff]/30 p-12 text-center border-dashed">
-                  <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Upload className="w-8 h-8 text-primary/40" />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleLogoUpload}
+                />
+                {!logo ? (
+                  <Card 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-primary/10 rounded-3xl bg-[#f0f9ff]/30 p-12 text-center border-dashed cursor-pointer hover:bg-[#f0f9ff]/50 transition-all"
+                  >
+                    <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Upload className="w-8 h-8 text-primary/40" />
+                    </div>
+                    <p className="text-primary/60 font-bold uppercase tracking-widest text-sm">Upload Primary Logo</p>
+                    <Button variant="outline" className="mt-4 border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl">Choose File</Button>
+                  </Card>
+                ) : (
+                  <div className="relative group max-w-md mx-auto">
+                    <Card className="border-2 border-primary/10 rounded-3xl p-12 bg-white/80 flex items-center justify-center">
+                      <img src={logo} alt="Logo Preview" className="max-h-32 object-contain" />
+                    </Card>
+                    <Button 
+                      variant="destructive" 
+                      size="icon" 
+                      className="absolute -top-2 -right-2 rounded-full"
+                      onClick={() => setLogo(null)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
                   </div>
-                  <p className="text-primary/60 font-bold uppercase tracking-widest text-sm">Upload Primary Logo</p>
-                  <Button variant="outline" className="mt-4 border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl">Choose File</Button>
-                </Card>
+                )}
               </section>
 
               <section className="space-y-8">
@@ -645,16 +702,21 @@ export default function BrandStrategy() {
                   <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">2. Brand Colors</h2>
                   <div className="h-px flex-1 bg-primary/10" />
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {[
-                    { label: "Coral Red", hex: "#e26e6d" },
-                    { label: "Light Blue", hex: "#c6e4f9" },
-                    { label: "Highlight", hex: "#f0f9ff" },
-                    { label: "Deep Charcoal", hex: "#1a1a1a" }
-                  ].map(c => (
-                    <div key={c.label} className="space-y-3">
-                      <div className="h-24 rounded-2xl border-2 border-primary/5 shadow-inner" style={{ background: c.hex }} />
-                      <div className="text-[10px] font-bold uppercase tracking-widest text-primary/60">{c.label}</div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  {colors.map((c, idx) => (
+                    <div key={idx} className="space-y-3 bg-white/40 p-4 rounded-2xl border-2 border-primary/5">
+                      <div 
+                        className="h-24 rounded-xl border-2 border-primary/5 shadow-inner transition-colors duration-300" 
+                        style={{ background: c.hex.length === 7 || c.hex.length === 4 ? c.hex : "#cccccc" }} 
+                      />
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">{c.label}</label>
+                        <Input 
+                          value={c.hex}
+                          onChange={(e) => handleColorChange(idx, e.target.value)}
+                          className="h-9 text-xs font-mono uppercase border-primary/10 focus-visible:ring-primary/20 rounded-lg"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
