@@ -224,7 +224,7 @@ export async function generateLiveInsights(address: string, businessType: string
           Provide the absolute most accurate current weather, traffic, and news insights for a "${businessType}" at the EXACT location: "${address}".
           
           CRITICAL INSTRUCTIONS:
-          1. 2-Week Weather Forecast: Provide a day-by-day weather forecast for the next 14 days for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions. DO NOT hallucinate generic mild weather; reflect current seasonal reality.
+          1. 2-Week Weather Forecast: Provide an accurate day-by-day weather forecast for the next 14 days for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions. USE SEARCH/KNOWLEDGE TO FIND REAL CURRENT METEOROLOGICAL DATA FOR THIS SPECIFIC LOCATION. DO NOT hallucinate.
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
           
@@ -259,7 +259,7 @@ export async function generateLiveInsights(address: string, businessType: string
         },
         {
           role: "user",
-          content: `Analyze the location "${address}" and provide current live insights for a "${businessType}".`
+          content: `Search for current weather data and news within 5 miles of "${address}" and provide live insights for a "${businessType}".`
         }
       ],
       response_format: { type: "json_object" }
