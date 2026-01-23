@@ -146,13 +146,6 @@ export default function BrandStrategy() {
                         </h3>
                       )}
                     </div>
-
-                    <div className="pt-6 border-t border-primary/5">
-                      <p className="text-xs font-bold uppercase tracking-widest text-primary/40 mb-2">Original Concept:</p>
-                      <p className="text-sm text-primary/70 italic line-clamp-2">
-                        "{m.originalInput}"
-                      </p>
-                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
