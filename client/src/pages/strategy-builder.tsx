@@ -90,7 +90,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
     <div className="space-y-8">
       <div className="glass-card p-8 rounded-3xl space-y-6">
         <div className="space-y-2 relative">
-          <div className="flex items-center justify-between ml-1">
+          <div className="flex items-center justify-between ml-1 translate-y-2">
             <label className="text-sm font-bold uppercase tracking-widest text-primary/70">
               {label}
             </label>
