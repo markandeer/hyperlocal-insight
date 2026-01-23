@@ -2,10 +2,10 @@ import { Layout } from "@/components/Layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BrandMission, BrandVision, BrandValue, BrandTargetMarket, BrandBackground } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus } from "lucide-react";
+import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus, Palette, Type, Box, Image as ImageIcon } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -16,26 +16,71 @@ export default function BrandStrategy() {
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
-  const [logo, setLogo] = useState<string | null>(null);
-  const [elements, setElements] = useState<(string | null)[]>([null, null, null]);
+  
+  const [logo, setLogo] = useState<string | null>(() => localStorage.getItem("brand_logo"));
+  const [elements, setElements] = useState<(string | null)[]>(() => {
+    const saved = localStorage.getItem("brand_elements");
+    return saved ? JSON.parse(saved) : [null, null, null];
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const elementInputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null)
   ];
-  const [colors, setColors] = useState([
-    { label: "Coral Red", hex: "#e26e6d" },
-    { label: "Light Blue", hex: "#c6e4f9" },
-    { label: "Highlight", hex: "#f0f9ff" },
-    { label: "Deep Charcoal", hex: "#1a1a1a" },
-    { label: "Accent 1", hex: "#f5f5f5" },
-    { label: "Accent 2", hex: "#ffffff" }
-  ]);
+  const [colors, setColors] = useState(() => {
+    const saved = localStorage.getItem("brand_colors");
+    return saved ? JSON.parse(saved) : [
+      { label: "Coral Red", hex: "#e26e6d" },
+      { label: "Light Blue", hex: "#c6e4f9" },
+      { label: "Highlight", hex: "#f0f9ff" },
+      { label: "Deep Charcoal", hex: "#1a1a1a" },
+      { label: "Accent 1", hex: "#f5f5f5" },
+      { label: "Accent 2", hex: "#ffffff" }
+    ];
+  });
+
+  useEffect(() => {
+    try {
+      if (logo) {
+        if (logo.length > 2000000) {
+          toast({ variant: "destructive", title: "File too large", description: "Please upload a smaller image to save it." });
+          return;
+        }
+        localStorage.setItem("brand_logo", logo);
+      } else {
+        localStorage.removeItem("brand_logo");
+      }
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+      toast({ variant: "destructive", title: "Storage full", description: "Could not save logo. Try a smaller image." });
+    }
+  }, [logo]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("brand_elements", JSON.stringify(elements));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+      toast({ variant: "destructive", title: "Storage full", description: "Could not save elements." });
+    }
+  }, [elements]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("brand_colors", JSON.stringify(colors));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+    }
+  }, [colors]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast({ variant: "destructive", title: "File too large", description: "Maximum file size is 2MB for storage." });
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogo(reader.result as string);
@@ -47,6 +92,10 @@ export default function BrandStrategy() {
   const handleElementUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 1 * 1024 * 1024) {
+        toast({ variant: "destructive", title: "File too large", description: "Maximum file size is 1MB for elements." });
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         const newElements = [...elements];

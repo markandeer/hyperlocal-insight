@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 export default function BrandIdentity() {
+  const { toast } = useToast();
   const [logo, setLogo] = useState<string | null>(() => localStorage.getItem("brand_logo"));
   const [elements, setElements] = useState<(string | null)[]>(() => {
     const saved = localStorage.getItem("brand_elements");
@@ -31,21 +33,46 @@ export default function BrandIdentity() {
   });
 
   useEffect(() => {
-    if (logo) localStorage.setItem("brand_logo", logo);
-    else localStorage.removeItem("brand_logo");
+    try {
+      if (logo) {
+        if (logo.length > 2000000) {
+          toast({ variant: "destructive", title: "File too large", description: "Please upload a smaller image to save it." });
+          return;
+        }
+        localStorage.setItem("brand_logo", logo);
+      } else {
+        localStorage.removeItem("brand_logo");
+      }
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+      toast({ variant: "destructive", title: "Storage full", description: "Could not save logo. Try a smaller image." });
+    }
   }, [logo]);
 
   useEffect(() => {
-    localStorage.setItem("brand_elements", JSON.stringify(elements));
+    try {
+      localStorage.setItem("brand_elements", JSON.stringify(elements));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+      toast({ variant: "destructive", title: "Storage full", description: "Could not save elements." });
+    }
   }, [elements]);
 
   useEffect(() => {
-    localStorage.setItem("brand_colors", JSON.stringify(colors));
+    try {
+      localStorage.setItem("brand_colors", JSON.stringify(colors));
+    } catch (e) {
+      console.error("Storage quota exceeded", e);
+    }
   }, [colors]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast({ variant: "destructive", title: "File too large", description: "Maximum file size is 2MB for storage." });
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogo(reader.result as string);
@@ -57,6 +84,10 @@ export default function BrandIdentity() {
   const handleElementUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 1 * 1024 * 1024) {
+        toast({ variant: "destructive", title: "File too large", description: "Maximum file size is 1MB for elements." });
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         const newElements = [...elements];
