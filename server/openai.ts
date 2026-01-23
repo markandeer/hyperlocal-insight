@@ -108,3 +108,28 @@ export async function generateMissionStatement(input: string): Promise<string> {
     throw new Error("Failed to generate mission statement");
   }
 }
+
+export async function generateVisionStatement(input: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, just provide the vision statement."
+        },
+        {
+          role: "user",
+          content: `Create a vision statement for this concept: ${input}`
+        }
+      ]
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) throw new Error("No content received from OpenAI");
+    return content.trim().replace(/^"|"$/g, '');
+  } catch (error) {
+    console.error("Vision generation error:", error);
+    throw new Error("Failed to generate vision statement");
+  }
+}

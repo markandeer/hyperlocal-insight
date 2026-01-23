@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -108,6 +108,66 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete mission");
+    }
+  });
+
+  // Vision statement routes
+  app.post("/api/generate-vision", async (req, res) => {
+    try {
+      const { input } = req.body;
+      if (!input || typeof input !== "string") {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      const vision = await generateVisionStatement(input);
+      res.json({ vision });
+    } catch (error: any) {
+      console.error("Vision generation error:", error);
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to generate vision statement" });
+    }
+  });
+
+  app.post("/api/visions", async (req, res) => {
+    try {
+      const { vision, originalInput } = req.body;
+      if (!vision || !originalInput) {
+        return res.status(400).json({ message: "Vision and input are required" });
+      }
+      const savedVision = await storage.createVision({ vision, originalInput });
+      res.status(201).json(savedVision);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to save vision" });
+    }
+  });
+
+  app.get("/api/visions", async (_req, res) => {
+    try {
+      const visions = await storage.getVisions();
+      res.json(visions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch visions" });
+    }
+  });
+
+  app.patch("/api/visions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { vision } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      const updatedVision = await storage.updateVision(id, vision);
+      res.json(updatedVision);
+    } catch (error) {
+      res.status(500).send("Failed to update vision");
+    }
+  });
+
+  app.delete("/api/visions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      await storage.deleteVision(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send("Failed to delete vision");
     }
   });
 

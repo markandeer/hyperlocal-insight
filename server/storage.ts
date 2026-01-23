@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { analysis_reports, brand_missions, type Report, type InsertReport, type BrandMission, type InsertBrandMission } from "@shared/schema";
+import { analysis_reports, brand_missions, brand_visions, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
@@ -12,6 +12,11 @@ export interface IStorage {
   getMissions(): Promise<BrandMission[]>;
   updateMission(id: number, mission: string): Promise<BrandMission>;
   deleteMission(id: number): Promise<void>;
+
+  createVision(vision: InsertBrandVision): Promise<BrandVision>;
+  getVisions(): Promise<BrandVision[]>;
+  updateVision(id: number, vision: string): Promise<BrandVision>;
+  deleteVision(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -75,6 +80,35 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMission(id: number): Promise<void> {
     await db.delete(brand_missions).where(eq(brand_missions.id, id));
+  }
+
+  async createVision(insertVision: InsertBrandVision): Promise<BrandVision> {
+    const [vision] = await db
+      .insert(brand_visions)
+      .values(insertVision)
+      .returning();
+    return vision;
+  }
+
+  async getVisions(): Promise<BrandVision[]> {
+    return await db
+      .select()
+      .from(brand_visions)
+      .orderBy(desc(brand_visions.createdAt));
+  }
+
+  async updateVision(id: number, vision: string): Promise<BrandVision> {
+    const [updated] = await db
+      .update(brand_visions)
+      .set({ vision })
+      .where(eq(brand_visions.id, id))
+      .returning();
+    if (!updated) throw new Error("Vision not found");
+    return updated;
+  }
+
+  async deleteVision(id: number): Promise<void> {
+    await db.delete(brand_visions).where(eq(brand_visions.id, id));
   }
 }
 
