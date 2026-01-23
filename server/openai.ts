@@ -228,10 +228,10 @@ export async function generateLiveInsights(address: string, businessType: string
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
           
-          Return ONLY valid JSON with this exact structure:
+          Return ONLY valid JSON with this exact structure (do not include any other keys):
           {
             "weather": {
-              "temp": "string",
+              "temp": "string (e.g., 0°F)",
               "condition": "string",
               "impact": "string"
             },

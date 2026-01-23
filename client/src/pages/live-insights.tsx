@@ -36,13 +36,17 @@ export default function LiveInsights() {
   const [editValue, setEditValue] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
-  const { data: insights, isLoading: isLoadingInsights } = useQuery<LiveInsight>({
+  const { data: insights, isLoading: isLoadingInsights, error: insightsError } = useQuery<LiveInsight>({
     queryKey: ["/api/live-insights", selectedReportId],
     queryFn: async () => {
       const res = await apiRequest("GET", `/api/live-insights/${selectedReportId}`);
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
       return res.json();
     },
     enabled: !!selectedReportId,
+    retry: 1,
   });
 
   const startEditing = (e: React.MouseEvent, id: number, currentName: string | null) => {
@@ -219,8 +223,15 @@ export default function LiveInsights() {
               className="space-y-8 pt-8 border-t border-primary/10"
             >
               {isLoadingInsights ? (
-                <div className="flex justify-center py-20">
-                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                <div className="flex flex-col items-center justify-center py-20 space-y-4">
+                  <Loader2 className="w-12 h-12 text-[#e26e6d] animate-spin" />
+                  <p className="text-[#e26e6d] font-bold uppercase tracking-widest text-xs animate-pulse">Generating Live Intelligence...</p>
+                </div>
+              ) : insightsError ? (
+                <div className="flex flex-col items-center justify-center py-20 glass-card rounded-3xl border-2 border-red-100 bg-red-50/30">
+                  <X className="w-12 h-12 text-red-400 mb-4" />
+                  <p className="text-red-500 font-bold uppercase tracking-widest text-xs">Analysis Failed</p>
+                  <p className="text-red-400/60 text-[10px] mt-2 italic">Please try refreshing or select another location.</p>
                 </div>
               ) : insights ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
