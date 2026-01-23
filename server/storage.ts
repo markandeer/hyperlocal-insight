@@ -10,6 +10,8 @@ export interface IStorage {
   
   createMission(mission: InsertBrandMission): Promise<BrandMission>;
   getMissions(): Promise<BrandMission[]>;
+  updateMission(id: number, mission: string): Promise<BrandMission>;
+  deleteMission(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -59,6 +61,20 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(brand_missions)
       .orderBy(desc(brand_missions.createdAt));
+  }
+
+  async updateMission(id: number, mission: string): Promise<BrandMission> {
+    const [updated] = await db
+      .update(brand_missions)
+      .set({ mission })
+      .where(eq(brand_missions.id, id))
+      .returning();
+    if (!updated) throw new Error("Mission not found");
+    return updated;
+  }
+
+  async deleteMission(id: number): Promise<void> {
+    await db.delete(brand_missions).where(eq(brand_missions.id, id));
   }
 }
 

@@ -88,6 +88,29 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  app.patch("/api/missions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { mission } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      const updatedMission = await storage.updateMission(id, mission);
+      res.json(updatedMission);
+    } catch (error) {
+      res.status(500).send("Failed to update mission");
+    }
+  });
+
+  app.delete("/api/missions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      await storage.deleteMission(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send("Failed to delete mission");
+    }
+  });
+
   // API Routes
   app.post("/api/reports/analyze", async (req, res) => {
     try {
