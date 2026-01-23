@@ -16,7 +16,7 @@ export default function LocationInsightsPage() {
             <p className="text-primary italic relative top-[6px]">Your generated market intelligence profiles.</p>
           </div>
           <Link href="/">
-            <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
+            <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs relative -top-[10px]">
               New Analysis
             </button>
           </Link>
