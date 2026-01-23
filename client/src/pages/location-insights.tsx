@@ -13,7 +13,7 @@ export default function LocationInsightsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-primary mb-2 uppercase tracking-tight">Location Insights</h1>
-            <p className="text-muted-foreground italic">Your generated market intelligence profiles.</p>
+            <p className="text-primary italic relative top-[6px]">Your generated market intelligence profiles.</p>
           </div>
           <Link href="/">
             <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
