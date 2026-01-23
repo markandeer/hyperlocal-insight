@@ -11,7 +11,7 @@ import HistoryPage from "@/pages/history";
 import StrategyBuilder from "@/pages/strategy-builder";
 import BrandStrategy from "@/pages/brand-strategy";
 import BrandIdentity from "@/pages/brand-identity";
-import MarketReach from "@/pages/market-reach";
+import LiveInsights from "@/pages/live-insights";
 import LocationInsightsPage from "@/pages/location-insights";
 
 function Router() {
@@ -25,7 +25,7 @@ function Router() {
       <Route path="/strategy-builder" component={StrategyBuilder} />
       <Route path="/brand-strategy" component={BrandStrategy} />
       <Route path="/brand-identity" component={BrandIdentity} />
-      <Route path="/market-reach" component={MarketReach} />
+      <Route path="/live-insights" component={LiveInsights} />
       <Route component={NotFound} />
     </Switch>
   );

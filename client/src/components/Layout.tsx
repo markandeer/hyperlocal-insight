@@ -22,7 +22,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { href: "/strategy-builder", label: "Strategy Builder" },
     { href: "/brand-strategy", label: "Brand Strategy" },
     { href: "/brand-identity", label: "Brand Identity" },
-    { href: "/market-reach", label: "Market Reach" },
+    { href: "/live-insights", label: "Live Insights" },
     { href: "/history", label: "History" },
   ];
 
