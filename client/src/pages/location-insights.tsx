@@ -29,7 +29,7 @@ export default function LocationInsightsPage() {
     e.preventDefault();
     e.stopPropagation();
     setEditingId(id);
-    setEditValue(currentName || businessType);
+    setEditValue(currentName || "");
   };
 
   const cancelEditing = (e: React.MouseEvent) => {
@@ -132,7 +132,8 @@ export default function LocationInsightsPage() {
                           <Input
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
-                            className="h-8 bg-primary/5 border-primary/20 text-[10px] font-bold uppercase tracking-widest rounded-full px-3 py-1"
+                            className="h-8 bg-primary/5 border-primary/20 text-[10px] font-bold uppercase tracking-widest rounded-full px-3 py-1 placeholder:text-slate-400 placeholder:normal-case"
+                            placeholder="Name Input"
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') saveName(e as any, report.id);
@@ -161,9 +162,12 @@ export default function LocationInsightsPage() {
                           exit={{ opacity: 0, x: 10 }}
                           className="flex items-center gap-2"
                         >
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">
+                          <span 
+                            onClick={(e) => startEditing(e, report.id, report.name, report.businessType)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10 cursor-pointer hover:bg-primary/20 transition-colors"
+                          >
                             <Briefcase className="w-3 h-3" />
-                            {report.name || report.businessType}
+                            {report.name || <span className="text-slate-400 normal-case font-medium">Name Input</span>}
                           </span>
                           <button 
                             onClick={(e) => startEditing(e, report.id, report.name, report.businessType)}
