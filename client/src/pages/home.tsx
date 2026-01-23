@@ -82,14 +82,14 @@ export default function Home() {
             </div>
             
             <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-tight uppercase tracking-tighter text-foreground">
-              Hyper Local <br />
+              Location <br />
               <span className="text-primary neon-text">
-                Marketing AI
+                Insights
               </span>
             </h1>
             
             <p className="text-lg text-foreground/80 max-w-lg mx-auto font-medium">
-              We connect businesses with their local customers by fusing creative brilliance with strategy and AI technology.
+              Unlock powerful market intelligence for any address. Our AI analysis provides instant demographic, traffic, and business insights to help you dominate your local market.
             </p>
           </motion.div>
 
