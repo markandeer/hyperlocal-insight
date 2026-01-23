@@ -1,11 +1,57 @@
 import { useReports } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
-import { Loader2, Calendar, MapPin, Briefcase, ArrowRight, FileText } from "lucide-react";
-import { motion } from "framer-motion";
+import { Loader2, Calendar, MapPin, Briefcase, ArrowRight, FileText, Pencil, Check, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 export default function LocationInsightsPage() {
   const { data: reports, isLoading } = useReports();
+  const { toast } = useToast();
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const startEditing = (e: React.MouseEvent, id: number, currentName: string | null, businessType: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditingId(id);
+    setEditValue(currentName || businessType);
+  };
+
+  const cancelEditing = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setEditingId(null);
+  };
+
+  const saveName = async (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!editValue.trim()) return;
+
+    setIsSaving(true);
+    try {
+      await apiRequest("PATCH", `/api/reports/${id}`, { name: editValue });
+      await queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
+      toast({
+        title: "Name Updated",
+        description: "Location name has been saved.",
+      });
+      setEditingId(null);
+    } catch (error) {
+      toast({
+        title: "Update Failed",
+        description: "Could not save the name. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <Layout>
@@ -50,43 +96,91 @@ export default function LocationInsightsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Link href={`/report/${report.id}`}>
-                  <div className="glass-card p-6 rounded-3xl cursor-pointer border-2 border-primary/5 hover:border-primary/30 bg-white shadow-xl shadow-primary/5 transition-all duration-300 group h-full flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">
-                        <Briefcase className="w-3 h-3" />
-                        {report.businessType}
-                      </span>
-                    </div>
+                <div className="glass-card p-6 rounded-3xl border-2 border-primary/5 hover:border-primary/30 bg-white shadow-xl shadow-primary/5 transition-all duration-300 group h-full flex flex-col relative overflow-hidden">
+                  <div className="flex items-center justify-between mb-4">
+                    <AnimatePresence mode="wait">
+                      {editingId === report.id ? (
+                        <motion.div 
+                          key="editing"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          className="flex items-center gap-2 flex-1 mr-2"
+                        >
+                          <Input
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="h-8 bg-primary/5 border-primary/20 text-[10px] font-bold uppercase tracking-widest rounded-full px-3 py-1"
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') saveName(e as any, report.id);
+                              if (e.key === 'Escape') setEditingId(null);
+                            }}
+                          />
+                          <button 
+                            onClick={(e) => saveName(e, report.id)}
+                            disabled={isSaving}
+                            className="p-1 text-emerald-500 hover:bg-emerald-50 rounded-full transition-colors"
+                          >
+                            <Check className="w-3 h-3" />
+                          </button>
+                          <button 
+                            onClick={cancelEditing}
+                            className="p-1 text-primary/40 hover:bg-primary/5 rounded-full transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </motion.div>
+                      ) : (
+                        <motion.div 
+                          key="static"
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 10 }}
+                          className="flex items-center gap-2"
+                        >
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/10">
+                            <Briefcase className="w-3 h-3" />
+                            {report.name || report.businessType}
+                          </span>
+                          <button 
+                            onClick={(e) => startEditing(e, report.id, report.name, report.businessType)}
+                            className="p-1.5 rounded-full hover:bg-primary/10 text-primary/40 hover:text-primary transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
 
-                    <div className="mb-4">
-                      <Link href={`/report/${report.id}`}>
-                        <button className="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 uppercase tracking-widest text-xs flex items-center justify-center gap-2 group-hover:scale-[1.02]">
-                          Location Insights
-                          <ArrowRight className="w-4 h-4" />
-                        </button>
-                      </Link>
+                  <div className="mb-4">
+                    <Link href={`/report/${report.id}`}>
+                      <button className="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 uppercase tracking-widest text-xs flex items-center justify-center gap-2 group-hover:scale-[1.02]">
+                        Location Insights
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </Link>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-primary/60 mb-4 px-1">
+                    <MapPin className="w-4 h-4 shrink-0" />
+                    <p className="text-xs font-medium line-clamp-1 italic">
+                      {report.address}
+                    </p>
+                  </div>
+                  
+                  <div className="mt-auto pt-4 border-t border-primary/5 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-primary/40 uppercase tracking-widest">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(report.createdAt || "").toLocaleDateString()}
                     </div>
-                    
-                    <div className="flex items-center gap-2 text-primary/60 mb-4 px-1">
-                      <MapPin className="w-4 h-4 shrink-0" />
-                      <p className="text-xs font-medium line-clamp-1 italic">
-                        {report.address}
-                      </p>
-                    </div>
-                    
-                    <div className="mt-auto pt-4 border-t border-primary/5 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-primary/40 uppercase tracking-widest">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(report.createdAt || "").toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        Ready
-                      </div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      Ready
                     </div>
                   </div>
-                </Link>
+                </div>
               </motion.div>
             ))}
           </div>
