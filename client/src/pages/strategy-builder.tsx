@@ -90,13 +90,13 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
     <div className="space-y-8">
       <div className="glass-card p-8 rounded-3xl space-y-6">
         <div className="space-y-2 relative">
-          <div className="flex items-center justify-between ml-1 translate-y-2">
+          <div className="flex items-end justify-between ml-1 -translate-y-[10px]">
             <label className="text-sm font-bold uppercase tracking-widest text-primary/70">
               {label}
             </label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6 text-primary/40 hover:text-primary hover:bg-primary/5 rounded-full">
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-primary/40 hover:text-primary hover:bg-primary/5 rounded-full translate-y-[20px]">
                   <Info className="w-4 h-4" />
                 </Button>
               </PopoverTrigger>
@@ -229,7 +229,7 @@ export default function StrategyBuilder() {
           </div>
           <BuilderSection
             title="Business Background"
-            label="Business Background (Max 1000 chars)"
+            label="Business Background (Max 1000 characters)"
             tips={backgroundTips}
             generateEndpoint="/api/generate-background"
             saveEndpoint="/api/backgrounds"
@@ -246,7 +246,7 @@ export default function StrategyBuilder() {
           </div>
           <BuilderSection
             title="Target Market Builder"
-            label="Target Market Concept (Max 500 chars)"
+            label="Target Market Concept (Max 500 characters)"
             tips={targetTips}
             generateEndpoint="/api/generate-target"
             saveEndpoint="/api/target-markets"
@@ -262,7 +262,7 @@ export default function StrategyBuilder() {
           </div>
           <BuilderSection
             title="Mission Builder"
-            label="Mission Statement Concept (Max 500 chars)"
+            label="Mission Statement Concept (Max 500 characters)"
             tips={missionTips}
             generateEndpoint="/api/generate-mission"
             saveEndpoint="/api/missions"
@@ -278,7 +278,7 @@ export default function StrategyBuilder() {
           </div>
           <BuilderSection
             title="Vision Builder"
-            label="Vision Statement Concept (Max 500 chars)"
+            label="Vision Statement Concept (Max 500 characters)"
             tips={visionTips}
             generateEndpoint="/api/generate-vision"
             saveEndpoint="/api/visions"
@@ -294,7 +294,7 @@ export default function StrategyBuilder() {
           </div>
           <BuilderSection
             title="Value Proposition Builder"
-            label="Value Proposition Concept (Max 500 chars)"
+            label="Value Proposition Concept (Max 500 characters)"
             tips={valueTips}
             generateEndpoint="/api/generate-value"
             saveEndpoint="/api/values"
