@@ -14,7 +14,7 @@ interface BuilderSectionProps {
   tips: string[];
   generateEndpoint: string;
   saveEndpoint: string;
-  type: "mission" | "vision";
+  type: "mission" | "vision" | "value";
 }
 
 function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, type }: BuilderSectionProps) {
@@ -33,7 +33,9 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
     try {
       const res = await apiRequest("POST", generateEndpoint, { input });
       const data = await res.json();
-      setResult(type === "mission" ? data.mission : data.vision);
+      if (type === "mission") setResult(data.mission);
+      else if (type === "vision") setResult(data.vision);
+      else setResult(data.value);
     } catch (error) {
       console.error(error);
       toast({
@@ -50,22 +52,23 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
     if (!result || isSaving) return;
     setIsSaving(true);
     try {
-      const body = type === "mission" 
-        ? { mission: result, originalInput: input }
-        : { vision: result, originalInput: input };
+      let body: any;
+      if (type === "mission") body = { mission: result, originalInput: input };
+      else if (type === "vision") body = { vision: result, originalInput: input };
+      else body = { valueProposition: result, originalInput: input };
       
       await apiRequest("POST", saveEndpoint, body);
       setIsSaved(true);
       queryClient.invalidateQueries({ queryKey: [saveEndpoint] });
       toast({
         title: "Success",
-        description: `${type.charAt(0).toUpperCase() + type.slice(1)} statement saved to Brand Strategy.`,
+        description: `${type.charAt(0).toUpperCase() + type.slice(1)} saved to Brand Strategy.`,
       });
     } catch (error) {
       console.error(error);
       toast({
         title: "Error",
-        description: `Failed to save ${type} statement.`,
+        description: `Failed to save ${type}.`,
         variant: "destructive"
       });
     } finally {
@@ -163,6 +166,12 @@ export default function StrategyBuilder() {
     "3. Keep it inspiring: What future state will motivate your team and attract customers?"
   ];
 
+  const valueTips = [
+    "1. Focus on the 'Why': What core benefit do you provide that no one else does?",
+    "2. Address the customer's pain: How specifically do you solve their biggest frustration?",
+    "3. Keep it punchy: A great value proposition should be understood in under 5 seconds."
+  ];
+
   return (
     <Layout>
       <div className="p-6 md:p-8 max-w-4xl mx-auto space-y-12 pb-20">
@@ -206,6 +215,22 @@ export default function StrategyBuilder() {
             generateEndpoint="/api/generate-vision"
             saveEndpoint="/api/visions"
             type="vision"
+          />
+        </section>
+
+        <section className="space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-primary/10" />
+            <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Value Proposition Builder</h2>
+            <div className="h-px flex-1 bg-primary/10" />
+          </div>
+          <BuilderSection
+            title="Value Proposition Builder"
+            label="Value Proposition Concept (Max 500 chars)"
+            tips={valueTips}
+            generateEndpoint="/api/generate-value"
+            saveEndpoint="/api/values"
+            type="value"
           />
         </section>
       </div>

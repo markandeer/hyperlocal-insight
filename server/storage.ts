@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { analysis_reports, brand_missions, brand_visions, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision } from "@shared/schema";
+import { analysis_reports, brand_missions, brand_visions, brand_values, type Report, type InsertReport, type BrandMission, type InsertBrandMission, type BrandVision, type InsertBrandVision, type BrandValue, type InsertBrandValue } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
@@ -17,6 +17,11 @@ export interface IStorage {
   getVisions(): Promise<BrandVision[]>;
   updateVision(id: number, vision: string): Promise<BrandVision>;
   deleteVision(id: number): Promise<void>;
+
+  createValue(value: InsertBrandValue): Promise<BrandValue>;
+  getValues(): Promise<BrandValue[]>;
+  updateValue(id: number, value: string): Promise<BrandValue>;
+  deleteValue(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -109,6 +114,35 @@ export class DatabaseStorage implements IStorage {
 
   async deleteVision(id: number): Promise<void> {
     await db.delete(brand_visions).where(eq(brand_visions.id, id));
+  }
+
+  async createValue(insertValue: InsertBrandValue): Promise<BrandValue> {
+    const [value] = await db
+      .insert(brand_values)
+      .values(insertValue)
+      .returning();
+    return value;
+  }
+
+  async getValues(): Promise<BrandValue[]> {
+    return await db
+      .select()
+      .from(brand_values)
+      .orderBy(desc(brand_values.createdAt));
+  }
+
+  async updateValue(id: number, valueProposition: string): Promise<BrandValue> {
+    const [updated] = await db
+      .update(brand_values)
+      .set({ valueProposition })
+      .where(eq(brand_values.id, id))
+      .returning();
+    if (!updated) throw new Error("Value proposition not found");
+    return updated;
+  }
+
+  async deleteValue(id: number): Promise<void> {
+    await db.delete(brand_values).where(eq(brand_values.id, id));
   }
 }
 

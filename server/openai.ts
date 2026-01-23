@@ -133,3 +133,28 @@ export async function generateVisionStatement(input: string): Promise<string> {
     throw new Error("Failed to generate vision statement");
   }
 }
+
+export async function generateValueProposition(input: string): Promise<string> {
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, just provide the value proposition statement."
+        },
+        {
+          role: "user",
+          content: `Create a value proposition for this concept: ${input}`
+        }
+      ]
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) throw new Error("No content received from OpenAI");
+    return content.trim().replace(/^"|"$/g, '');
+  } catch (error) {
+    console.error("Value proposition generation error:", error);
+    throw new Error("Failed to generate value proposition");
+  }
+}

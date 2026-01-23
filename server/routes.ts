@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement } from "./openai";
+import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -168,6 +168,66 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete vision");
+    }
+  });
+
+  // Value proposition routes
+  app.post("/api/generate-value", async (req, res) => {
+    try {
+      const { input } = req.body;
+      if (!input || typeof input !== "string") {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      const value = await generateValueProposition(input);
+      res.json({ value });
+    } catch (error: any) {
+      console.error("Value proposition generation error:", error);
+      res.status(500).json({ message: error instanceof Error ? error.message : "Failed to generate value proposition" });
+    }
+  });
+
+  app.post("/api/values", async (req, res) => {
+    try {
+      const { valueProposition, originalInput } = req.body;
+      if (!valueProposition || !originalInput) {
+        return res.status(400).json({ message: "Value proposition and input are required" });
+      }
+      const savedValue = await storage.createValue({ valueProposition, originalInput });
+      res.status(201).json(savedValue);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to save value proposition" });
+    }
+  });
+
+  app.get("/api/values", async (_req, res) => {
+    try {
+      const values = await storage.getValues();
+      res.json(values);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch value propositions" });
+    }
+  });
+
+  app.patch("/api/values/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { valueProposition } = req.body;
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      const updatedValue = await storage.updateValue(id, valueProposition);
+      res.json(updatedValue);
+    } catch (error) {
+      res.status(500).send("Failed to update value proposition");
+    }
+  });
+
+  app.delete("/api/values/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).send("Invalid ID");
+      await storage.deleteValue(id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send("Failed to delete value proposition");
     }
   });
 
