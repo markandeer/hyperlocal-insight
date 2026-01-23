@@ -3,10 +3,15 @@ import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Loader2, Sparkles, Save, Check } from "lucide-react";
+import { Pencil, Loader2, Sparkles, Save, Check, Info } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface BuilderSectionProps {
   title: string;
@@ -85,18 +90,27 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
     <div className="space-y-8">
       <div className="glass-card p-8 rounded-3xl space-y-6">
         <div className="space-y-2 relative">
-          <label className="text-sm font-bold uppercase tracking-widest text-primary/70 ml-1">
-            {label}
-          </label>
+          <div className="flex items-center justify-between ml-1">
+            <label className="text-sm font-bold uppercase tracking-widest text-primary/70">
+              {label}
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-primary/40 hover:text-primary hover:bg-primary/5 rounded-full">
+                  <Info className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-6 rounded-2xl border-primary/10 shadow-xl" align="end">
+                <div className="space-y-4">
+                  <p className="font-bold text-primary uppercase tracking-widest text-xs">3 Tips for Building a {type.charAt(0).toUpperCase() + type.slice(1)} Statement:</p>
+                  {tips.map((tip, i) => (
+                    <p key={i} className="text-sm text-primary/80 leading-relaxed italic">{tip}</p>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
           <div className="relative">
-            {!input && (
-              <div className="absolute inset-0 p-6 pointer-events-none text-primary/40 font-medium space-y-4">
-                <p className="font-bold text-primary/60 uppercase tracking-widest text-xs mb-2">3 Tips for Building a {type.charAt(0).toUpperCase() + type.slice(1)} Statement:</p>
-                {tips.map((tip, i) => (
-                  <p key={i} className="text-sm italic">{tip}</p>
-                ))}
-              </div>
-            )}
             <Textarea
               value={input}
               onChange={(e) => {
