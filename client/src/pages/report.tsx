@@ -96,20 +96,20 @@ export default function ReportPage() {
           className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-6 border-b border-white/5"
         >
           <div>
-            <div className="flex items-center gap-2 text-secondary mb-2">
-              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
+            <div className="flex items-center gap-2 text-primary mb-2">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-wider">Live Analysis Result</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2">{report.businessType}</h1>
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-primary font-medium">
               <MapPin className="w-4 h-4" />
-              <span>{report.address}</span>
+              <span className="text-lg">{report.address}</span>
             </div>
           </div>
           <div className="flex flex-col items-end gap-4">
             <div className="text-right">
-               <div className="text-sm text-muted-foreground">Generated on</div>
-               <div className="font-medium text-white">
+               <div className="text-sm text-primary/60 font-medium uppercase tracking-wider">Generated on</div>
+               <div className="font-bold text-primary text-lg">
                  {new Date(report.createdAt || "").toLocaleDateString(undefined, { 
                    year: 'numeric', month: 'long', day: 'numeric' 
                  })}
@@ -118,7 +118,7 @@ export default function ReportPage() {
             <Button 
               onClick={downloadPDF}
               variant="outline" 
-              className="gap-2 bg-white/5 border-white/10 hover:bg-white/10"
+              className="gap-2 bg-white/5 border-primary/20 text-primary hover:bg-primary/10 font-bold"
               data-testid="button-download-pdf"
             >
               <Download className="w-4 h-4" />

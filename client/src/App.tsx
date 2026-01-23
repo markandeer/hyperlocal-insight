@@ -7,6 +7,9 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import ReportPage from "@/pages/report";
 import HistoryPage from "@/pages/history";
+import StrategyBuilder from "@/pages/strategy-builder";
+import BrandIdentity from "@/pages/brand-identity";
+import MarketReach from "@/pages/market-reach";
 
 function Router() {
   return (
@@ -14,6 +17,9 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/history" component={HistoryPage} />
       <Route path="/report/:id" component={ReportPage} />
+      <Route path="/strategy-builder" component={StrategyBuilder} />
+      <Route path="/brand-identity" component={BrandIdentity} />
+      <Route path="/market-reach" component={MarketReach} />
       <Route component={NotFound} />
     </Switch>
   );
