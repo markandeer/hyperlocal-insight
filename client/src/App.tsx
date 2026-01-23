@@ -11,11 +11,13 @@ import StrategyBuilder from "@/pages/strategy-builder";
 import BrandStrategy from "@/pages/brand-strategy";
 import BrandIdentity from "@/pages/brand-identity";
 import MarketReach from "@/pages/market-reach";
+import LocationInsightsPage from "@/pages/location-insights";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/location-insights" component={LocationInsightsPage} />
       <Route path="/history" component={HistoryPage} />
       <Route path="/report/:id" component={ReportPage} />
       <Route path="/strategy-builder" component={StrategyBuilder} />
