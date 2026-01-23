@@ -102,7 +102,7 @@ export default function BrandStrategy() {
             {/* Missions Section */}
             <section className="space-y-8">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Mission Statements</h2>
+                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Mission Statement</h2>
                 <div className="h-px flex-1 bg-primary/10" />
               </div>
               
@@ -203,7 +203,7 @@ export default function BrandStrategy() {
             {/* Visions Section */}
             <section className="space-y-8">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Vision Statements</h2>
+                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Vision Statement</h2>
                 <div className="h-px flex-1 bg-primary/10" />
               </div>
               
@@ -304,7 +304,7 @@ export default function BrandStrategy() {
             {/* Value Propositions Section */}
             <section className="space-y-8">
               <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Value Propositions</h2>
+                <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-widest">Value Proposition</h2>
                 <div className="h-px flex-1 bg-primary/10" />
               </div>
               
