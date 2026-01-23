@@ -867,21 +867,23 @@ export default function BrandStrategy() {
                         style={{ fontFamily: typography.display.name }}
                       />
                     ) : (
-                      <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ fontFamily: typography.display.name, fontWeight: 
-                        typography.display.style === 'Light' ? 300 :
-                        typography.display.style === 'Regular' ? 400 :
-                        typography.display.style === 'Medium' ? 500 :
-                        typography.display.style === 'Semi-Bold' ? 600 :
-                        typography.display.style === 'Bold' ? 700 : 800
+                      <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ 
+                        fontFamily: typography.display.name,
+                        fontWeight: 
+                          typography.display.style === 'Light' ? 300 :
+                          typography.display.style === 'Regular' ? 400 :
+                          typography.display.style === 'Medium' ? 500 :
+                          typography.display.style === 'Semi-Bold' ? 600 :
+                          typography.display.style === 'Bold' ? 700 : 800
                       }}>{typography.display.name}</h2>
                     )}
-                    <div className="flex items-center gap-2 mt-2">
-                      <p className="text-sm text-primary/60 italic font-medium">{typography.display.style}</p>
+                    <div className="flex items-center gap-2 mt-4">
+                      <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.display.style}</p>
                       <Select 
                         value={typography.display.style} 
                         onValueChange={(val) => setTypography((prev: any) => ({ ...prev, display: { ...prev.display, style: val } }))}
                       >
-                        <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10">
+                        <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
                           <SelectValue placeholder="Weight" />
                         </SelectTrigger>
                         <SelectContent>
@@ -917,21 +919,23 @@ export default function BrandStrategy() {
                         style={{ fontFamily: typography.body.name }}
                       />
                     ) : (
-                      <p className="text-lg text-primary leading-relaxed font-medium" style={{ fontFamily: typography.body.name, fontWeight: 
-                        typography.body.style === 'Light' ? 300 :
-                        typography.body.style === 'Regular' ? 400 :
-                        typography.body.style === 'Medium' ? 500 :
-                        typography.body.style === 'Semi-Bold' ? 600 :
-                        typography.body.style === 'Bold' ? 700 : 800
+                      <p className="text-lg text-primary leading-relaxed" style={{ 
+                        fontFamily: typography.body.name,
+                        fontWeight: 
+                          typography.body.style === 'Light' ? 300 :
+                          typography.body.style === 'Regular' ? 400 :
+                          typography.body.style === 'Medium' ? 500 :
+                          typography.body.style === 'Semi-Bold' ? 600 :
+                          typography.body.style === 'Bold' ? 700 : 800
                       }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
                     )}
-                    <div className="flex items-center gap-2 mt-2">
-                      <p className="text-sm text-primary/60 italic font-medium">{typography.body.style}</p>
+                    <div className="flex items-center gap-2 mt-4">
+                      <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.body.style}</p>
                       <Select 
                         value={typography.body.style} 
                         onValueChange={(val) => setTypography((prev: any) => ({ ...prev, body: { ...prev.body, style: val } }))}
                       >
-                        <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10">
+                        <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
                           <SelectValue placeholder="Weight" />
                         </SelectTrigger>
                         <SelectContent>
