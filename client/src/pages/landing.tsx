@@ -30,10 +30,16 @@ export default function LandingPage() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
+          className="flex flex-col sm:flex-row gap-6"
         >
           <Link href="/location-insights-generator">
-            <button className="px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg sm:text-xl shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all uppercase tracking-widest hover:scale-105 active:scale-95">
-              Get Started
+            <button className="px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg sm:text-xl shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all uppercase tracking-widest hover:scale-105 active:scale-95 whitespace-nowrap">
+              Local Insight Generator
+            </button>
+          </Link>
+          <Link href="/strategy-generator">
+            <button className="px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg sm:text-xl shadow-2xl shadow-primary/30 hover:bg-primary/90 transition-all uppercase tracking-widest hover:scale-105 active:scale-95 whitespace-nowrap">
+              Brand Strategy Generator
             </button>
           </Link>
         </motion.div>
