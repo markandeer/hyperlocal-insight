@@ -54,11 +54,11 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // Mission statement generation
   app.post("/api/generate-mission", async (req, res) => {
     try {
-      const { input } = req.body;
-      if (!input || typeof input !== "string") {
-        return res.status(400).json({ message: "Input is required" });
+      const { background, target } = req.body;
+      if (!background || !target) {
+        return res.status(400).json({ message: "Background and target are required" });
       }
-      const mission = await generateMissionStatement(input);
+      const mission = await generateMissionStatement(background, target);
       res.json({ mission });
     } catch (error: any) {
       console.error("Mission generation error:", error);
@@ -114,11 +114,11 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // Vision statement routes
   app.post("/api/generate-vision", async (req, res) => {
     try {
-      const { input } = req.body;
-      if (!input || typeof input !== "string") {
-        return res.status(400).json({ message: "Input is required" });
+      const { background, target } = req.body;
+      if (!background || !target) {
+        return res.status(400).json({ message: "Background and target are required" });
       }
-      const vision = await generateVisionStatement(input);
+      const vision = await generateVisionStatement(background, target);
       res.json({ vision });
     } catch (error: any) {
       console.error("Vision generation error:", error);
@@ -174,11 +174,11 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // Value proposition routes
   app.post("/api/generate-value", async (req, res) => {
     try {
-      const { input } = req.body;
-      if (!input || typeof input !== "string") {
-        return res.status(400).json({ message: "Input is required" });
+      const { background, target } = req.body;
+      if (!background || !target) {
+        return res.status(400).json({ message: "Background and target are required" });
       }
-      const value = await generateValueProposition(input);
+      const value = await generateValueProposition(background, target);
       res.json({ value });
     } catch (error: any) {
       console.error("Value proposition generation error:", error);

@@ -84,18 +84,18 @@ export async function generateMarketAnalysis(address: string, businessType: stri
   }
 }
 
-export async function generateMissionStatement(input: string): Promise<string> {
+export async function generateMissionStatement(background: string, target: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. Return ONLY the mission statement text."
+          content: "You are a branding expert. Generate a concise, powerful mission statement based on the business background and target market provided. The mission statement should be professional, inspiring, and focus on the core value proposition. Return ONLY the mission statement text."
         },
         {
           role: "user",
-          content: input
+          content: `Business Background: ${background}\nTarget Market: ${target}`
         }
       ]
     });
@@ -109,18 +109,18 @@ export async function generateMissionStatement(input: string): Promise<string> {
   }
 }
 
-export async function generateVisionStatement(input: string): Promise<string> {
+export async function generateVisionStatement(background: string, target: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, just provide the vision statement."
+          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the business background and target market. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, just provide the vision statement."
         },
         {
           role: "user",
-          content: `Create a vision statement for this concept: ${input}`
+          content: `Create a vision statement for this business concept:\nBackground: ${background}\nTarget: ${target}`
         }
       ]
     });
@@ -134,18 +134,18 @@ export async function generateVisionStatement(input: string): Promise<string> {
   }
 }
 
-export async function generateValueProposition(input: string): Promise<string> {
+export async function generateValueProposition(background: string, target: string): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, just provide the value proposition statement."
+          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the business background and target market. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, just provide the value proposition statement."
         },
         {
           role: "user",
-          content: `Create a value proposition for this concept: ${input}`
+          content: `Create a value proposition for this concept:\nBackground: ${background}\nTarget: ${target}`
         }
       ]
     });
