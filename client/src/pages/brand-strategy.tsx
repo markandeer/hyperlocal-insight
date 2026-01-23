@@ -771,7 +771,7 @@ export default function BrandStrategy() {
                   <div className="h-px flex-1 bg-primary/10" />
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                  {colors.map((c, idx) => (
+                  {colors.map((c: any, idx: number) => (
                     <div key={idx} className="space-y-3 bg-white/40 p-4 rounded-2xl border-2 border-primary/5">
                       <div 
                         className="h-24 rounded-xl border-2 border-primary/5 shadow-inner transition-colors duration-300" 
