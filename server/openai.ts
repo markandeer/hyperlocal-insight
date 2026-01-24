@@ -255,7 +255,8 @@ export async function generateLiveInsights(address: string, businessType: string
                 "source": "string",
                 "summary": "string",
                 "date": "string",
-                "category": "Local Events | Business & Economy | Community Updates"
+                "category": "Local Events | Business & Economy | Community Updates",
+                "url": "string (MUST provide a valid HTTP/HTTPS URL to the source article)"
               }
             ]
           }`

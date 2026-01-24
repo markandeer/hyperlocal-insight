@@ -29,6 +29,7 @@ interface LiveInsight {
     summary: string;
     date: string;
     category: string;
+    url?: string;
   }>;
 }
 
@@ -318,7 +319,11 @@ export default function LiveInsights() {
                             {insights?.news
                               ?.filter(item => item.category === category || (!item.category && category === "Community Updates"))
                               .map((item, idx) => (
-                                <div key={idx} className="group cursor-pointer">
+                                <div 
+                                  key={idx} 
+                                  className="group cursor-pointer"
+                                  onClick={() => item.url && window.open(item.url, '_blank', 'noopener,noreferrer')}
+                                >
                                   <div className="flex items-start justify-between gap-2 mb-1">
                                     <h4 className="font-bold text-sm leading-snug group-hover:text-[#e26e6d] transition-colors">
                                       {item.title}
