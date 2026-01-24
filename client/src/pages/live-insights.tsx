@@ -269,7 +269,7 @@ export default function LiveInsights() {
                       </div>
                       <div className="pt-4 border-t border-primary/5">
                         <div className="text-xs font-bold uppercase tracking-widest text-primary/40 mb-1">Business Impact</div>
-                        <p className="text-sm text-primary/80 font-medium">{insights?.weather?.impact?.replace(/\*\*/g, '') || "No impact analysis available"}</p>
+                        <p className="text-sm text-primary/80 font-medium">{insights?.weather?.impact || "No impact analysis available"}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -289,7 +289,7 @@ export default function LiveInsights() {
                         <div className={`w-2 h-2 rounded-full ${insights?.traffic?.status === 'Heavy' ? 'bg-red-500' : 'bg-emerald-500'}`} />
                         <span className="font-bold text-black">{insights?.traffic?.status || "Unknown"} Traffic</span>
                       </div>
-                      <p className="text-sm text-primary/80 font-medium">{insights?.traffic?.notablePatterns?.replace(/\*\*/g, '') || "Traffic patterns unavailable"}</p>
+                      <p className="text-sm text-primary/80 font-medium">{insights?.traffic?.notablePatterns || "Traffic patterns unavailable"}</p>
                       <div className="pt-4 border-t border-primary/5 text-xs text-primary/40 font-bold uppercase tracking-widest">
                         Est. Delay: {insights?.traffic?.delay || "None reported"}
                       </div>
@@ -326,7 +326,7 @@ export default function LiveInsights() {
                                     <ExternalLink className="w-3 h-3 text-primary/20 shrink-0 group-hover:text-[#e26e6d] transition-colors" />
                                   </div>
                                   <p className="text-xs text-primary/60 line-clamp-2 mb-2 leading-relaxed italic">
-                                    {item.summary.replace(/\*\*/g, '')}
+                                    {item.summary}
                                   </p>
                                   <div className="flex items-center gap-2 text-[10px] text-primary/40 font-bold uppercase tracking-widest">
                                     <span>{item.source}</span>

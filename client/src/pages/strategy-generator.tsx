@@ -196,7 +196,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
             <div className="space-y-4">
               <h4 className="text-xs font-bold uppercase tracking-widest text-primary/70">Generated Result</h4>
               <div className="text-xl font-medium text-black leading-relaxed whitespace-pre-wrap">
-                {result.replace(/\*\*/g, '')}
+                {result}
               </div>
             </div>
           </div>
