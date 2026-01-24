@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Pencil, Loader2, Sparkles, Save, Check, Info } from "lucide-react";
+import { Pencil, Loader2, Sparkles, Save, Check, Info, Lock, RotateCcw } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import {
   Popover,
   PopoverContent,
@@ -29,7 +30,19 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const { toast } = useToast();
+
+  const { data: existingData, isLoading: isLoadingExisting } = useQuery<any[]>({
+    queryKey: [saveEndpoint],
+    queryFn: async () => {
+      const res = await apiRequest("GET", saveEndpoint);
+      return res.json();
+    }
+  });
+
+  const hasExistingData = existingData && existingData.length > 0;
+  const isLocked = hasExistingData && !isUnlocked;
 
   const handleGenerate = async () => {
     if (!input.trim()) return;
@@ -74,6 +87,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
         title: "Success",
         description: `${type.charAt(0).toUpperCase() + type.slice(1)} saved to Brand Strategy.`,
       });
+      setIsUnlocked(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -88,11 +102,26 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
 
   return (
     <div className="space-y-8">
-      <div className="glass-card p-8 rounded-3xl space-y-6">
+      <div className={cn(
+        "glass-card p-8 rounded-3xl space-y-6 transition-all duration-300 relative overflow-hidden",
+        isLocked && "opacity-60 bg-slate-100/50 pointer-events-none grayscale-[0.5]"
+      )}>
+        {isLocked && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center pointer-events-auto bg-white/10 backdrop-blur-[2px]">
+            <Button 
+              onClick={() => setIsUnlocked(true)}
+              className="bg-primary text-white hover:bg-primary/90 px-8 py-6 rounded-2xl font-bold text-lg flex items-center gap-2 shadow-2xl shadow-primary/30"
+            >
+              <RotateCcw className="w-5 h-5" />
+              TRY AGAIN
+            </Button>
+          </div>
+        )}
         <div className="space-y-2 relative">
           <div className="flex items-end justify-between ml-1 -translate-y-[10px]">
-            <label className="text-sm font-bold uppercase tracking-widest text-primary/70">
+            <label className="text-sm font-bold uppercase tracking-widest text-primary/70 flex items-center gap-2">
               {label}
+              {isLocked && <Lock className="w-3 h-3" />}
             </label>
             <Popover>
               <PopoverTrigger asChild>
@@ -113,6 +142,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
           <div className="relative">
             <Textarea
               value={input}
+              disabled={isLocked}
               onChange={(e) => {
                 setInput(e.target.value.slice(0, maxChars));
                 setIsSaved(false);
@@ -127,7 +157,7 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
 
         <Button
           onClick={handleGenerate}
-          disabled={isGenerating || !input.trim()}
+          disabled={isGenerating || !input.trim() || isLocked}
           className="w-full h-14 bg-primary text-white hover:bg-primary/90 rounded-2xl font-bold text-xl shadow-lg shadow-primary/25"
         >
           {isGenerating ? (
