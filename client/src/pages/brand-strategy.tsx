@@ -343,35 +343,33 @@ export default function BrandStrategy() {
                                 </Button>
                               </>
                             ) : (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    setEditingId(b.id);
-                                    setEditValue(b.background);
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    if (confirm("Are you sure you want to delete this business background profile?")) {
-                                      deleteMutation.mutate({ id: b.id, type: 'background' });
-                                    }
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </>
+                              !isLocked && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                    onClick={() => {
+                                      setEditingId(b.id);
+                                      setEditValue(b.background);
+                                    }}
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                    onClick={() => {
+                                      if (confirm("Are you sure you want to delete this business background profile?")) {
+                                        deleteMutation.mutate({ id: b.id, type: 'background' });
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )
                             )}
                           </div>
 
@@ -448,35 +446,33 @@ export default function BrandStrategy() {
                                 </Button>
                               </>
                             ) : (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    setEditingId(t.id);
-                                    setEditValue(t.targetMarket);
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    if (confirm("Are you sure you want to delete this target market profile?")) {
-                                      deleteMutation.mutate({ id: t.id, type: 'target' });
-                                    }
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </>
+                              !isLocked && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                    onClick={() => {
+                                      setEditingId(t.id);
+                                      setEditValue(t.targetMarket);
+                                    }}
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                    onClick={() => {
+                                      if (confirm("Are you sure you want to delete this target market profile?")) {
+                                        deleteMutation.mutate({ id: t.id, type: 'target' });
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )
                             )}
                           </div>
 
@@ -553,35 +549,33 @@ export default function BrandStrategy() {
                                 </Button>
                               </>
                             ) : (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    setEditingId(m.id);
-                                    setEditValue(m.mission);
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    if (confirm("Are you sure you want to delete this mission?")) {
-                                      deleteMutation.mutate({ id: m.id, type: 'mission' });
-                                    }
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </>
+                              !isLocked && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                    onClick={() => {
+                                      setEditingId(m.id);
+                                      setEditValue(m.mission);
+                                    }}
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                    onClick={() => {
+                                      if (confirm("Are you sure you want to delete this mission?")) {
+                                        deleteMutation.mutate({ id: m.id, type: 'mission' });
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )
                             )}
                           </div>
 
@@ -658,35 +652,33 @@ export default function BrandStrategy() {
                                 </Button>
                               </>
                             ) : (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    setEditingId(v.id);
-                                    setEditValue(v.vision);
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    if (confirm("Are you sure you want to delete this vision?")) {
-                                      deleteMutation.mutate({ id: v.id, type: 'vision' });
-                                    }
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </>
+                              !isLocked && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                    onClick={() => {
+                                      setEditingId(v.id);
+                                      setEditValue(v.vision);
+                                    }}
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                    onClick={() => {
+                                      if (confirm("Are you sure you want to delete this vision?")) {
+                                        deleteMutation.mutate({ id: v.id, type: 'vision' });
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )
                             )}
                           </div>
 
@@ -742,13 +734,13 @@ export default function BrandStrategy() {
                       <Card className="overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all rounded-3xl bg-white shadow-xl shadow-primary/5">
                         <CardContent className="p-8 space-y-6 relative">
                           <div className="absolute top-6 right-6 flex gap-2">
-                            {editingId === v.id ? (
+                            {editingId === val.id ? (
                               <>
                                 <Button
                                   size="icon"
                                   variant="ghost"
                                   className="h-8 w-8 text-green-600 hover:bg-green-50"
-                                  onClick={() => updateMutation.mutate({ id: v.id, content: editValue, type: 'value' })}
+                                  onClick={() => updateMutation.mutate({ id: val.id, content: editValue, type: 'value' })}
                                   disabled={updateMutation.isPending || isLocked}
                                 >
                                   <Check className="w-4 h-4" />
@@ -763,35 +755,33 @@ export default function BrandStrategy() {
                                 </Button>
                               </>
                             ) : (
-                              <>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    setEditingId(v.id);
-                                    setEditValue(v.valueProposition);
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Pencil className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
-                                  onClick={() => {
-                                    if (isLocked) return;
-                                    if (confirm("Are you sure you want to delete this value proposition?")) {
-                                      deleteMutation.mutate({ id: v.id, type: 'value' });
-                                    }
-                                  }}
-                                  disabled={isLocked}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </>
+                              !isLocked && (
+                                <>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
+                                    onClick={() => {
+                                      setEditingId(val.id);
+                                      setEditValue(val.valueProposition);
+                                    }}
+                                  >
+                                    <Pencil className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
+                                    onClick={() => {
+                                      if (confirm("Are you sure you want to delete this value proposition?")) {
+                                        deleteMutation.mutate({ id: val.id, type: 'value' });
+                                      }
+                                    }}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )
                             )}
                           </div>
 
