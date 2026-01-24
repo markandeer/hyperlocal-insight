@@ -19,13 +19,13 @@ export async function generateMarketAnalysis(address: string, businessType: stri
           CRITICAL: Do not use any markdown formatting, bolding (asterisks), or special characters for emphasis in text descriptions. Keep all output text uniform.
           
           Calculation Guidelines for TAM, SAM, SOM (5-mile radius):
-          1. TAM (Total Addressable Market): Estimate total annual spending for this business category within the 5-mile radius based on population and national/regional average spend per capita.
-          2. SAM (Serviceable Available Market): The portion of TAM that fits the specific sub-type and quality of this business, adjusted for local median income and regional demographics.
-          3. SOM (Serviceable Obtainable Market): This must be a realistic first-year revenue target. Factor in:
-             - Local competition density (how many similar businesses exist nearby?).
-             - Physical accessibility and traffic patterns of "${address}".
-             - A conservative market share (typically 1-5% in competitive areas, up to 15% in underserved areas).
-             - Address-specific advantages/limitations.
+          1. TAM (Total Addressable Market): Total population within the 5-mile radius. Use real-time census-level data for this specific location.
+          2. SAM (Serviceable Available Market): The portion of the population that specifically fits the customer profile for this business type (e.g., age-appropriate, interest-aligned).
+          3. SOM (Serviceable Obtainable Market): The realistic portion of the SAM that this specific business can attract in its first year, considering location quality and immediate competition.
+          
+          CRITICAL: TAM, SAM, and SOM MUST BE POPULATION COUNTS (number of people), NOT DOLLAR AMOUNTS. Do not include currency symbols.
+          
+          Accuracy Note: Ensure population estimates are highly specific to the 5-mile radius around "${address}". Reference local neighborhood densities and demographic reports.
 
           Return ONLY valid JSON matching this structure:
           {

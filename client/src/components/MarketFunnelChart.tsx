@@ -46,7 +46,7 @@ export function MarketFunnelChart({ data }: { data: MarketData }) {
               <div className="flex justify-between items-center mb-1">
                 <span className="font-bold text-lg text-white">{item.name}</span>
                 <span className="text-xl font-display font-bold text-white">
-                  ${(item.value / 1000000).toFixed(1)}M
+                  {(item.value).toLocaleString()}
                 </span>
               </div>
               <p className="text-xs text-white/60">{item.desc}</p>
