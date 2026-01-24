@@ -431,7 +431,7 @@ export default function BrandIdentity() {
           </h1>
           <p className="text-xl text-primary/80 font-medium italic">Define the visual soul of your business.</p>
           <div className="mt-2 flex items-center justify-center gap-3">
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[1.3]">
+            <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
               {isLocked ? (
                 <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
               ) : (
