@@ -363,7 +363,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
-                                {b.background}
+                                {b.background.replace(/\*\*/g, '')}
                               </p>
                             )}
                           </div>
@@ -464,7 +464,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
-                                "{t.targetMarket}"
+                                {t.targetMarket.replace(/\*\*/g, '')}
                               </p>
                             )}
                           </div>
