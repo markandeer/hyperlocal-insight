@@ -104,7 +104,7 @@ export async function generateMissionStatement(input: string): Promise<string> {
 
     const content = response.choices[0].message.content;
     if (!content) throw new Error("No content received from OpenAI");
-    return content.trim();
+    return content.trim().replace(/\*\*/g, '');
   } catch (error) {
     console.error("Mission generation error:", error);
     throw new Error("Failed to generate mission statement");
@@ -168,7 +168,7 @@ export async function generateTargetMarket(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis or labels. Do not explain anything, just provide the target market profile text."
+          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis, bolding, or labels. Return ONLY the plain text content. If you need to separate sections, use simple line breaks."
         },
         {
           role: "user",
@@ -179,7 +179,7 @@ export async function generateTargetMarket(input: string): Promise<string> {
 
     const content = response.choices[0].message.content;
     if (!content) throw new Error("No content received from OpenAI");
-    return content.trim().replace(/^"|"$/g, '');
+    return content.trim().replace(/\*\*/g, '').replace(/^"|"$/g, '');
   } catch (error) {
     console.error("Target market generation error:", error);
     throw new Error("Failed to generate target market profile");
@@ -204,7 +204,7 @@ export async function generateBackground(input: string): Promise<string> {
 
     const content = response.choices[0].message.content;
     if (!content) throw new Error("No content received from OpenAI");
-    return content.trim();
+    return content.trim().replace(/\*\*/g, '');
   } catch (error) {
     console.error("Background refinement error:", error);
     throw new Error("Failed to refine business background");
