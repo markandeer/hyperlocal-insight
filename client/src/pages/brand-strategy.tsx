@@ -887,7 +887,7 @@ export default function BrandStrategy() {
                           <SelectValue placeholder="Weight" />
                         </SelectTrigger>
                         <SelectContent>
-                          {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                          {['Regular', 'Medium', 'Bold'].map(w => (
                             <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
                           ))}
                         </SelectContent>
@@ -939,7 +939,7 @@ export default function BrandStrategy() {
                           <SelectValue placeholder="Weight" />
                         </SelectTrigger>
                         <SelectContent>
-                          {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                          {['Regular', 'Medium', 'Bold'].map(w => (
                             <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
                           ))}
                         </SelectContent>
