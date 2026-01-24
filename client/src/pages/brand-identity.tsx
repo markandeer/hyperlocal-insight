@@ -151,12 +151,9 @@ export default function BrandIdentity() {
     link.href = `https://fonts.googleapis.com/css2?family=${fontQuery.split('|').map((f, i) => {
       const weight = i === 0 ? typography.display.style : typography.body.style;
       const weightMap: Record<string, string> = {
-        'Light': '300',
         'Regular': '400',
         'Medium': '500',
-        'Semi-Bold': '600',
         'Bold': '700',
-        'Extra-Bold': '800'
       };
       const w = weightMap[weight] || '400';
       return `${f}:wght@${w}`;
@@ -243,8 +240,18 @@ export default function BrandIdentity() {
       description: "Standardize your brand fonts and text hierarchies.",
       content: (
         <div className="space-y-6">
-          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-hidden">
-            <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-4">Display Font</p>
+          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-visible">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">Display Font</p>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setEditingFont('display')}
+                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                Change Font
+              </Button>
+            </div>
             {editingFont === 'display' ? (
               <Input
                 autoFocus
@@ -252,21 +259,18 @@ export default function BrandIdentity() {
                 onChange={(e) => handleFontChange('display', e.target.value)}
                 onBlur={() => setEditingFont(null)}
                 onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
-                className="text-4xl font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20"
+                className="text-4xl font-bold text-primary tracking-tighter uppercase h-auto py-2 bg-transparent border-primary/20 mb-4"
                 style={{ fontFamily: typography.display.name }}
               />
             ) : (
-              <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase" style={{ 
+              <h2 className="text-4xl font-bold text-primary tracking-tighter uppercase mb-4" style={{ 
                 fontFamily: typography.display.name,
                 fontWeight: 
-                  typography.display.style === 'Light' ? 300 :
                   typography.display.style === 'Regular' ? 400 :
-                  typography.display.style === 'Medium' ? 500 :
-                  typography.display.style === 'Semi-Bold' ? 600 :
-                  typography.display.style === 'Bold' ? 700 : 800
+                  typography.display.style === 'Medium' ? 500 : 700
               }}>{typography.display.name}</h2>
             )}
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2">
               <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.display.style}</p>
               <Select 
                 value={typography.display.style} 
@@ -276,27 +280,26 @@ export default function BrandIdentity() {
                   <SelectValue placeholder="Weight" />
                 </SelectTrigger>
                 <SelectContent>
-                  {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                  {['Regular', 'Medium', 'Bold'].map(w => (
                     <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
+          </div>
+
+          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-visible">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">Body Font</p>
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => setEditingFont('display')}
-                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                onClick={() => setEditingFont('body')}
+                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 Change Font
               </Button>
             </div>
-          </div>
-
-          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-hidden">
-            <p className="text-xs font-bold text-primary/40 uppercase tracking-widest mb-4">Body Font</p>
             {editingFont === 'body' ? (
               <Input
                 autoFocus
@@ -304,21 +307,18 @@ export default function BrandIdentity() {
                 onChange={(e) => handleFontChange('body', e.target.value)}
                 onBlur={() => setEditingFont(null)}
                 onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
-                className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20"
+                className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20 mb-4"
                 style={{ fontFamily: typography.body.name }}
               />
             ) : (
-              <p className="text-lg text-primary leading-relaxed" style={{ 
+              <p className="text-lg text-primary leading-relaxed mb-4" style={{ 
                 fontFamily: typography.body.name,
                 fontWeight: 
-                  typography.body.style === 'Light' ? 300 :
                   typography.body.style === 'Regular' ? 400 :
-                  typography.body.style === 'Medium' ? 500 :
-                  typography.body.style === 'Semi-Bold' ? 600 :
-                  typography.body.style === 'Bold' ? 700 : 800
+                  typography.body.style === 'Medium' ? 500 : 700
               }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
             )}
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2">
               <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.body.style}</p>
               <Select 
                 value={typography.body.style} 
@@ -328,22 +328,11 @@ export default function BrandIdentity() {
                   <SelectValue placeholder="Weight" />
                 </SelectTrigger>
                 <SelectContent>
-                  {['Light', 'Regular', 'Medium', 'Semi-Bold', 'Bold', 'Extra-Bold'].map(w => (
+                  {['Regular', 'Medium', 'Bold'].map(w => (
                     <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setEditingFont('body')}
-                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
-              >
-                Change Font
-              </Button>
             </div>
           </div>
         </div>
