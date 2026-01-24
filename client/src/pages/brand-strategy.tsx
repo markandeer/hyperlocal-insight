@@ -308,7 +308,7 @@ export default function BrandStrategy() {
               
               {!backgrounds || backgrounds.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-3xl">
-                  <p className="text-primary/60 text-lg font-medium italic">No saved business background profiles yet.</p>
+                  <p className="text-primary/60 text-lg font-medium">No saved business background profiles yet.</p>
                 </div>
               ) : (
                 <div className="grid gap-8">
@@ -411,7 +411,7 @@ export default function BrandStrategy() {
               
               {!targetMarkets || targetMarkets.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-3xl">
-                  <p className="text-primary/60 text-lg font-medium italic">No saved target market profiles yet.</p>
+                  <p className="text-primary/60 text-lg font-medium">No saved target market profiles yet.</p>
                 </div>
               ) : (
                 <div className="grid gap-8">
@@ -514,7 +514,7 @@ export default function BrandStrategy() {
               
               {!missions || missions.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-3xl">
-                  <p className="text-primary/60 text-lg font-medium italic">No saved mission statements yet.</p>
+                  <p className="text-primary/60 text-lg font-medium">No saved mission statements yet.</p>
                 </div>
               ) : (
                 <div className="grid gap-8">
@@ -617,7 +617,7 @@ export default function BrandStrategy() {
               
               {!visions || visions.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-3xl">
-                  <p className="text-primary/60 text-lg font-medium italic">No saved vision statements yet.</p>
+                  <p className="text-primary/60 text-lg font-medium">No saved vision statements yet.</p>
                 </div>
               ) : (
                 <div className="grid gap-8">
@@ -720,7 +720,7 @@ export default function BrandStrategy() {
               
               {!values || values.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-3xl">
-                  <p className="text-primary/60 text-lg font-medium italic">No saved value propositions yet.</p>
+                  <p className="text-primary/60 text-lg font-medium">No saved value propositions yet.</p>
                 </div>
               ) : (
                 <div className="grid gap-8">
