@@ -662,10 +662,10 @@ export default function BrandStrategy() {
                               <Textarea
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                                className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <p className="text-2xl font-display font-bold text-black leading-tight pr-12 italic whitespace-pre-wrap">
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 italic whitespace-pre-wrap">
                                 "{v.vision.replace(/\*/g, '')}"
                               </p>
                             )}
