@@ -1,15 +1,18 @@
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, Palette, Type, Box, Image as ImageIcon, Plus, Check, Pencil } from "lucide-react";
+import { Upload, Palette, Type, Box, Image as ImageIcon, Plus, Check, Pencil, Lock, Unlock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ReactNode } from "react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export default function BrandIdentity() {
   const { toast } = useToast();
+  const [isLocked, setIsLocked] = useState(() => localStorage.getItem("brand_identity_locked") === "true");
   const [logo, setLogo] = useState<string | null>(() => localStorage.getItem("brand_logo"));
   const [elements, setElements] = useState<(string | null)[]>(() => {
     const saved = localStorage.getItem("brand_elements");
@@ -67,7 +70,12 @@ export default function BrandIdentity() {
     }
   }, [colors]);
 
+  useEffect(() => {
+    localStorage.setItem("brand_identity_locked", String(isLocked));
+  }, [isLocked]);
+
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isLocked) return;
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 2 * 1024 * 1024) {
@@ -83,6 +91,7 @@ export default function BrandIdentity() {
   };
 
   const handleElementUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isLocked) return;
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 1 * 1024 * 1024) {
@@ -117,6 +126,7 @@ export default function BrandIdentity() {
   }, [typography]);
 
   const handleColorChange = (index: number, newHex: string) => {
+    if (isLocked) return;
     const newColors = [...colors];
     if (!newHex.startsWith("#") && newHex.length > 0) {
       newHex = "#" + newHex;
@@ -126,6 +136,7 @@ export default function BrandIdentity() {
   };
 
   const handleFontChange = (type: 'display' | 'body', name: string) => {
+    if (isLocked) return;
     setTypography((prev: any) => ({
       ...prev,
       [type]: { ...prev[type], name }
@@ -160,7 +171,7 @@ export default function BrandIdentity() {
     }).join('&family=')}&display=swap`;
   }, [typography]);
 
-  const sections = [
+  const sections: { id: string; title: string; icon: any; description: string; content: ReactNode }[] = [
     {
       id: "logo",
       title: "1. Brand Logo",
@@ -174,11 +185,15 @@ export default function BrandIdentity() {
             className="hidden"
             accept="image/*"
             onChange={handleLogoUpload}
+            disabled={isLocked}
           />
           {!logo ? (
             <div 
-              onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center justify-center border-2 border-dashed border-primary/20 rounded-3xl p-12 bg-white/50 hover:bg-white/80 transition-all cursor-pointer group"
+              onClick={() => !isLocked && fileInputRef.current?.click()}
+              className={cn(
+                "flex flex-col items-center justify-center border-2 border-dashed border-primary/20 rounded-3xl p-12 bg-white/50 transition-all group",
+                isLocked ? "cursor-not-allowed opacity-50" : "hover:bg-white/80 cursor-pointer"
+              )}
             >
               <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <Upload className="w-10 h-10 text-primary/40" />
@@ -191,16 +206,18 @@ export default function BrandIdentity() {
               <div className="border-2 border-primary/10 rounded-3xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center min-h-[200px]">
                 <img src={logo} alt="Brand Logo" className="max-h-48 w-full object-contain rounded-2xl" />
               </div>
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
-                >
-                  Change Logo
-                </Button>
-              </div>
+              {!isLocked && (
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-3xl">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                  >
+                    Change Logo
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -226,6 +243,7 @@ export default function BrandIdentity() {
                   onChange={(e) => handleColorChange(idx, e.target.value)}
                   className="h-9 text-xs font-mono uppercase border-primary/10 focus-visible:ring-primary/20 rounded-lg"
                   placeholder="#000000"
+                  disabled={isLocked}
                 />
               </div>
             </div>
@@ -243,16 +261,18 @@ export default function BrandIdentity() {
           <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-visible">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">Display Font</p>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setEditingFont('display')}
-                className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                Change Font
-              </Button>
+              {!isLocked && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setEditingFont('display')}
+                  className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  Change Font
+                </Button>
+              )}
             </div>
-            {editingFont === 'display' ? (
+            {editingFont === 'display' && !isLocked ? (
               <Input
                 autoFocus
                 value={typography.display.name}
@@ -270,27 +290,29 @@ export default function BrandIdentity() {
                   typography.display.style === 'Medium' ? 500 : 700
               }}>{typography.display.name}</h2>
             )}
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.display.style}</p>
-              <Select 
-                value={typography.display.style} 
-                onValueChange={(val) => setTypography((prev: any) => ({ ...prev, display: { ...prev.display, style: val } }))}
-              >
-                <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
-                  <SelectValue placeholder="Weight" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Regular', 'Medium', 'Bold'].map(w => (
-                    <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.display.style}</p>
+            <Select 
+              value={typography.display.style} 
+              onValueChange={(val) => setTypography((prev: any) => ({ ...prev, display: { ...prev.display, style: val } }))}
+              disabled={isLocked}
+            >
+              <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
+                <SelectValue placeholder="Weight" />
+              </SelectTrigger>
+              <SelectContent>
+                {['Regular', 'Medium', 'Bold'].map(w => (
+                  <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+        </div>
 
-          <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-visible">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">Body Font</p>
+        <div className="p-6 bg-white/50 rounded-2xl border-2 border-primary/5 relative group overflow-visible">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs font-bold text-primary/40 uppercase tracking-widest">Body Font</p>
+            {!isLocked && (
               <Button 
                 variant="outline" 
                 size="sm"
@@ -299,43 +321,45 @@ export default function BrandIdentity() {
               >
                 Change Font
               </Button>
-            </div>
-            {editingFont === 'body' ? (
-              <Input
-                autoFocus
-                value={typography.body.name}
-                onChange={(e) => handleFontChange('body', e.target.value)}
-                onBlur={() => setEditingFont(null)}
-                onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
-                className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20 mb-4"
-                style={{ fontFamily: typography.body.name }}
-              />
-            ) : (
-              <p className="text-lg text-primary leading-relaxed mb-4" style={{ 
-                fontFamily: typography.body.name,
-                fontWeight: 
-                  typography.body.style === 'Regular' ? 400 :
-                  typography.body.style === 'Medium' ? 500 : 700
-              }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
             )}
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.body.style}</p>
-              <Select 
-                value={typography.body.style} 
-                onValueChange={(val) => setTypography((prev: any) => ({ ...prev, body: { ...prev.body, style: val } }))}
-              >
-                <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
-                  <SelectValue placeholder="Weight" />
-                </SelectTrigger>
-                <SelectContent>
-                  {['Regular', 'Medium', 'Bold'].map(w => (
-                    <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          </div>
+          {editingFont === 'body' && !isLocked ? (
+            <Input
+              autoFocus
+              value={typography.body.name}
+              onChange={(e) => handleFontChange('body', e.target.value)}
+              onBlur={() => setEditingFont(null)}
+              onKeyDown={(e) => e.key === 'Enter' && setEditingFont(null)}
+              className="text-lg text-primary leading-relaxed font-medium h-auto py-1 bg-transparent border-primary/20 mb-4"
+              style={{ fontFamily: typography.body.name }}
+            />
+          ) : (
+            <p className="text-lg text-primary leading-relaxed mb-4" style={{ 
+              fontFamily: typography.body.name,
+              fontWeight: 
+                typography.body.style === 'Regular' ? 400 :
+                typography.body.style === 'Medium' ? 500 : 700
+            }}>The quick brown fox jumps over the lazy dog. ({typography.body.name})</p>
+          )}
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-bold uppercase tracking-widest text-primary/40">{typography.body.style}</p>
+            <Select 
+              value={typography.body.style} 
+              onValueChange={(val) => setTypography((prev: any) => ({ ...prev, body: { ...prev.body, style: val } }))}
+              disabled={isLocked}
+            >
+              <SelectTrigger className="h-7 w-28 text-[10px] uppercase font-bold tracking-widest border-primary/10 bg-white/50">
+                <SelectValue placeholder="Weight" />
+              </SelectTrigger>
+              <SelectContent>
+                {['Regular', 'Medium', 'Bold'].map(w => (
+                  <SelectItem key={w} value={w} className="text-[10px] uppercase font-bold tracking-widest">{w}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
+      </div>
       )
     },
     {
@@ -353,11 +377,15 @@ export default function BrandIdentity() {
                 className="hidden"
                 accept="image/*"
                 onChange={(e) => handleElementUpload(idx, e)}
+                disabled={isLocked}
               />
               {!elements[idx] ? (
                 <div 
-                  onClick={() => elementInputRefs[idx].current?.click()}
-                  className="aspect-square bg-white/50 rounded-2xl border-2 border-primary/5 flex flex-col items-center justify-center border-dashed cursor-pointer hover:bg-white/80 transition-all group"
+                  onClick={() => !isLocked && elementInputRefs[idx].current?.click()}
+                  className={cn(
+                    "aspect-square bg-white/50 rounded-2xl border-2 border-primary/5 flex flex-col items-center justify-center border-dashed transition-all group",
+                    isLocked ? "cursor-not-allowed opacity-50" : "hover:bg-white/80 cursor-pointer"
+                  )}
                 >
                   <Plus className="w-8 h-8 text-primary/20 group-hover:scale-110 transition-transform" />
                   <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mt-2">Upload Element</p>
@@ -367,16 +395,18 @@ export default function BrandIdentity() {
                   <div className="h-full w-full border-2 border-primary/10 rounded-2xl p-[10px] bg-white/80 shadow-inner flex items-center justify-center overflow-hidden">
                     <img src={elements[idx]!} alt={`Element ${idx + 1}`} className="max-h-full w-full object-contain rounded-lg" />
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => elementInputRefs[idx].current?.click()}
-                      className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
-                    >
-                      Change
-                    </Button>
-                  </div>
+                  {!isLocked && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5 rounded-2xl">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => elementInputRefs[idx].current?.click()}
+                        className="border-primary/20 text-primary uppercase font-bold tracking-widest rounded-xl scale-75 bg-white/90"
+                      >
+                        Change
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -398,6 +428,24 @@ export default function BrandIdentity() {
             Brand Identity
           </h1>
           <p className="text-xl text-primary/80 font-medium italic">Define the visual soul of your business.</p>
+          <div className="mt-2 flex items-center justify-center gap-3">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm">
+              {isLocked ? (
+                <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
+              ) : (
+                <Unlock className="w-4 h-4 text-primary/40 animate-in fade-in zoom-in duration-300" />
+              )}
+              <Label htmlFor="lock-toggle" className="text-xs font-bold uppercase tracking-widest text-primary/60 cursor-pointer select-none">
+                {isLocked ? "Locked" : "Lock Choices"}
+              </Label>
+              <Switch 
+                id="lock-toggle" 
+                checked={isLocked} 
+                onCheckedChange={setIsLocked}
+                className="data-[state=checked]:bg-primary"
+              />
+            </div>
+          </div>
         </motion.div>
 
         <div className="grid gap-12">
@@ -432,7 +480,11 @@ export default function BrandIdentity() {
         </div>
 
         <div className="pt-12 flex justify-center">
-          <Button size="lg" className="px-12 py-8 bg-primary text-white rounded-3xl font-bold text-xl uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 transition-transform">
+          <Button 
+            size="lg" 
+            className="px-12 py-8 bg-primary text-white rounded-3xl font-bold text-xl uppercase tracking-widest shadow-2xl shadow-primary/30 hover:scale-105 transition-transform"
+            disabled={isLocked}
+          >
             Save Brand Identity
           </Button>
         </div>
