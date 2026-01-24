@@ -734,13 +734,13 @@ export default function BrandStrategy() {
                       <Card className="overflow-hidden border-2 border-primary/10 hover:border-primary/30 transition-all rounded-3xl bg-white shadow-xl shadow-primary/5">
                         <CardContent className="p-8 space-y-6 relative">
                           <div className="absolute top-6 right-6 flex gap-2">
-                            {editingId === val.id ? (
+                            {editingId === v.id ? (
                               <>
                                 <Button
                                   size="icon"
                                   variant="ghost"
                                   className="h-8 w-8 text-green-600 hover:bg-green-50"
-                                  onClick={() => updateMutation.mutate({ id: val.id, content: editValue, type: 'value' })}
+                                  onClick={() => updateMutation.mutate({ id: v.id, content: editValue, type: 'value' })}
                                   disabled={updateMutation.isPending || isLocked}
                                 >
                                   <Check className="w-4 h-4" />
@@ -762,8 +762,8 @@ export default function BrandStrategy() {
                                     variant="ghost"
                                     className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/5"
                                     onClick={() => {
-                                      setEditingId(val.id);
-                                      setEditValue(val.valueProposition);
+                                      setEditingId(v.id);
+                                      setEditValue(v.valueProposition);
                                     }}
                                   >
                                     <Pencil className="w-4 h-4" />
@@ -774,7 +774,7 @@ export default function BrandStrategy() {
                                     className="h-8 w-8 text-primary/40 hover:text-red-500 hover:bg-red-50"
                                     onClick={() => {
                                       if (confirm("Are you sure you want to delete this value proposition?")) {
-                                        deleteMutation.mutate({ id: val.id, type: 'value' });
+                                        deleteMutation.mutate({ id: v.id, type: 'value' });
                                       }
                                     }}
                                   >
