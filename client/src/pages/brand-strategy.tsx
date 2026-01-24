@@ -359,7 +359,7 @@ export default function BrandStrategy() {
                               <Textarea
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="text-lg font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                                className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
@@ -460,12 +460,12 @@ export default function BrandStrategy() {
                               <Textarea
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                                className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12 whitespace-pre-wrap">
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
                                 "{t.targetMarket.replace(/\*\*/g, '')}"
-                              </h3>
+                              </p>
                             )}
                           </div>
                         </CardContent>
@@ -561,10 +561,10 @@ export default function BrandStrategy() {
                               <Textarea
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                                className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <p className="text-2xl font-display font-bold text-black leading-tight pr-12 italic whitespace-pre-wrap">
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 italic whitespace-pre-wrap">
                                 "{m.mission.replace(/\*\*/g, '')}"
                               </p>
                             )}
@@ -763,12 +763,12 @@ export default function BrandStrategy() {
                               <Textarea
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
-                                className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
+                                className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12">
-                                "{v.valueProposition}"
-                              </h3>
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
+                                "{v.valueProposition.replace(/\*\*/g, '')}"
+                              </p>
                             )}
                           </div>
                         </CardContent>

@@ -165,8 +165,8 @@ function BuilderSection({ title, label, tips, generateEndpoint, saveEndpoint, ty
             <Sparkles className="w-8 h-8 text-primary shrink-0 mt-1" />
             <div className="space-y-4">
               <h4 className="text-xs font-bold uppercase tracking-widest text-primary/70">Generated Result</h4>
-              <div className="text-2xl font-display font-bold text-black leading-tight">
-                {result}
+              <div className="text-xl font-medium text-black leading-relaxed whitespace-pre-wrap">
+                {result.replace(/\*\*/g, '')}
               </div>
             </div>
           </div>

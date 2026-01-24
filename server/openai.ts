@@ -93,7 +93,7 @@ export async function generateMissionStatement(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. Do not use markdown or asterisks for emphasis, just provide the mission statement text. Return ONLY the mission statement text."
+          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis or titles. Return ONLY the plain text mission statement."
         },
         {
           role: "user",
@@ -118,7 +118,7 @@ export async function generateVisionStatement(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the vision statement text."
+          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis. Do not explain anything, just provide the vision statement text."
         },
         {
           role: "user",
@@ -143,7 +143,7 @@ export async function generateValueProposition(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the value proposition statement text."
+          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis. Do not explain anything, just provide the value proposition statement text."
         },
         {
           role: "user",
@@ -168,7 +168,7 @@ export async function generateTargetMarket(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the target market profile text."
+          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis or labels. Do not explain anything, just provide the target market profile text."
         },
         {
           role: "user",
@@ -193,7 +193,7 @@ export async function generateBackground(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the refined background text."
+          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. ABSOLUTELY NO MARKDOWN OR ASTERISKS. Do not use asterisks (**) for emphasis. Do not explain anything, just provide the refined background text."
         },
         {
           role: "user",
