@@ -17,7 +17,7 @@ interface DemographicsData {
   medianIncome: number;
 }
 
-const COLORS = ["#e26e6d", "#c6e4f9", "#8B8589", "#800020", "#191970"];
+const COLORS = ["#e26e6d", "#c6e4f9", "#8B8589", "#B3FFB3", "#FF99FF"];
 
 export function DemographicsChart({ data }: { data: DemographicsData }) {
   return (

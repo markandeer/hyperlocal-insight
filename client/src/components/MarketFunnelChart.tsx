@@ -19,8 +19,8 @@ interface MarketData {
 export function MarketFunnelChart({ data }: { data: MarketData }) {
   const chartData = [
     { name: "TAM", value: data.tam.value, color: "#8B8589", desc: "Total Addressable Market" },
-    { name: "SAM", value: data.sam.value, color: "#800020", desc: "Serviceable Available Market" },
-    { name: "SOM", value: data.som.value, color: "#191970", desc: "Serviceable Obtainable Market" },
+    { name: "SAM", value: data.sam.value, color: "#B3FFB3", desc: "Serviceable Available Market" },
+    { name: "SOM", value: data.som.value, color: "#FF99FF", desc: "Serviceable Obtainable Market" },
   ];
 
   return (

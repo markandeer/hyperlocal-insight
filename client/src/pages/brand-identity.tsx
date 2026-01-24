@@ -27,9 +27,9 @@ export default function BrandIdentity() {
       { name: "Primary", hex: "#e26e6d" },
       { name: "Secondary", hex: "#c6e4f9" },
       { name: "Accent", hex: "#f0f9ff" },
-      { name: "Dark", hex: "#1a1a1a" },
-      { name: "Neutral 1", hex: "#f5f5f5" },
-      { name: "Neutral 2", hex: "#ffffff" }
+      { name: "Mint Green", hex: "#B3FFB3" },
+      { name: "Light Pink", hex: "#FF99FF" },
+      { name: "Neutral", hex: "#ffffff" }
     ];
   });
 

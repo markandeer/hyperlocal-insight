@@ -35,9 +35,9 @@ export default function BrandStrategy() {
       { label: "Coral Red", hex: "#e26e6d" },
       { label: "Light Blue", hex: "#c6e4f9" },
       { label: "Highlight", hex: "#f0f9ff" },
-      { label: "Deep Charcoal", hex: "#1a1a1a" },
-      { label: "Accent 1", hex: "#f5f5f5" },
-      { label: "Accent 2", hex: "#ffffff" }
+      { label: "Mint Green", hex: "#B3FFB3" },
+      { label: "Light Pink", hex: "#FF99FF" },
+      { label: "Accent", hex: "#ffffff" }
     ];
   });
 
