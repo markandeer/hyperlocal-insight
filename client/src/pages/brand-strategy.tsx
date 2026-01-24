@@ -362,8 +362,8 @@ export default function BrandStrategy() {
                                 className="text-lg font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <p className="text-xl font-medium text-black leading-relaxed pr-12">
-                                {b.background}
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
+                                {b.background.replace(/\*\*/g, '')}
                               </p>
                             )}
                           </div>
@@ -463,8 +463,8 @@ export default function BrandStrategy() {
                                 className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12">
-                                "{t.targetMarket}"
+                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12 whitespace-pre-wrap">
+                                "{t.targetMarket.replace(/\*\*/g, '')}"
                               </h3>
                             )}
                           </div>
@@ -564,9 +564,9 @@ export default function BrandStrategy() {
                                 className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12">
-                                "{m.mission}"
-                              </h3>
+                              <p className="text-2xl font-display font-bold text-black leading-tight pr-12 italic whitespace-pre-wrap">
+                                "{m.mission.replace(/\*\*/g, '')}"
+                              </p>
                             )}
                           </div>
                         </CardContent>
@@ -665,9 +665,9 @@ export default function BrandStrategy() {
                                 className="text-2xl font-display font-bold text-black leading-tight border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <h3 className="text-3xl font-display font-bold text-black leading-tight pr-12">
-                                "{v.vision}"
-                              </h3>
+                              <p className="text-2xl font-display font-bold text-black leading-tight pr-12 italic whitespace-pre-wrap">
+                                "{v.vision.replace(/\*\*/g, '')}"
+                              </p>
                             )}
                           </div>
                         </CardContent>

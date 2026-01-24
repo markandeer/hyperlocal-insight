@@ -16,6 +16,8 @@ export async function generateMarketAnalysis(address: string, businessType: stri
           role: "system",
           content: `You are an expert market analyst AI specializing in hyperlocal business intelligence. Generate a highly accurate market analysis for a "${businessType}" at "${address}".
           
+          CRITICAL: Do not use any markdown formatting, bolding (asterisks), or special characters for emphasis in text descriptions. Keep all output text uniform.
+          
           Calculation Guidelines for TAM, SAM, SOM (5-mile radius):
           1. TAM (Total Addressable Market): Estimate total annual spending for this business category within the 5-mile radius based on population and national/regional average spend per capita.
           2. SAM (Serviceable Available Market): The portion of TAM that fits the specific sub-type and quality of this business, adjusted for local median income and regional demographics.
@@ -91,7 +93,7 @@ export async function generateMissionStatement(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. Return ONLY the mission statement text."
+          content: "You are a branding expert. Generate a concise, powerful mission statement based on the user's ideas. The mission statement should be professional, inspiring, and focus on the core value proposition. Do not use markdown or asterisks for emphasis, just provide the mission statement text. Return ONLY the mission statement text."
         },
         {
           role: "user",
@@ -116,7 +118,7 @@ export async function generateVisionStatement(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, just provide the vision statement."
+          content: "You are a strategic brand consultant. Generate a compelling, forward-looking vision statement based on the user's input. The vision statement should be a single, powerful sentence that describes the long-term impact and future state the business aspires to achieve. Keep it inspiring, ambitious, and concise. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the vision statement text."
         },
         {
           role: "user",
@@ -141,7 +143,7 @@ export async function generateValueProposition(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, just provide the value proposition statement."
+          content: "You are a strategic marketing expert. Generate a clear, compelling value proposition based on the user's input. The value proposition should highlight the primary benefit, the target audience, and what makes the offering unique. Keep it punchy and persuasive. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the value proposition statement text."
         },
         {
           role: "user",
@@ -166,7 +168,7 @@ export async function generateTargetMarket(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. Do not explain anything, just provide the target market profile."
+          content: "You are a market research specialist. Generate a detailed target market profile based on the user's input. The profile should describe the ideal customer's demographics, psychographics, and key pain points. Keep it professional, data-driven, and concise. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the target market profile text."
         },
         {
           role: "user",
@@ -191,7 +193,7 @@ export async function generateBackground(input: string): Promise<string> {
       messages: [
         {
           role: "system",
-          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. Do not explain anything, just provide the refined background text."
+          content: "You are a professional business writer. Your task is to refine the user's business background. Perform spell check, grammar check, and make the text a touch more inspired and polished while maintaining the original meaning. Do not explain anything, do not use markdown or asterisks for emphasis, just provide the refined background text."
         },
         {
           role: "user",
@@ -227,6 +229,7 @@ export async function generateLiveInsights(address: string, businessType: string
           1. 2-Week Weather Forecast: Provide an accurate day-by-day weather forecast for the next 14 days for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions. USE SEARCH/KNOWLEDGE TO FIND REAL CURRENT METEOROLOGICAL DATA FOR THIS SPECIFIC LOCATION. DO NOT hallucinate.
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
+          4. NO MARKDOWN: Do not use any asterisks (**), bolding, or markdown formatting in any text fields. Keep all text uniform and plain.
           
           Return ONLY valid JSON with this exact structure (do not include any other keys):
           {
