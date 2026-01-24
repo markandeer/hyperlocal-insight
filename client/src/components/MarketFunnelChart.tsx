@@ -20,7 +20,7 @@ export function MarketFunnelChart({ data }: { data: MarketData }) {
   const chartData = [
     { name: "TAM", value: data.tam.value, color: "#8B9CAD", desc: "Total Addressable Market" },
     { name: "SAM", value: data.sam.value, color: "#7B6B6D", desc: "Serviceable Available Market" },
-    { name: "SOM", value: data.som.value, color: "#FF99FF", desc: "Serviceable Obtainable Market" },
+    { name: "SOM", value: data.som.value, color: "#FAF0E6", desc: "Serviceable Obtainable Market" },
   ];
 
   return (
