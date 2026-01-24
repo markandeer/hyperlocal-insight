@@ -363,7 +363,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
-                                {b.background.replace(/\*\*/g, '')}
+                                {b.background.replace(/\*/g, '')}
                               </p>
                             )}
                           </div>
@@ -464,7 +464,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
-                                {t.targetMarket.replace(/\*\*/g, '')}
+                                {t.targetMarket.replace(/\*/g, '')}
                               </p>
                             )}
                           </div>
@@ -565,7 +565,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 italic whitespace-pre-wrap">
-                                "{m.mission}"
+                                "{m.mission.replace(/\*/g, '')}"
                               </p>
                             )}
                           </div>
@@ -666,7 +666,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-2xl font-display font-bold text-black leading-tight pr-12 italic whitespace-pre-wrap">
-                                "{v.vision}"
+                                "{v.vision.replace(/\*/g, '')}"
                               </p>
                             )}
                           </div>
@@ -767,7 +767,7 @@ export default function BrandStrategy() {
                               />
                             ) : (
                               <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
-                                "{v.valueProposition}"
+                                "{v.valueProposition.replace(/\*/g, '')}"
                               </p>
                             )}
                           </div>
