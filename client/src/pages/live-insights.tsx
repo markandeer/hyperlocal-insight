@@ -103,7 +103,7 @@ export default function LiveInsights() {
           >
             Live Insights
           </motion.h1>
-          <p className="text-primary/60 italic">Real-time market intelligence affecting your locations.</p>
+          <p className="text-primary/60">Real-time market intelligence affecting your locations.</p>
         </div>
 
         {isLoadingReports ? (
@@ -197,7 +197,7 @@ export default function LiveInsights() {
                   
                   <div className="flex items-center gap-2 text-[#e26e6d]/60 mb-4 px-1">
                     <MapPin className="w-4 h-4 shrink-0 text-[#e26e6d]" />
-                    <p className="text-sm font-medium line-clamp-1 italic text-primary/80">
+                    <p className="text-sm font-medium line-clamp-1 text-primary/80">
                       {report.address}
                     </p>
                   </div>
@@ -236,7 +236,7 @@ export default function LiveInsights() {
                 <div className="flex flex-col items-center justify-center py-20 glass-card rounded-3xl border-2 border-red-100 bg-red-50/30">
                   <X className="w-12 h-12 text-red-400 mb-4" />
                   <p className="text-red-500 font-bold uppercase tracking-widest text-xs">Analysis Failed</p>
-                  <p className="text-red-400/60 text-[10px] mt-2 italic">Please try refreshing or select another location.</p>
+                  <p className="text-red-400/60 text-[10px] mt-2">Please try refreshing or select another location.</p>
                 </div>
               ) : insights ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -330,7 +330,7 @@ export default function LiveInsights() {
                                     </h4>
                                     <ExternalLink className="w-3 h-3 text-primary/20 shrink-0 group-hover:text-[#e26e6d] transition-colors" />
                                   </div>
-                                  <p className="text-xs text-primary/60 line-clamp-2 mb-2 leading-relaxed italic">
+                                  <p className="text-xs text-primary/60 line-clamp-2 mb-2 leading-relaxed">
                                     {item.summary}
                                   </p>
                                   <div className="flex items-center gap-2 text-[10px] text-primary/40 font-bold uppercase tracking-widest">
@@ -344,7 +344,7 @@ export default function LiveInsights() {
                                 </div>
                               ))}
                             {(insights?.news?.filter(item => item.category === category).length === 0 || !insights?.news) && (
-                              <p className="text-xs text-primary/30 italic">No recent updates in this category.</p>
+                              <p className="text-xs text-primary/30">No recent updates in this category.</p>
                             )}
                           </div>
                         </div>

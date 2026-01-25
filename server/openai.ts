@@ -234,7 +234,7 @@ export async function generateLiveInsights(address: string, businessType: string
           Provide the absolute most accurate current weather, traffic, and news insights for a "${businessType}" at the EXACT location: "${address}".
           
           CRITICAL INSTRUCTIONS:
-          1. 2-Week Weather Forecast: Provide an accurate day-by-day weather forecast for the next 14 days for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions. USE SEARCH/KNOWLEDGE TO FIND REAL CURRENT METEOROLOGICAL DATA FOR THIS SPECIFIC LOCATION. DO NOT hallucinate.
+          1. 2-Week Weather Forecast: You MUST search for the current real-world weather forecast for "${address}". Include date, expected high/low temp (Fahrenheit), and conditions for the next 14 days. DO NOT hallucinate. Use your browsing capabilities or internal knowledge of current seasonal patterns for this specific coordinate.
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
           4. NO MARKDOWN: Do not use any asterisks (**), bolding, or markdown formatting in any text fields. Keep all text uniform and plain.
