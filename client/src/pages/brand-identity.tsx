@@ -201,7 +201,7 @@ export default function BrandIdentity() {
                 <Upload className="w-10 h-10 text-primary/40" />
               </div>
               <p className="text-primary/60 font-medium uppercase tracking-widest text-sm">Upload Logo Asset</p>
-              <p className="text-primary/40 text-xs mt-2 italic">SVG, PNG, or JPG (Max 5MB)</p>
+              <p className="text-primary/40 text-xs mt-2">SVG, PNG, or JPG (Max 5MB)</p>
             </div>
           ) : (
             <div className="relative group max-w-md mx-auto">
@@ -429,7 +429,7 @@ export default function BrandIdentity() {
           <h1 className="text-5xl md:text-6xl font-display font-bold text-primary uppercase tracking-tighter mb-4">
             Brand Identity
           </h1>
-          <p className="text-xl text-primary/80 font-medium italic">Define the visual soul of your business.</p>
+          <p className="text-xl text-primary/80 font-medium">Define the visual soul of your business.</p>
           <div className="mt-2 flex items-center justify-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
               {isLocked ? (
@@ -467,7 +467,7 @@ export default function BrandIdentity() {
                   <h2 className="text-2xl font-display font-bold text-primary uppercase tracking-tight leading-none">
                     {section.title}
                   </h2>
-                  <p className="text-sm text-primary/60 font-medium italic">{section.description}</p>
+                  <p className="text-sm text-primary/60 font-medium">{section.description}</p>
                 </div>
                 <div className="h-px flex-1 bg-primary/10" />
               </div>

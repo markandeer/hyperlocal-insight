@@ -595,7 +595,7 @@ export default function BrandStrategy() {
                                 className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <p className="text-xl font-medium text-black leading-relaxed pr-12 italic whitespace-pre-wrap">
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
                                 "{m.mission.replace(/\*/g, '')}"
                               </p>
                             )}
@@ -698,7 +698,7 @@ export default function BrandStrategy() {
                                 className="text-xl font-medium text-black leading-relaxed border-primary/20 focus-visible:ring-primary/30 min-h-[120px]"
                               />
                             ) : (
-                              <p className="text-xl font-medium text-black leading-relaxed pr-12 italic whitespace-pre-wrap">
+                              <p className="text-xl font-medium text-black leading-relaxed pr-12 whitespace-pre-wrap">
                                 "{v.vision.replace(/\*/g, '')}"
                               </p>
                             )}
