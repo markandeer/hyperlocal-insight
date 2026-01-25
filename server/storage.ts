@@ -32,6 +32,8 @@ export interface IStorage {
   getBackgrounds(): Promise<BrandBackground[]>;
   updateBackground(id: number, background: string): Promise<BrandBackground>;
   deleteBackground(id: number): Promise<void>;
+  
+  // Auth operations are handled by replit_integrations/auth/storage.ts
 }
 
 export class DatabaseStorage implements IStorage {

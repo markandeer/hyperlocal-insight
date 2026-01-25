@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights, generateBackground } from "./openai";
 import { insertReportSchema } from "@shared/schema";
 import { z } from "zod";
@@ -51,6 +52,10 @@ async function seedDatabase() {
 }
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
+  // Setup auth and register auth routes
+  await setupAuth(app);
+  registerAuthRoutes(app);
+
   // Mission statement generation
   app.post("/api/generate-mission", async (req, res) => {
     try {

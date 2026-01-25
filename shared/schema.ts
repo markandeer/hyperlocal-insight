@@ -2,6 +2,8 @@ import { pgTable, text, serial, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export * from "./models/auth";
+
 export const analysis_reports = pgTable("analysis_reports", {
   id: serial("id").primaryKey(),
   name: text("name"), // Optional custom name for the report
