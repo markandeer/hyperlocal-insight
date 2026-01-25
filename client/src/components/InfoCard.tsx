@@ -2,7 +2,7 @@ import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface InfoCardProps {
-  title: string;
+  title: React.ReactNode;
   icon: LucideIcon;
   color: "primary" | "secondary" | "orange" | "green";
   children: React.ReactNode;
