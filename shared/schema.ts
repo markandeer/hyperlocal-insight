@@ -116,6 +116,10 @@ export const analysisDataSchema = z.object({
     challenges: z.array(z.string()),
     peakHours: z.string(),
   }),
+  gentrification: z.object({
+    score: z.number().min(1).max(10),
+    description: z.string(),
+  }),
 });
 
 export type AnalysisData = z.infer<typeof analysisDataSchema>;

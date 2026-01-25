@@ -59,6 +59,10 @@ export async function generateMarketAnalysis(address: string, businessType: stri
               "typicalTraffic": "string",
               "challenges": ["string", "string"],
               "peakHours": "string"
+            },
+            "gentrification": {
+              "score": number (scale of 1-10),
+              "description": "string (briefly explain the factors for this score within the 5-mile radius)"
             }
           }
           

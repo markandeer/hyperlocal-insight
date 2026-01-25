@@ -4,7 +4,7 @@ import { Layout } from "@/components/Layout";
 import { MarketFunnelChart } from "@/components/MarketFunnelChart";
 import { DemographicsChart } from "@/components/DemographicsChart";
 import { InfoCard } from "@/components/InfoCard";
-import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target, Download } from "lucide-react";
+import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target, Download, TrendingDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnalysisData } from "@shared/schema";
 import { Button } from "@/components/ui/button";
@@ -153,8 +153,8 @@ export default function ReportPage() {
               </div>
             </motion.section>
 
-            {/* Grid Section for Psychographics, Weather, Traffic */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Grid Section for Psychographics, Weather, Traffic, Gentrification */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               
               {/* Psychographics */}
               <motion.div variants={itemVariants} className="h-full">
@@ -217,6 +217,24 @@ export default function ReportPage() {
                           <li key={i}>{challenge}</li>
                         ))}
                       </ul>
+                    </div>
+                  </div>
+                </InfoCard>
+              </motion.div>
+
+              {/* Gentrification Scale */}
+              <motion.div variants={itemVariants} className="h-full">
+                <InfoCard title="Gentrification" icon={TrendingUp} color="secondary">
+                  <div className="space-y-4 text-white">
+                    <div className="flex flex-col items-center justify-center py-2 bg-white/5 rounded-xl border border-white/10">
+                      <span className="text-4xl font-display font-black text-secondary">
+                        {analysis.gentrification?.score || "N/A"}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Scale 1-10</span>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Analysis</span>
+                      <p className="text-sm leading-relaxed">{analysis.gentrification?.description || "No gentrification data available."}</p>
                     </div>
                   </div>
                 </InfoCard>
