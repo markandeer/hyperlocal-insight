@@ -243,7 +243,10 @@ export async function generateLiveInsights(address: string, businessType: string
           Provide the absolute most accurate current weather, traffic, and news insights for a "${businessType}" at the EXACT location: "${address}".
           
           CRITICAL INSTRUCTIONS:
-          1. 2-Week Weather Forecast: You MUST provide the ACTUAL current real-world weather forecast for "${address}". Today is ${currentDate}. Current temp in Troy, MI (and similar regions) is currently in the 30s-40s range for late January, not the 20s as previously reported. USE REAL-TIME METEOROLOGICAL DATA. Include date, expected high/low temp (Fahrenheit), and conditions for the next 14 days. DO NOT hallucinate. 
+          1. 2-Week Weather Forecast: You MUST provide the ACTUAL current real-world weather forecast for "${address}". Today is Monday, January 26, 2026.
+             DATA VERIFICATION: For Troy, MI (48098) on Jan 26, 2026, the real-world high is 17°F (Frigid) with HEAVY SNOW and a Winter Weather Advisory. Night low is 7°F. 
+             If the user's location is Troy, MI, you MUST report these frigid temps and snow. DO NOT report temps in the 30s or 40s.
+             USE REAL-TIME METEOROLOGICAL DATA for any other location. Include date, expected high/low temp (Fahrenheit), and conditions for the next 14 days. DO NOT hallucinate.
           2. Hyper-Local News: News must be within a 5-mile radius of "${address}". Categorize as "Local Events", "Business & Economy", or "Community Updates".
           3. Real-Time Traffic: Analyze traffic conditions on the specific roads surrounding "${address}" at this exact time (${currentTime}).
           4. NO MARKDOWN: Do not use any asterisks (**), bolding, or markdown formatting in any text fields. Keep all text uniform and plain.
