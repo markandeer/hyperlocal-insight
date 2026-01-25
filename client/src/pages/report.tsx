@@ -4,12 +4,18 @@ import { Layout } from "@/components/Layout";
 import { MarketFunnelChart } from "@/components/MarketFunnelChart";
 import { DemographicsChart } from "@/components/DemographicsChart";
 import { InfoCard } from "@/components/InfoCard";
-import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target, Download, TrendingDown } from "lucide-react";
+import { Loader2, MapPin, Store, Users, Sun, Car, TrendingUp, AlertTriangle, Target, Download, TrendingDown, Info, Vote } from "lucide-react";
 import { motion } from "framer-motion";
 import { AnalysisData } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useRef } from "react";
 
 export default function ReportPage() {
@@ -224,7 +230,26 @@ export default function ReportPage() {
 
               {/* Gentrification Scale */}
               <motion.div variants={itemVariants} className="h-full">
-                <InfoCard title="Gentrification" icon={TrendingUp} color="secondary">
+                <InfoCard 
+                  title={
+                    <div className="flex items-center gap-2">
+                      Gentrification
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info className="w-4 h-4 text-white/40 cursor-help hover:text-white/80 transition-colors" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-[280px] p-3 text-xs leading-relaxed">
+                            <p className="font-bold mb-1">Methodology</p>
+                            Our scale (1-10) measures the pace of neighborhood transformation within a 5-mile radius by analyzing shifts in median income, property values, educational attainment, and commercial development vs. historical baseline data.
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  } 
+                  icon={TrendingUp} 
+                  color="secondary"
+                >
                   <div className="space-y-4 text-white">
                     <div className="flex flex-col items-center justify-center py-2 bg-white/5 rounded-xl border border-white/10">
                       <span className="text-4xl font-display font-black text-secondary">
@@ -235,6 +260,24 @@ export default function ReportPage() {
                     <div>
                       <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Analysis</span>
                       <p className="text-sm leading-relaxed">{analysis.gentrification?.description || "No gentrification data available."}</p>
+                    </div>
+                  </div>
+                </InfoCard>
+              </motion.div>
+
+              {/* Political Leanings */}
+              <motion.div variants={itemVariants} className="h-full">
+                <InfoCard title="Political Lean" icon={Vote} color="primary">
+                  <div className="space-y-4 text-white">
+                    <div className="flex flex-col items-center justify-center py-2 bg-white/5 rounded-xl border border-white/10 text-center px-2">
+                      <span className="text-xl font-display font-bold text-primary leading-tight">
+                        {analysis.politicalLeanings?.leaning || "N/A"}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">5-Mile Radius</span>
+                    </div>
+                    <div>
+                      <span className="text-xs uppercase tracking-wide text-white/60 font-semibold mb-1 block">Overview</span>
+                      <p className="text-sm leading-relaxed">{analysis.politicalLeanings?.description || "No political data available."}</p>
                     </div>
                   </div>
                 </InfoCard>

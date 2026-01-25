@@ -120,6 +120,10 @@ export const analysisDataSchema = z.object({
     score: z.number().min(1).max(10),
     description: z.string(),
   }),
+  politicalLeanings: z.object({
+    leaning: z.string(),
+    description: z.string(),
+  }),
 });
 
 export type AnalysisData = z.infer<typeof analysisDataSchema>;
