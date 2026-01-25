@@ -356,6 +356,24 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // Create customer portal session
+  app.post("/api/checkout/portal", async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const user = await storage.getUser(req.user.id);
+    if (!user?.stripeCustomerId) {
+      return res.status(400).json({ message: "No customer ID found" });
+    }
+    try {
+      const session = await stripeService.createCustomerPortalSession(
+        user.stripeCustomerId,
+        `${req.protocol}://${req.get("host")}/settings`
+      );
+      res.json({ url: session.url });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create portal session" });
+    }
+  });
+
   // API Routes
   app.post("/api/reports/analyze", async (req, res) => {
     try {

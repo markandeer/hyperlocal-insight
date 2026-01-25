@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { History, LayoutDashboard, Menu, X } from "lucide-react";
+import { History, LayoutDashboard, Menu, X, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import {
@@ -55,6 +55,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
               ))}
             </nav>
+            <div className="mt-auto pt-8 border-t border-primary/10">
+              <Link href="/settings">
+                <div
+                  onClick={() => setIsOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2 text-xl font-display font-bold uppercase tracking-tight py-2 transition-colors cursor-pointer",
+                    location === "/settings" ? "text-primary" : "text-primary/60 hover:text-primary"
+                  )}
+                >
+                  <Settings className="w-6 h-6" />
+                  Settings
+                </div>
+              </Link>
+            </div>
           </SheetContent>
         </Sheet>
 

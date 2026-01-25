@@ -13,6 +13,7 @@ import BrandStrategy from "@/pages/brand-strategy";
 import BrandIdentity from "@/pages/brand-identity";
 import LiveInsights from "@/pages/live-insights";
 import LocationInsightsPage from "@/pages/location-insights";
+import SettingsPage from "@/pages/settings";
 import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -94,6 +95,9 @@ function Router() {
         </Route>
         <Route path="/live-insights">
           {() => isAuthenticated ? <LiveInsights /> : <LandingPage />}
+        </Route>
+        <Route path="/settings">
+          {() => isAuthenticated ? <SettingsPage /> : <LandingPage />}
         </Route>
         <Route component={NotFound} />
       </Switch>
