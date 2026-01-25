@@ -1,60 +1,47 @@
-import type { Express } from "express";
-import { createServer, type Server } from "http";
-import { storage } from "./storage";
-import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import express, { type Express } from 'express';
+import { storage } from './storage';
+import { stripeService } from './stripeService';
+import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights, generateBackground } from "./openai";
-import { insertReportSchema } from "@shared/schema";
-import { z } from "zod";
 
-async function seedDatabase() {
-  const existingReports = await storage.getReports();
-  if (existingReports.length === 0) {
-    console.log("Seeding database with sample report...");
-    await storage.createReport({
-      address: "210 S Desplaines St, Chicago, IL 60661",
-      businessType: "Marketing Agency",
-      data: {
-        marketSize: {
-          tam: { value: 50000000, description: "Total addressable market for digital marketing in Chicago metro area." },
-          sam: { value: 15000000, description: "Serviceable market within downtown Chicago business district." },
-          som: { value: 3000000, description: "Realistic obtainable market share based on current competition." }
-        },
-        demographics: {
-          population: 45000,
-          medianIncome: 110000,
-          ageGroups: [
-            { range: "18-24", percentage: 15 },
-            { range: "25-34", percentage: 40 },
-            { range: "35-44", percentage: 25 },
-            { range: "45-54", percentage: 15 },
-            { range: "55+", percentage: 5 }
-          ],
-          description: "Young, affluent professionals living in high-rise apartments."
-        },
-        psychographics: {
-          interests: ["Technology", "Business", "Fine Dining", "Fitness"],
-          lifestyle: "Fast-paced, career-focused, digitally connected.",
-          buyingBehavior: "Values quality and convenience, high disposable income."
-        },
-        weather: {
-          seasonalTrends: "Harsh winters reduce foot traffic; vibrant summer activity.",
-          impactOnBusiness: "Digital services remain stable; local events peak in summer."
-        },
-        traffic: {
-          typicalTraffic: "Heavy congestion during rush hours.",
-          challenges: ["Limited parking", "Construction delays"],
-          peakHours: "8-9 AM, 5-6 PM"
-        }
-      }
-    });
-    console.log("Database seeded successfully.");
-  }
-}
-
-export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
+export async function registerRoutes(httpServer: any, app: Express): Promise<any> {
   // Setup auth and register auth routes
   await setupAuth(app);
   registerAuthRoutes(app);
+
+  // Create customer portal session
+  app.post("/api/checkout/portal", async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const user = await storage.getUser(req.user.id);
+    if (!user?.stripeCustomerId) {
+      return res.status(400).json({ message: "No customer ID found" });
+    }
+    try {
+      const session = await stripeService.createCustomerPortalSession(
+        user.stripeCustomerId,
+        `${req.protocol}://${req.get("host")}/settings`
+      );
+      res.json({ url: session.url });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create portal session" });
+    }
+  });
+
+  // Get user subscription
+  app.get('/api/subscription', async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.json({ subscription: null });
+    try {
+      const user = await storage.getUser(req.user.id);
+      if (!user?.stripeSubscriptionId) {
+        return res.json({ subscription: null });
+      }
+      const subscription = await stripeService.getSubscription(user.stripeSubscriptionId);
+      res.json({ subscription });
+    } catch (error) {
+      console.error("Subscription fetch error:", error);
+      res.json({ subscription: null });
+    }
+  });
 
   // Mission statement generation
   app.post("/api/generate-mission", async (req, res) => {
@@ -455,9 +442,6 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
       res.status(500).send("Failed to generate live insights");
     }
   });
-
-  // Seed on startup
-  seedDatabase().catch(err => console.error("Seeding failed:", err));
 
   return httpServer;
 }

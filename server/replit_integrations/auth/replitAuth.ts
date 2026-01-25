@@ -71,6 +71,8 @@ export async function setupAuth(app: Express) {
       firstName: claims["first_name"] as string,
       lastName: claims["last_name"] as string,
       profileImageUrl: claims["profile_image_url"] as string,
+      stripeCustomerId: claims["stripe_customer_id"] as string,
+      stripeSubscriptionId: claims["stripe_subscription_id"] as string,
     });
     verified(null, user);
   };

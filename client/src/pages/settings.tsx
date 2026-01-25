@@ -11,7 +11,7 @@ export default function SettingsPage() {
   const { user } = useAuth();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
 
-  const { data: subscriptionData } = useQuery({
+  const { data: subscriptionData } = useQuery<any>({
     queryKey: ["/api/subscription"],
   });
 

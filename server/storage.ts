@@ -214,6 +214,20 @@ export class DatabaseStorage implements IStorage {
   async deleteBackground(id: number): Promise<void> {
     await db.delete(brand_backgrounds).where(eq(brand_backgrounds.id, id));
   }
+
+  // User operations
+  async getUser(id: string) {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async updateUserStripeInfo(userId: string, stripeInfo: {
+    stripeCustomerId?: string;
+    stripeSubscriptionId?: string;
+  }) {
+    const [user] = await db.update(users).set(stripeInfo).where(eq(users.id, userId)).returning();
+    return user;
+  }
 }
 
 export const storage = new DatabaseStorage();
