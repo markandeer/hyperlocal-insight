@@ -5,12 +5,15 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { CreditCard, User, ExternalLink, Shield, FileText } from "lucide-react";
+import { CreditCard, User, ExternalLink, Shield, FileText, Lock, Unlock } from "lucide-react";
 import { Link } from "wouter";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const { data: subscriptionData } = useQuery<any>({
     queryKey: ["/api/subscription"],
@@ -150,37 +153,73 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="mt-8 border-primary/10 shadow-lg rounded-3xl overflow-hidden">
-            <CardHeader className="bg-primary/5">
+            <CardHeader className="bg-primary/5 relative">
               <CardTitle className="text-xl font-display font-bold text-primary uppercase tracking-tighter">
                 Member Details
               </CardTitle>
               <CardDescription className="text-primary/60">
                 Personal information for your account.
               </CardDescription>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-4 top-4 text-primary/40 hover:text-primary"
+                onClick={() => setIsEditing(!isEditing)}
+              >
+                {isEditing ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+              </Button>
             </CardHeader>
             <CardContent className="pt-8">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Name</p>
-                  <p className="font-bold text-primary">{claims.first_name} {claims.last_name}</p>
+              <form className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Name</Label>
+                  <Input 
+                    readOnly={!isEditing}
+                    defaultValue={`${claims.first_name} ${claims.last_name}`}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                  />
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Email</p>
-                  <p className="font-bold text-primary">{claims.email}</p>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Email</Label>
+                  <Input 
+                    readOnly={!isEditing}
+                    defaultValue={claims.email}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                  />
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Phone</p>
-                  <p className="font-bold text-primary">{claims.phone_number || "Not provided"}</p>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Phone</Label>
+                  <Input 
+                    readOnly={!isEditing}
+                    placeholder="Not provided"
+                    defaultValue={claims.phone_number}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                  />
                 </div>
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Address</p>
-                  <p className="font-bold text-primary/60 italic">Optional</p>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Address</Label>
+                  <Input 
+                    readOnly={!isEditing}
+                    placeholder="Optional"
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                  />
                 </div>
-                <div className="space-y-1 md:col-span-2">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Billing Address</p>
-                  <p className="font-bold text-primary/60 italic">Optional</p>
+                <div className="space-y-2 md:col-span-2">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Billing Address</Label>
+                  <Input 
+                    readOnly={!isEditing}
+                    placeholder="Optional"
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                  />
                 </div>
-              </div>
+                {isEditing && (
+                  <div className="md:col-span-2 pt-4">
+                    <Button className="w-full bg-primary text-white font-bold uppercase tracking-widest text-xs h-12 rounded-xl">
+                      Save Changes
+                    </Button>
+                  </div>
+                )}
+              </form>
             </CardContent>
           </Card>
         </TabsContent>
