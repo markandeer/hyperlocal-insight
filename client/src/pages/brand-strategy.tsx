@@ -275,14 +275,13 @@ export default function BrandStrategy() {
           </h1>
           <p className="text-xl text-primary/80 font-medium">Your saved brand assets and strategy foundations.</p>
           <div className="mt-4 flex flex-col items-center gap-4">
-            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer">
-              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-10 px-8 rounded-xl shadow-lg shadow-emerald-200 flex items-center gap-2">
-                <Zap className="w-4 h-4" />
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-48">
+              <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-10 rounded-xl shadow-lg shadow-emerald-200 flex items-center justify-center gap-2">
                 Get Insights
               </Button>
             </a>
-            <div className="flex items-center justify-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
+            <div className="w-48 flex items-center justify-center gap-3">
+              <div className="w-full flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
                 {isLocked ? (
                   <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
                 ) : (
