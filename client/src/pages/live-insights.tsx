@@ -105,9 +105,9 @@ export default function LiveInsights() {
             Live Insights
           </motion.h1>
           <p className="text-primary/60">Real-time market intelligence affecting your locations.</p>
-          <div className="mt-4 flex flex-col items-center gap-4">
-            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-48">
-              <button className="w-full px-8 py-2.5 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-32">
+              <button className="w-full px-4 py-1.5 bg-[hsl(var(--linen))] text-primary rounded-xl font-bold hover:opacity-90 transition-colors shadow-lg shadow-black/5 uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
                 Get Insights
               </button>
             </a>

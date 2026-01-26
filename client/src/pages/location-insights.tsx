@@ -72,14 +72,14 @@ export default function LocationInsightsPage() {
             <h1 className="text-3xl font-display font-bold text-primary mb-2 uppercase tracking-tight">Location Insights</h1>
             <p className="text-primary italic relative top-[6px]">Your generated market intelligence profiles.</p>
           </div>
-          <div className="flex flex-col items-center gap-4 relative -top-[25px]">
-            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-full">
-              <button className="w-full px-6 py-2 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center justify-center gap-2">
+          <div className="flex flex-col items-center gap-2 relative -top-[25px]">
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-48">
+              <button className="w-full px-4 py-1.5 bg-[hsl(var(--linen))] text-primary rounded-xl font-bold hover:opacity-90 transition-colors shadow-lg shadow-black/5 uppercase tracking-widest text-[10px] flex items-center justify-center gap-2">
                 Get Insights
               </button>
             </a>
-            <Link href="/" className="w-full">
-              <button className="w-full px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
+            <Link href="/" className="w-48">
+              <button className="w-full px-4 py-1.5 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-[10px]">
                 New Analysis
               </button>
             </Link>
