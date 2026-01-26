@@ -45,6 +45,48 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
+  // Create checkout session
+  app.post('/api/checkout', async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const user = await storage.getUser(req.user.id);
+    const { priceId } = req.body;
+
+    // Create or get customer
+    let customerId = user.stripeCustomerId;
+    if (!customerId) {
+      const customer = await stripeService.createCustomer(user.email, user.id);
+      await storage.updateUserStripeInfo(user.id, { stripeCustomerId: customer.id });
+      customerId = customer.id;
+    }
+
+    // Create checkout session
+    const products = await db.execute(sql`SELECT pr.id FROM stripe.products p JOIN stripe.prices pr ON pr.product = p.id WHERE p.name = 'Pro Subscription' AND pr.active = true LIMIT 1`);
+    const priceIdToUse = (products.rows && products.rows[0]?.id) || priceId;
+
+    if (!priceIdToUse) {
+      return res.status(400).json({ message: "No active price found for Pro Subscription" });
+    }
+
+    const session = await stripeService.createCheckoutSession(
+      customerId,
+      priceIdToUse,
+      `${req.protocol}://${req.get("host")}/settings`,
+      `${req.protocol}://${req.get("host")}/payment`
+    );
+
+    res.json({ url: session.url });
+  });
+
+  // List products
+  app.get('/api/products', async (req, res) => {
+    try {
+      const products = await db.execute(sql`SELECT * FROM stripe.products WHERE active = true`);
+      res.json({ data: products.rows });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch products" });
+    }
+  });
+
   // Mission statement generation
   app.post("/api/generate-mission", async (req, res) => {
     try {
@@ -342,48 +384,6 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete business background");
-    }
-  });
-
-  // Create checkout session
-  app.post('/api/checkout', async (req: any, res) => {
-    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
-    const user = await storage.getUser(req.user.id);
-    const { priceId } = req.body;
-
-    // Create or get customer
-    let customerId = user.stripeCustomerId;
-    if (!customerId) {
-      const customer = await stripeService.createCustomer(user.email, user.id);
-      await storage.updateUserStripeInfo(user.id, { stripeCustomerId: customer.id });
-      customerId = customer.id;
-    }
-
-    // Create checkout session
-    const products = await db.execute(sql`SELECT pr.id FROM stripe.products p JOIN stripe.prices pr ON pr.product = p.id WHERE p.name = 'Pro Subscription' AND pr.active = true LIMIT 1`);
-    const priceIdToUse = (products.rows && products.rows[0]?.id) || priceId;
-
-    if (!priceIdToUse) {
-      return res.status(400).json({ message: "No active price found for Pro Subscription" });
-    }
-
-    const session = await stripeService.createCheckoutSession(
-      customerId,
-      priceIdToUse,
-      `${req.protocol}://${req.get("host")}/settings`,
-      `${req.protocol}://${req.get("host")}/payment`
-    );
-
-    res.json({ url: session.url });
-  });
-
-  // List products
-  app.get('/api/products', async (req, res) => {
-    try {
-      const products = await db.execute(sql`SELECT * FROM stripe.products WHERE active = true`);
-      res.json({ data: products.rows });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch products" });
     }
   });
 
