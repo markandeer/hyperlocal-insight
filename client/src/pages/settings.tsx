@@ -1,19 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { CreditCard, User, ExternalLink, Shield, FileText, Lock, Unlock } from "lucide-react";
+import { CreditCard, User, ExternalLink, Shield, FileText, Lock, Unlock, Clock, Power } from "lucide-react";
 import { Link } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function SettingsPage() {
   const { user } = useAuth();
   const [isPortalLoading, setIsPortalLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  
+  // Auto-logout settings
+  const [logoutChoice, setLogoutChoice] = useState(() => {
+    return localStorage.getItem("autoLogoutChoice") || "never";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("autoLogoutChoice", logoutChoice);
+  }, [logoutChoice]);
 
   const { data: subscriptionData } = useQuery<any>({
     queryKey: ["/api/subscription"],
@@ -31,8 +41,6 @@ export default function SettingsPage() {
       setIsPortalLoading(false);
     }
   };
-
-  const isLocked = !isEditing;
 
   return (
     <div className="container mx-auto p-6 max-w-4xl pt-24">
@@ -53,54 +61,103 @@ export default function SettingsPage() {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card className="border-primary/10 shadow-lg rounded-3xl overflow-hidden">
-            <CardHeader className="bg-primary/5 pb-8">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-20 w-20 border-4 border-white shadow-xl">
-                  <AvatarImage src={user?.profileImageUrl || undefined} />
-                  <AvatarFallback className="bg-primary text-white text-xl uppercase">
-                    {user?.firstName?.[0]}
-                    {user?.lastName?.[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <CardTitle className="text-2xl font-display font-bold text-primary uppercase tracking-tighter">
-                    {user?.firstName} {user?.lastName}
-                  </CardTitle>
-                  <CardDescription className="text-primary/60">
-                    {user?.email}
-                  </CardDescription>
+          <div className="space-y-8">
+            <Card className="border-primary/10 shadow-lg rounded-3xl overflow-hidden">
+              <CardHeader className="bg-primary/5 pb-8">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-20 w-20 border-4 border-white shadow-xl">
+                    <AvatarImage src={user?.profileImageUrl || undefined} />
+                    <AvatarFallback className="bg-primary text-white text-xl uppercase">
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <CardTitle className="text-2xl font-display font-bold text-primary uppercase tracking-tighter">
+                      {user?.firstName} {user?.lastName}
+                    </CardTitle>
+                    <CardDescription className="text-primary/60">
+                      {user?.email}
+                    </CardDescription>
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-8">
-              <div className="grid gap-6">
-                <div className="space-y-4">
-                  <Link href="/terms">
-                    <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
-                      <FileText className="w-4 h-4" />
-                      Terms & Conditions
+              </CardHeader>
+              <CardContent className="pt-8">
+                <div className="grid gap-6">
+                  <div className="space-y-4">
+                    <Link href="/terms">
+                      <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
+                        <FileText className="w-4 h-4" />
+                        Terms & Conditions
+                      </Button>
+                    </Link>
+                    <Link href="/privacy">
+                      <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
+                        <Shield className="w-4 h-4" />
+                        Privacy Policy
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="pt-4 border-t border-primary/5">
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-primary/20 text-primary font-bold uppercase tracking-widest text-xs h-12 rounded-xl hover:bg-primary/5"
+                      onClick={() => window.location.href = "/api/logout"}
+                    >
+                      Log Out
                     </Button>
-                  </Link>
-                  <Link href="/privacy">
-                    <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
-                      <Shield className="w-4 h-4" />
-                      Privacy Policy
-                    </Button>
-                  </Link>
+                  </div>
                 </div>
-                <div className="pt-4 border-t border-primary/5">
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-primary/20 text-primary font-bold uppercase tracking-widest text-xs h-12 rounded-xl hover:bg-primary/5"
-                    onClick={() => window.location.href = "/api/logout"}
-                  >
-                    Log Out
-                  </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-primary/10 shadow-lg rounded-3xl overflow-hidden">
+              <CardHeader className="bg-primary/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                    <Power className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl font-display font-bold text-primary uppercase tracking-tighter">
+                      Session Settings
+                    </CardTitle>
+                    <CardDescription className="text-primary/60">
+                      Manage when you are automatically logged out.
+                    </CardDescription>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent className="pt-8">
+                <RadioGroup 
+                  value={logoutChoice} 
+                  onValueChange={setLogoutChoice}
+                  className="grid gap-4"
+                >
+                  <div className="flex items-center justify-between p-4 rounded-2xl border border-primary/10 hover:bg-primary/5 transition-colors">
+                    <Label htmlFor="immediately" className="flex flex-col gap-1 cursor-pointer flex-1">
+                      <span className="font-bold text-primary">Immediately</span>
+                      <span className="text-xs text-primary/40 uppercase tracking-widest">Logout after closing the app</span>
+                    </Label>
+                    <RadioGroupItem value="immediately" id="immediately" className="border-primary text-primary" />
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-2xl border border-primary/10 hover:bg-primary/5 transition-colors">
+                    <Label htmlFor="5min" className="flex flex-col gap-1 cursor-pointer flex-1">
+                      <span className="font-bold text-primary">5 Minutes</span>
+                      <span className="text-xs text-primary/40 uppercase tracking-widest">Logout after 5 minutes of inactivity</span>
+                    </Label>
+                    <RadioGroupItem value="5min" id="5min" className="border-primary text-primary" />
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-2xl border border-primary/10 hover:bg-primary/5 transition-colors">
+                    <Label htmlFor="never" className="flex flex-col gap-1 cursor-pointer flex-1">
+                      <span className="font-bold text-primary">Never</span>
+                      <span className="text-xs text-primary/40 uppercase tracking-widest">Stay logged in</span>
+                    </Label>
+                    <RadioGroupItem value="never" id="never" className="border-primary text-primary" />
+                  </div>
+                </RadioGroup>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="billing">
@@ -235,6 +292,5 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
     </div>
-
   );
 }
