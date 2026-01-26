@@ -73,12 +73,12 @@ export default function LocationInsightsPage() {
             <p className="text-primary italic relative top-[6px]">Your generated market intelligence profiles.</p>
           </div>
           <div className="flex items-center gap-4 relative -top-[25px]">
-            <Link href="/payment">
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer">
               <button className="px-6 py-2 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center gap-2">
                 <Zap className="w-3 h-3" />
                 Get Insights
               </button>
-            </Link>
+            </a>
             <Link href="/">
               <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
                 New Analysis

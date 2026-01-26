@@ -275,12 +275,12 @@ export default function BrandStrategy() {
           </h1>
           <p className="text-xl text-primary/80 font-medium">Your saved brand assets and strategy foundations.</p>
           <div className="mt-4 flex flex-col items-center gap-4">
-            <Link href="/payment">
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer">
               <Button className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-10 px-8 rounded-xl shadow-lg shadow-emerald-200 flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 Get Insights
               </Button>
-            </Link>
+            </a>
             <div className="flex items-center justify-center gap-3">
               <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
                 {isLocked ? (

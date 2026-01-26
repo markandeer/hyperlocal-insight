@@ -106,12 +106,12 @@ export default function LiveInsights() {
           </motion.h1>
           <p className="text-primary/60">Real-time market intelligence affecting your locations.</p>
           <div className="mt-4 flex justify-center">
-            <Link href="/payment">
+            <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer">
               <button className="px-8 py-2.5 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 Get Insights
               </button>
-            </Link>
+            </a>
           </div>
         </div>
 
