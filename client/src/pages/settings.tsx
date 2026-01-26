@@ -106,7 +106,7 @@ export default function SettingsPage() {
               <CardTitle className="text-xl font-display font-bold text-primary uppercase tracking-tighter">
                 Subscription Plan
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-primary/60">
                 Manage your subscription and billing preferences.
               </CardDescription>
             </CardHeader>
@@ -145,6 +145,41 @@ export default function SettingsPage() {
                     </Button>
                   </a>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="mt-8 border-primary/10 shadow-lg rounded-3xl overflow-hidden">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-xl font-display font-bold text-primary uppercase tracking-tighter">
+                Member Details
+              </CardTitle>
+              <CardDescription className="text-primary/60">
+                Personal information for your account.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-8">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Name</p>
+                  <p className="font-bold text-primary">{claims.first_name} {claims.last_name}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Email</p>
+                  <p className="font-bold text-primary">{claims.email}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Phone</p>
+                  <p className="font-bold text-primary">{claims.phone_number || "Not provided"}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Address</p>
+                  <p className="font-bold text-primary/60 italic">Optional</p>
+                </div>
+                <div className="space-y-1 md:col-span-2">
+                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Billing Address</p>
+                  <p className="font-bold text-primary/60 italic">Optional</p>
+                </div>
               </div>
             </CardContent>
           </Card>
