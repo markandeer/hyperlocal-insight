@@ -253,7 +253,7 @@ export default function LiveInsights() {
                     className="glass-card p-6 rounded-3xl border-2 border-primary/5 bg-white shadow-xl"
                   >
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-2xl bg-sky-50 text-sky-500">
+                      <div className="p-3 rounded-2xl bg-[hsl(var(--linen))] text-primary">
                         <Cloud className="w-6 h-6" />
                       </div>
                       <h2 className="text-xl font-bold uppercase tracking-tight text-primary">2-Week Forecast</h2>
@@ -288,7 +288,7 @@ export default function LiveInsights() {
                     className="glass-card p-6 rounded-3xl border-2 border-primary/5 bg-white shadow-xl"
                   >
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-2xl bg-amber-50 text-amber-500">
+                      <div className="p-3 rounded-2xl bg-[hsl(var(--linen))] text-primary">
                         <Car className="w-6 h-6" />
                       </div>
                       <h2 className="text-xl font-bold uppercase tracking-tight text-primary">Traffic Patterns</h2>
@@ -310,7 +310,7 @@ export default function LiveInsights() {
                     className="glass-card p-6 rounded-3xl border-2 border-primary/5 bg-white shadow-xl md:col-span-3"
                   >
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 rounded-2xl bg-[#e26e6d]/10 text-[#e26e6d]">
+                      <div className="p-3 rounded-2xl bg-[hsl(var(--linen))] text-primary">
                         <Newspaper className="w-6 h-6" />
                       </div>
                       <h2 className="text-xl font-bold uppercase tracking-tight text-primary">Local News Feed</h2>
