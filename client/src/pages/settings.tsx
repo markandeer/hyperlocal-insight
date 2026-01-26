@@ -32,7 +32,7 @@ export default function SettingsPage() {
     }
   };
 
-  const claims = user?.claims || {};
+  const isLocked = !isEditing;
 
   return (
     <div className="container mx-auto p-6 max-w-4xl pt-24">
@@ -57,18 +57,18 @@ export default function SettingsPage() {
             <CardHeader className="bg-primary/5 pb-8">
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20 border-4 border-white shadow-xl">
-                  <AvatarImage src={claims.profile_image_url} />
-                  <AvatarFallback className="bg-primary text-white text-xl">
-                    {claims.first_name?.[0]}
-                    {claims.last_name?.[0]}
+                  <AvatarImage src={user?.profileImageUrl || undefined} />
+                  <AvatarFallback className="bg-primary text-white text-xl uppercase">
+                    {user?.firstName?.[0]}
+                    {user?.lastName?.[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <CardTitle className="text-2xl font-display font-bold text-primary uppercase tracking-tighter">
-                    {claims.first_name} {claims.last_name}
+                    {user?.firstName} {user?.lastName}
                   </CardTitle>
                   <CardDescription className="text-primary/60">
-                    {claims.email}
+                    {user?.email}
                   </CardDescription>
                 </div>
               </div>
@@ -163,59 +163,69 @@ export default function SettingsPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 top-4 text-primary/40 hover:text-primary"
+                className={`absolute right-4 top-4 transition-all duration-300 ${isEditing ? "text-primary bg-primary/10" : "text-primary/40 hover:text-primary"}`}
                 onClick={() => setIsEditing(!isEditing)}
               >
                 {isEditing ? <Unlock className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
               </Button>
             </CardHeader>
             <CardContent className="pt-8">
-              <form className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Name</Label>
+              <form className="grid gap-8 md:grid-cols-2">
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest flex items-center gap-1">
+                    Name <span className="text-red-500">*</span>
+                  </Label>
                   <Input 
                     readOnly={!isEditing}
-                    defaultValue={`${claims.first_name} ${claims.last_name}`}
-                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                    defaultValue={user?.firstName ? `${user.firstName} ${user.lastName}` : (user?.username || "")}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-10 font-bold text-primary text-lg focus-visible:ring-0 ${!isEditing ? "cursor-default border-transparent" : "border-primary/40 focus:border-primary"}`}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Email</Label>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest flex items-center gap-1">
+                    Email <span className="text-red-500">*</span>
+                  </Label>
                   <Input 
                     readOnly={!isEditing}
-                    defaultValue={claims.email}
-                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                    defaultValue={user?.email || ""}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-10 font-bold text-primary text-lg focus-visible:ring-0 ${!isEditing ? "cursor-default border-transparent" : "border-primary/40 focus:border-primary"}`}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Phone</Label>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest flex items-center gap-1">
+                    Phone <span className="text-red-500">*</span>
+                  </Label>
                   <Input 
                     readOnly={!isEditing}
                     placeholder="Not provided"
-                    defaultValue={claims.phone_number}
-                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                    defaultValue={""}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-10 font-bold text-primary text-lg focus-visible:ring-0 placeholder:text-primary/30 ${!isEditing ? "cursor-default border-transparent" : "border-primary/40 focus:border-primary"}`}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Address</Label>
                   <Input 
                     readOnly={!isEditing}
                     placeholder="Optional"
-                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-10 font-bold text-primary text-lg focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default border-transparent" : "border-primary/40 focus:border-primary"}`}
                   />
                 </div>
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-3 md:col-span-2">
                   <Label className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Billing Address</Label>
                   <Input 
                     readOnly={!isEditing}
                     placeholder="Optional"
-                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-auto font-bold text-primary focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default" : "border-primary/40"}`}
+                    className={`bg-transparent border-0 border-b border-primary/10 rounded-none px-0 h-10 font-bold text-primary text-lg focus-visible:ring-0 placeholder:italic placeholder:text-primary/30 ${!isEditing ? "cursor-default border-transparent" : "border-primary/40 focus:border-primary"}`}
                   />
                 </div>
                 {isEditing && (
-                  <div className="md:col-span-2 pt-4">
-                    <Button className="w-full bg-primary text-white font-bold uppercase tracking-widest text-xs h-12 rounded-xl">
-                      Save Changes
+                  <div className="md:col-span-2 pt-6">
+                    <Button 
+                      type="button"
+                      onClick={() => setIsEditing(false)}
+                      className="w-full bg-primary hover:opacity-90 text-white font-bold uppercase tracking-widest text-xs h-14 rounded-2xl shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      Update Member Profile
                     </Button>
                   </div>
                 )}
@@ -225,5 +235,6 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
     </div>
+
   );
 }
