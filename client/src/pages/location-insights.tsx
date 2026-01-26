@@ -1,3 +1,4 @@
+import { Zap } from "lucide-react";
 import { useReports } from "@/hooks/use-reports";
 import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
@@ -71,11 +72,19 @@ export default function LocationInsightsPage() {
             <h1 className="text-3xl font-display font-bold text-primary mb-2 uppercase tracking-tight">Location Insights</h1>
             <p className="text-primary italic relative top-[6px]">Your generated market intelligence profiles.</p>
           </div>
-          <Link href="/">
-            <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs relative -top-[25px]">
-              New Analysis
-            </button>
-          </Link>
+          <div className="flex items-center gap-4 relative -top-[25px]">
+            <Link href="/payment">
+              <button className="px-6 py-2 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center gap-2">
+                <Zap className="w-3 h-3" />
+                Get Insights
+              </button>
+            </Link>
+            <Link href="/">
+              <button className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 uppercase tracking-widest text-xs">
+                New Analysis
+              </button>
+            </Link>
+          </div>
         </div>
 
         <div className="mb-8 max-w-md">

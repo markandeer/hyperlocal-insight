@@ -1,8 +1,9 @@
+import { Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BrandMission, BrandVision, BrandValue, BrandTargetMarket, BrandBackground } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus, Palette, Type, Box, Image as ImageIcon, Lock, Unlock } from "lucide-react";
+import { Zap, Quote, Calendar, Pencil, Trash2, X, Check, Upload, Plus, Palette, Type, Box, Image as ImageIcon, Lock, Unlock, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
@@ -273,22 +274,30 @@ export default function BrandStrategy() {
             Brand Strategy
           </h1>
           <p className="text-xl text-primary/80 font-medium">Your saved brand assets and strategy foundations.</p>
-          <div className="mt-2 flex items-center justify-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
-              {isLocked ? (
-                <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
-              ) : (
-                <Unlock className="w-4 h-4 text-primary/40 animate-in fade-in zoom-in duration-300" />
-              )}
-              <Label htmlFor="lock-toggle" className="text-xs font-bold uppercase tracking-widest text-primary/60 cursor-pointer select-none">
-                {isLocked ? "Locked" : "Lock Choices"}
-              </Label>
-              <Switch 
-                id="lock-toggle" 
-                checked={isLocked} 
-                onCheckedChange={setIsLocked}
-                className="data-[state=checked]:bg-primary"
-              />
+          <div className="mt-4 flex flex-col items-center gap-4">
+            <Link href="/payment">
+              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-10 px-8 rounded-xl shadow-lg shadow-emerald-200 flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Get Insights
+              </Button>
+            </Link>
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
+                {isLocked ? (
+                  <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
+                ) : (
+                  <Unlock className="w-4 h-4 text-primary/40 animate-in fade-in zoom-in duration-300" />
+                )}
+                <Label htmlFor="lock-toggle" className="text-xs font-bold uppercase tracking-widest text-primary/60 cursor-pointer select-none">
+                  {isLocked ? "Locked" : "Lock Choices"}
+                </Label>
+                <Switch 
+                  id="lock-toggle" 
+                  checked={isLocked} 
+                  onCheckedChange={setIsLocked}
+                  className="data-[state=checked]:bg-primary"
+                />
+              </div>
             </div>
           </div>
         </motion.div>

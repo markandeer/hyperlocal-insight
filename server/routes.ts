@@ -3,6 +3,8 @@ import { storage } from './storage';
 import { stripeService } from './stripeService';
 import { setupAuth, registerAuthRoutes } from "./replit_integrations/auth";
 import { generateMarketAnalysis, generateMissionStatement, generateVisionStatement, generateValueProposition, generateTargetMarket, generateLiveInsights, generateBackground } from "./openai";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 export async function registerRoutes(httpServer: any, app: Express): Promise<any> {
   // Setup auth and register auth routes
@@ -343,21 +345,45 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  // Create customer portal session
-  app.post("/api/checkout/portal", async (req: any, res) => {
+  // Create checkout session
+  app.post('/api/checkout', async (req: any, res) => {
     if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
     const user = await storage.getUser(req.user.id);
-    if (!user?.stripeCustomerId) {
-      return res.status(400).json({ message: "No customer ID found" });
+    const { priceId } = req.body;
+
+    // Create or get customer
+    let customerId = user.stripeCustomerId;
+    if (!customerId) {
+      const customer = await stripeService.createCustomer(user.email, user.id);
+      await storage.updateUserStripeInfo(user.id, { stripeCustomerId: customer.id });
+      customerId = customer.id;
     }
+
+    // Create checkout session
+    const products = await db.execute(sql`SELECT pr.id FROM stripe.products p JOIN stripe.prices pr ON pr.product = p.id WHERE p.name = 'Pro Subscription' AND pr.active = true LIMIT 1`);
+    const priceIdToUse = (products.rows && products.rows[0]?.id) || priceId;
+
+    if (!priceIdToUse) {
+      return res.status(400).json({ message: "No active price found for Pro Subscription" });
+    }
+
+    const session = await stripeService.createCheckoutSession(
+      customerId,
+      priceIdToUse,
+      `${req.protocol}://${req.get("host")}/settings`,
+      `${req.protocol}://${req.get("host")}/payment`
+    );
+
+    res.json({ url: session.url });
+  });
+
+  // List products
+  app.get('/api/products', async (req, res) => {
     try {
-      const session = await stripeService.createCustomerPortalSession(
-        user.stripeCustomerId,
-        `${req.protocol}://${req.get("host")}/settings`
-      );
-      res.json({ url: session.url });
+      const products = await db.execute(sql`SELECT * FROM stripe.products WHERE active = true`);
+      res.json({ data: products.rows });
     } catch (error) {
-      res.status(500).json({ message: "Failed to create portal session" });
+      res.status(500).json({ message: "Failed to fetch products" });
     }
   });
 

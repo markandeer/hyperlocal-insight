@@ -1,7 +1,8 @@
+import { Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReports } from "@/hooks/use-reports";
-import { Cloud, Car, Newspaper, Loader2, MapPin, ExternalLink, Calendar, Briefcase, Pencil, Check, X, ArrowRight } from "lucide-react";
+import { Cloud, Car, Newspaper, Loader2, MapPin, ExternalLink, Calendar, Briefcase, Pencil, Check, X, ArrowRight, Zap } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -104,6 +105,14 @@ export default function LiveInsights() {
             Live Insights
           </motion.h1>
           <p className="text-primary/60">Real-time market intelligence affecting your locations.</p>
+          <div className="mt-4 flex justify-center">
+            <Link href="/payment">
+              <button className="px-8 py-2.5 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-200 uppercase tracking-widest text-xs flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Get Insights
+              </button>
+            </Link>
+          </div>
         </div>
 
         {isLoadingReports ? (

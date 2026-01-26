@@ -14,6 +14,7 @@ import BrandIdentity from "@/pages/brand-identity";
 import LiveInsights from "@/pages/live-insights";
 import LocationInsightsPage from "@/pages/location-insights";
 import SettingsPage from "@/pages/settings";
+import PaymentPage from "@/pages/payment";
 import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -98,6 +99,9 @@ function Router() {
         </Route>
         <Route path="/settings">
           {() => isAuthenticated ? <SettingsPage /> : <LandingPage />}
+        </Route>
+        <Route path="/payment">
+          {() => isAuthenticated ? <PaymentPage /> : <LandingPage />}
         </Route>
         <Route component={NotFound} />
       </Switch>

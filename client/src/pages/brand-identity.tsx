@@ -1,6 +1,7 @@
+import { Link } from "wouter";
 import { Layout } from "@/components/Layout";
 import { motion } from "framer-motion";
-import { Upload, Palette, Type, Box, Image as ImageIcon, Plus, Check, Pencil, Lock, Unlock } from "lucide-react";
+import { Zap, Upload, Palette, Type, Box, Image as ImageIcon, Plus, Check, Pencil, Lock, Unlock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect, ReactNode } from "react";
@@ -430,22 +431,30 @@ export default function BrandIdentity() {
             Brand Identity
           </h1>
           <p className="text-xl text-primary/80 font-medium">Define the visual soul of your business.</p>
-          <div className="mt-2 flex items-center justify-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
-              {isLocked ? (
-                <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
-              ) : (
-                <Unlock className="w-4 h-4 text-primary/40 animate-in fade-in zoom-in duration-300" />
-              )}
-              <Label htmlFor="lock-toggle" className="text-xs font-bold uppercase tracking-widest text-primary/60 cursor-pointer select-none">
-                {isLocked ? "Locked" : "Lock Choices"}
-              </Label>
-              <Switch 
-                id="lock-toggle" 
-                checked={isLocked} 
-                onCheckedChange={setIsLocked}
-                className="data-[state=checked]:bg-primary"
-              />
+          <div className="mt-4 flex flex-col items-center gap-4">
+            <Link href="/payment">
+              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-10 px-8 rounded-xl shadow-lg shadow-emerald-200 flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Get Insights
+              </Button>
+            </Link>
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1 bg-[#f0f9ff]/50 rounded-full border border-primary/10 shadow-sm scale-[0.65]">
+                {isLocked ? (
+                  <Lock className="w-4 h-4 text-primary animate-in fade-in zoom-in duration-300" />
+                ) : (
+                  <Unlock className="w-4 h-4 text-primary/40 animate-in fade-in zoom-in duration-300" />
+                )}
+                <Label htmlFor="lock-toggle" className="text-xs font-bold uppercase tracking-widest text-primary/60 cursor-pointer select-none">
+                  {isLocked ? "Locked" : "Lock Choices"}
+                </Label>
+                <Switch 
+                  id="lock-toggle" 
+                  checked={isLocked} 
+                  onCheckedChange={setIsLocked}
+                  className="data-[state=checked]:bg-primary"
+                />
+              </div>
             </div>
           </div>
         </motion.div>
