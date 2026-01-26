@@ -6,6 +6,7 @@ export * from "./models/auth";
 
 export const analysis_reports = pgTable("analysis_reports", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   name: text("name"), // Optional custom name for the report
   address: text("address").notNull(),
   businessType: text("business_type").notNull(),
@@ -15,6 +16,7 @@ export const analysis_reports = pgTable("analysis_reports", {
 
 export const brand_missions = pgTable("brand_missions", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   mission: text("mission").notNull(),
   originalInput: text("original_input").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -22,6 +24,7 @@ export const brand_missions = pgTable("brand_missions", {
 
 export const brand_visions = pgTable("brand_visions", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   vision: text("vision").notNull(),
   originalInput: text("original_input").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -29,6 +32,7 @@ export const brand_visions = pgTable("brand_visions", {
 
 export const brand_values = pgTable("brand_values", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   valueProposition: text("value_proposition").notNull(),
   originalInput: text("original_input").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -36,6 +40,7 @@ export const brand_values = pgTable("brand_values", {
 
 export const brand_target_markets = pgTable("brand_target_markets", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   targetMarket: text("target_market").notNull(),
   originalInput: text("original_input").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -43,6 +48,7 @@ export const brand_target_markets = pgTable("brand_target_markets", {
 
 export const brand_backgrounds = pgTable("brand_backgrounds", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   background: text("background").notNull(),
   originalInput: text("original_input").notNull(),
   createdAt: timestamp("created_at").defaultNow(),

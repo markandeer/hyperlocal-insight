@@ -29,6 +29,16 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
+  app.patch("/api/user/stripe-info", async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    try {
+      const updatedUser = await storage.updateUserStripeInfo(req.user.id, req.body);
+      res.json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update user stripe info" });
+    }
+  });
+
   // Get user subscription
   app.get('/api/subscription', async (req: any, res) => {
     if (!req.isAuthenticated()) return res.json({ subscription: null });
@@ -60,45 +70,49 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.post("/api/missions", async (req, res) => {
+  app.post("/api/missions", async (req: any, res) => {
     try {
       const { mission, originalInput } = req.body;
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       if (!mission || !originalInput) {
         return res.status(400).json({ message: "Mission and input are required" });
       }
-      const savedMission = await storage.createMission({ mission, originalInput });
+      const savedMission = await storage.createMission(req.user.id, { mission, originalInput });
       res.status(201).json(savedMission);
     } catch (error) {
       res.status(500).json({ message: "Failed to save mission" });
     }
   });
 
-  app.get("/api/missions", async (_req, res) => {
+  app.get("/api/missions", async (req: any, res) => {
     try {
-      const missions = await storage.getMissions();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const missions = await storage.getMissions(req.user.id);
       res.json(missions);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch missions" });
     }
   });
 
-  app.patch("/api/missions/:id", async (req, res) => {
+  app.patch("/api/missions/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { mission } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      const updatedMission = await storage.updateMission(id, mission);
+      const updatedMission = await storage.updateMission(id, req.user.id, mission);
       res.json(updatedMission);
     } catch (error) {
       res.status(500).send("Failed to update mission");
     }
   });
 
-  app.delete("/api/missions/:id", async (req, res) => {
+  app.delete("/api/missions/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      await storage.deleteMission(id);
+      await storage.deleteMission(id, req.user.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete mission");
@@ -120,45 +134,49 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.post("/api/visions", async (req, res) => {
+  app.post("/api/visions", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const { vision, originalInput } = req.body;
       if (!vision || !originalInput) {
         return res.status(400).json({ message: "Vision and input are required" });
       }
-      const savedVision = await storage.createVision({ vision, originalInput });
+      const savedVision = await storage.createVision(req.user.id, { vision, originalInput });
       res.status(201).json(savedVision);
     } catch (error) {
       res.status(500).json({ message: "Failed to save vision" });
     }
   });
 
-  app.get("/api/visions", async (_req, res) => {
+  app.get("/api/visions", async (req: any, res) => {
     try {
-      const visions = await storage.getVisions();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const visions = await storage.getVisions(req.user.id);
       res.json(visions);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch visions" });
     }
   });
 
-  app.patch("/api/visions/:id", async (req, res) => {
+  app.patch("/api/visions/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { vision } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      const updatedVision = await storage.updateVision(id, vision);
+      const updatedVision = await storage.updateVision(id, req.user.id, vision);
       res.json(updatedVision);
     } catch (error) {
       res.status(500).send("Failed to update vision");
     }
   });
 
-  app.delete("/api/visions/:id", async (req, res) => {
+  app.delete("/api/visions/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      await storage.deleteVision(id);
+      await storage.deleteVision(id, req.user.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete vision");
@@ -180,45 +198,49 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.post("/api/values", async (req, res) => {
+  app.post("/api/values", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const { valueProposition, originalInput } = req.body;
       if (!valueProposition || !originalInput) {
         return res.status(400).json({ message: "Value proposition and input are required" });
       }
-      const savedValue = await storage.createValue({ valueProposition, originalInput });
+      const savedValue = await storage.createValue(req.user.id, { valueProposition, originalInput });
       res.status(201).json(savedValue);
     } catch (error) {
       res.status(500).json({ message: "Failed to save value proposition" });
     }
   });
 
-  app.get("/api/values", async (_req, res) => {
+  app.get("/api/values", async (req: any, res) => {
     try {
-      const values = await storage.getValues();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const values = await storage.getValues(req.user.id);
       res.json(values);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch value propositions" });
     }
   });
 
-  app.patch("/api/values/:id", async (req, res) => {
+  app.patch("/api/values/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { valueProposition } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      const updatedValue = await storage.updateValue(id, valueProposition);
+      const updatedValue = await storage.updateValue(id, req.user.id, valueProposition);
       res.json(updatedValue);
     } catch (error) {
       res.status(500).send("Failed to update value proposition");
     }
   });
 
-  app.delete("/api/values/:id", async (req, res) => {
+  app.delete("/api/values/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      await storage.deleteValue(id);
+      await storage.deleteValue(id, req.user.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete value proposition");
@@ -240,45 +262,49 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.post("/api/target-markets", async (req, res) => {
+  app.post("/api/target-markets", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const { targetMarket, originalInput } = req.body;
       if (!targetMarket || !originalInput) {
         return res.status(400).json({ message: "Target market and input are required" });
       }
-      const savedTargetMarket = await storage.createTargetMarket({ targetMarket, originalInput });
+      const savedTargetMarket = await storage.createTargetMarket(req.user.id, { targetMarket, originalInput });
       res.status(201).json(savedTargetMarket);
     } catch (error) {
       res.status(500).json({ message: "Failed to save target market profile" });
     }
   });
 
-  app.get("/api/target-markets", async (_req, res) => {
+  app.get("/api/target-markets", async (req: any, res) => {
     try {
-      const targetMarkets = await storage.getTargetMarkets();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const targetMarkets = await storage.getTargetMarkets(req.user.id);
       res.json(targetMarkets);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch target market profiles" });
     }
   });
 
-  app.patch("/api/target-markets/:id", async (req, res) => {
+  app.patch("/api/target-markets/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { targetMarket } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      const updatedTargetMarket = await storage.updateTargetMarket(id, targetMarket);
+      const updatedTargetMarket = await storage.updateTargetMarket(id, req.user.id, targetMarket);
       res.json(updatedTargetMarket);
     } catch (error) {
       res.status(500).send("Failed to update target market profile");
     }
   });
 
-  app.delete("/api/target-markets/:id", async (req, res) => {
+  app.delete("/api/target-markets/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      await storage.deleteTargetMarket(id);
+      await storage.deleteTargetMarket(id, req.user.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete target market profile");
@@ -300,45 +326,49 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.post("/api/backgrounds", async (req, res) => {
+  app.post("/api/backgrounds", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const { background, originalInput } = req.body;
       if (!background || !originalInput) {
         return res.status(400).json({ message: "Background and input are required" });
       }
-      const savedBackground = await storage.createBackground({ background, originalInput });
+      const savedBackground = await storage.createBackground(req.user.id, { background, originalInput });
       res.status(201).json(savedBackground);
     } catch (error) {
       res.status(500).json({ message: "Failed to save business background" });
     }
   });
 
-  app.get("/api/backgrounds", async (_req, res) => {
+  app.get("/api/backgrounds", async (req: any, res) => {
     try {
-      const backgrounds = await storage.getBackgrounds();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const backgrounds = await storage.getBackgrounds(req.user.id);
       res.json(backgrounds);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch business backgrounds" });
     }
   });
 
-  app.patch("/api/backgrounds/:id", async (req, res) => {
+  app.patch("/api/backgrounds/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { background } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      const updatedBackground = await storage.updateBackground(id, background);
+      const updatedBackground = await storage.updateBackground(id, req.user.id, background);
       res.json(updatedBackground);
     } catch (error) {
       res.status(500).send("Failed to update business background");
     }
   });
 
-  app.delete("/api/backgrounds/:id", async (req, res) => {
+  app.delete("/api/backgrounds/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) return res.status(400).send("Invalid ID");
-      await storage.deleteBackground(id);
+      await storage.deleteBackground(id, req.user.id);
       res.status(204).send();
     } catch (error) {
       res.status(500).send("Failed to delete business background");
@@ -346,8 +376,9 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
   });
 
   // API Routes
-  app.post("/api/reports/analyze", async (req, res) => {
+  app.post("/api/reports/analyze", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const { address, businessType } = req.body;
       
       if (!address || !businessType) {
@@ -360,10 +391,11 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
       const analysisData = await generateMarketAnalysis(address, businessType);
       
       // Save to database
-      const report = await storage.createReport({
+      const report = await storage.createReport(req.user.id, {
         address,
         businessType,
-        data: analysisData
+        data: analysisData,
+        userId: req.user.id
       });
 
       res.status(201).json(report);
@@ -373,23 +405,25 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.get("/api/reports", async (req, res) => {
+  app.get("/api/reports", async (req: any, res) => {
     try {
-      const reports = await storage.getReports();
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+      const reports = await storage.getReports(req.user.id);
       res.json(reports);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch reports" });
     }
   });
 
-  app.get("/api/reports/:id", async (req, res) => {
+  app.get("/api/reports/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid ID" });
       }
 
-      const report = await storage.getReport(id);
+      const report = await storage.getReport(id, req.user.id);
       if (!report) {
         return res.status(404).json({ message: "Report not found" });
       }
@@ -400,22 +434,24 @@ export async function registerRoutes(httpServer: any, app: Express): Promise<any
     }
   });
 
-  app.patch("/api/reports/:id", async (req, res) => {
+  app.patch("/api/reports/:id", async (req: any, res) => {
     try {
+      if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
       const id = parseInt(req.params.id);
       const { name } = req.body;
       if (isNaN(id)) return res.status(400).send("Invalid ID");
       
-      const updatedReport = await storage.updateReportName(id, name);
+      const updatedReport = await storage.updateReportName(id, req.user.id, name);
       res.json(updatedReport);
     } catch (error) {
       res.status(500).send("Failed to update report");
     }
   });
 
-  app.get("/api/live-insights/:id", async (req, res) => {
+  app.get("/api/live-insights/:id", async (req: any, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
     const id = parseInt(req.params.id);
-    const report = await storage.getReport(id);
+    const report = await storage.getReport(id, req.user.id);
     if (!report) return res.status(404).send("Report not found");
 
     try {

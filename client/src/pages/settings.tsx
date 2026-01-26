@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { CreditCard, User, ExternalLink } from "lucide-react";
+import { CreditCard, User, ExternalLink, Shield, FileText } from "lucide-react";
+import { Link } from "wouter";
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -32,19 +33,19 @@ export default function SettingsPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-4xl pt-24">
-      <h1 className="text-3xl font-display font-bold text-primary uppercase tracking-tighter mb-8">
-        Settings
+      <h1 className="text-3xl font-display font-bold text-primary uppercase tracking-tighter mb-8 text-center">
+        Member Dashboard
       </h1>
 
       <Tabs defaultValue="profile" className="w-full">
         <TabsList className="grid w-full grid-cols-2 bg-primary/5 p-1 rounded-xl mb-8">
           <TabsTrigger value="profile" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold uppercase tracking-widest text-xs">
             <User className="w-4 h-4 mr-2" />
-            Profile
+            Account
           </TabsTrigger>
           <TabsTrigger value="billing" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-primary font-bold uppercase tracking-widest text-xs">
             <CreditCard className="w-4 h-4 mr-2" />
-            Billing
+            Subscription
           </TabsTrigger>
         </TabsList>
 
@@ -71,14 +72,24 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="pt-8">
               <div className="grid gap-6">
-                <div className="space-y-1">
-                  <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">User ID</p>
-                  <p className="font-mono text-sm text-primary/80">{claims.sub}</p>
+                <div className="space-y-4">
+                  <Link href="/terms">
+                    <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
+                      <FileText className="w-4 h-4" />
+                      Terms & Conditions
+                    </Button>
+                  </Link>
+                  <Link href="/privacy">
+                    <Button variant="outline" className="w-full justify-start gap-3 border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] h-12 rounded-xl">
+                      <Shield className="w-4 h-4" />
+                      Privacy Policy
+                    </Button>
+                  </Link>
                 </div>
                 <div className="pt-4 border-t border-primary/5">
                   <Button 
                     variant="outline" 
-                    className="border-primary/20 text-primary font-bold uppercase tracking-widest text-xs h-10 px-6 rounded-xl hover:bg-primary/5"
+                    className="w-full border-primary/20 text-primary font-bold uppercase tracking-widest text-xs h-12 rounded-xl hover:bg-primary/5"
                     onClick={() => window.location.href = "/api/logout"}
                   >
                     Log Out
@@ -103,7 +114,7 @@ export default function SettingsPage() {
               <div className="p-6 bg-primary/5 rounded-2xl border border-primary/10 mb-6">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">Current Plan</p>
+                    <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">Status</p>
                     <p className="text-lg font-bold text-primary">
                       {subscriptionData?.subscription ? "Pro Plan" : "Free Plan"}
                     </p>
@@ -118,14 +129,22 @@ export default function SettingsPage() {
               </div>
 
               <div className="flex gap-4">
-                <Button 
-                  className="bg-primary text-white font-bold uppercase tracking-widest text-xs h-12 px-8 rounded-2xl hover:opacity-90 shadow-lg transition-all"
-                  disabled={isPortalLoading}
-                  onClick={handleStripePortal}
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Manage Billing
-                </Button>
+                {subscriptionData?.subscription ? (
+                  <Button 
+                    className="w-full bg-primary text-white font-bold uppercase tracking-widest text-xs h-12 px-8 rounded-2xl hover:opacity-90 shadow-lg transition-all"
+                    disabled={isPortalLoading}
+                    onClick={handleStripePortal}
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Manage Billing
+                  </Button>
+                ) : (
+                  <a href="https://buy.stripe.com/6oU5kDaPVgFdetBckF7Zu01" target="_blank" rel="noopener noreferrer" className="w-full">
+                    <Button className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-xs h-12 px-8 rounded-2xl shadow-lg transition-all">
+                      Upgrade to Pro
+                    </Button>
+                  </a>
+                )}
               </div>
             </CardContent>
           </Card>

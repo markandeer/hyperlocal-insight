@@ -14,6 +14,8 @@ import BrandIdentity from "@/pages/brand-identity";
 import LiveInsights from "@/pages/live-insights";
 import LocationInsightsPage from "@/pages/location-insights";
 import SettingsPage from "@/pages/settings";
+import TermsPage from "@/pages/terms";
+import PrivacyPage from "@/pages/privacy";
 import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -99,6 +101,8 @@ function Router() {
         <Route path="/settings">
           {() => isAuthenticated ? <SettingsPage /> : <LandingPage />}
         </Route>
+        <Route path="/terms" component={TermsPage} />
+        <Route path="/privacy" component={PrivacyPage} />
         <Route component={NotFound} />
       </Switch>
       <AuthModal 
