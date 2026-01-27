@@ -1,23 +1,16 @@
-# ---- Base ----
-FROM node:22-alpine AS base
+FROM node:22-alpine
 WORKDIR /app
 
-# ---- Install deps (server only) ----
-FROM base AS deps
+# Copy ONLY server package files first (better caching)
 COPY server/package*.json ./server/
-RUN cd server && npm ci
+WORKDIR /app/server
+RUN npm ci
 
-# ---- Run ----
-FROM base AS runner
-WORKDIR /app
-
-COPY --from=deps /app/server/node_modules ./server/node_modules
-COPY server ./server
+# Now copy the server source
+COPY server/ ./
 
 ENV NODE_ENV=production
-# Railway sets PORT; this default is fine
-ENV PORT=3000
-
 EXPOSE 3000
-CMD ["sh", "-lc", "cd server && npm start"]
+CMD ["npm","start"]
+
 
