@@ -1,16 +1,14 @@
 FROM node:22-alpine
 WORKDIR /app
 
-# Copy ONLY server package files first (better caching)
+# Install server deps (works even without package-lock.json)
 COPY server/package*.json ./server/
-WORKDIR /app/server
-RUN npm ci
+RUN cd server && npm install --omit=dev
 
-# Now copy the server source
-COPY server/ ./
+# Copy needed code
+COPY server ./server
+COPY shared ./shared
 
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["npm","start"]
-
-
+CMD ["sh", "-lc", "cd server && npm start"]
