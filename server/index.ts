@@ -138,5 +138,4 @@ app.use((req, res, next) => {
     },
   );
 })();
-const httpServer = createServer(app);
 
