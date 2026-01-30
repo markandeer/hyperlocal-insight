@@ -1,28 +1,31 @@
-# ---------- Build ----------
+# ---------- Build stage ----------
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# Install deps using lockfile
+# Install all deps (including dev, needed to build)
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy the full repo and build
+# Copy source
 COPY . .
+
+# Build server + client
 RUN npm run build
 
-# ---------- Run ----------
+
+# ---------- Runtime stage ----------
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Only production deps at runtime
+# Install only production deps
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Bring over the built output + anything needed at runtime
+# Copy built output and runtime files
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/server ./server
+COPY --from=build /app/shared ./shared
 
-# Railway sets PORT automatically; your app should read process.env.PORT
-EXPOSE 3000
-CMD ["node", "dist/index.cjs"]
+# Railway provides PORT automatically
+CMD ["npm", "run", "start"]
