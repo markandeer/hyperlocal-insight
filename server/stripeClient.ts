@@ -124,12 +124,25 @@ export async function getStripeSecretKey() {
 let stripeSync: any = null;
 
 export async function getStripeSync() {
-  // This package is Replit-specific. Don’t try to run it on Railway.
   if (!isRunningOnReplit()) {
-    throw new Error(
-      "[StripeSync] stripe-replit-sync is Replit-only. Disable sync on Railway."
-    );
+    return null;
   }
+
+  if (!stripeSync) {
+    const { StripeSync } = await import("stripe-replit-sync");
+    const secretKey = await getStripeSecretKey();
+
+    stripeSync = new StripeSync({
+      poolConfig: {
+        connectionString: process.env.DATABASE_URL!,
+        max: 2,
+      },
+      stripeSecretKey: secretKey,
+    });
+  }
+
+  return stripeSync;
+}
 
   if (!stripeSync) {
     const { StripeSync } = await import("stripe-replit-sync");
