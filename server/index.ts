@@ -7,6 +7,12 @@ import { getStripeSync } from "./stripeClient";
 import { WebhookHandlers } from "./webhookHandlers";
 
 const app = express();
+console.log("[BOOT] index.ts loaded");
+console.log("[ENV] NODE_ENV =", process.env.NODE_ENV);
+console.log("[ENV] DATABASE_URL =", process.env.DATABASE_URL ? "SET" : "MISSING");
+console.log("[ENV] OPENAI_API_KEY =", process.env.OPENAI_API_KEY ? "SET" : "MISSING");
+console.log("[ENV] OIDC_CLIENT_ID =", process.env.OIDC_CLIENT_ID || process.env.REPL_ID || "MISSING");
+
 const httpServer = createServer(app);
 
 async function initStripe() {
