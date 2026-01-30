@@ -42,27 +42,21 @@ const httpServer = createServer(app);
 // --- Stripe init (safe on Railway + Replit) ---
 async function initStripe() {
   const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    console.info("[Stripe] DATABASE_URL missing; skipping migrations + StripeSync.");
-    return;
-  }
+  if (!databaseUrl) return;
 
   try {
     await runMigrations({ databaseUrl });
 
     const stripeSync = await getStripeSync();
-    console.info("✅ STRIPESYNC VALUE =", stripeSync);
+    console.log("[StripeSync] value =", stripeSync);
 
-    // StripeSync may be null on Railway OR on Replit deployments without connectors
     if (!stripeSync) {
-      console.info("[StripeSync] Not available; skipping managed webhook + backfill.");
+      console.log("[StripeSync] Not available, skipping.");
       return;
     }
 
     const domain = process.env.REPLIT_DOMAINS?.split(",")[0];
-    if (!domain) {
-      throw new Error("[StripeSync] REPLIT_DOMAINS missing; cannot build webhook URL.");
-    }
+    if (!domain) return;
 
     const webhookBaseUrl = `https://${domain}`;
 
@@ -71,7 +65,11 @@ async function initStripe() {
     );
 
     stripeSync.syncBackfill().catch(console.error);
-  } catch (error) {
+  } catch (err) {
+    console.error("Failed to initialize Stripe:", err);
+  }
+}
+initStripe();
     console.error("Failed to initialize Stripe:", error);
   }
 }
@@ -88,3 +86,8 @@ const port = Number(process.env.PORT) || 8080;
 httpServer.listen(port, "0.0.0.0", () => {
   console.log(`[express] serving on port ${port}`);
 });
+declare module "http" {
+  interface IncomingMessage {
+    rawBody: unknown;
+  }
+}
