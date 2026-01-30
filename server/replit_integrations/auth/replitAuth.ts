@@ -22,7 +22,7 @@ const getOidcConfig = memoize(
       "https://replit.com/oidc";
 
     const clientId = (process.env.OIDC_CLIENT_ID || process.env.REPL_ID || "").trim();
-    const clientSecret = process.env.OIDC_CLIENT_SECRET; // may be undefined for some flows/providers
+    const clientSecret = process.env.OIDC_CLIENT_SECRET;
 
     if (!clientId) {
       throw new Error(
@@ -30,8 +30,14 @@ const getOidcConfig = memoize(
       );
     }
 
-    const issuer = await client.Issuer.discover(issuerUrl);
-    return new client.Configuration(issuer, clientId, clientSecret);
+    // IMPORTANT: this works across openid-client versions
+    const config = await client.discovery(
+      new URL(issuerUrl),
+      clientId,
+      clientSecret
+    );
+
+    return config;
   },
   { maxAge: 3600 * 1000 }
 );
