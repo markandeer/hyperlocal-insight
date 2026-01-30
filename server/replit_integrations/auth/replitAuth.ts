@@ -21,23 +21,17 @@ const getOidcConfig = memoize(
       process.env.ISSUER_URL ||
       "https://replit.com/oidc";
 
-    const clientId = process.env.OIDC_CLIENT_ID || process.env.REPL_ID || "";
-    const clientSecret = process.env.OIDC_CLIENT_SECRET; // optional depending on provider/flow
+    const clientId = (process.env.OIDC_CLIENT_ID || process.env.REPL_ID || "").trim();
+    const clientSecret = process.env.OIDC_CLIENT_SECRET; // may be undefined for some flows/providers
 
-    if (!clientId.trim()) {
+    if (!clientId) {
       throw new Error(
         "[AUTH] Missing clientId. Set OIDC_CLIENT_ID (Railway) or REPL_ID (Replit)."
       );
     }
 
-    // openid-client v6: discover issuer then create Configuration
     const issuer = await client.Issuer.discover(issuerUrl);
-
-    return new client.Configuration(
-      issuer,
-      clientId,
-      clientSecret // ok if undefined for some providers
-    );
+    return new client.Configuration(issuer, clientId, clientSecret);
   },
   { maxAge: 3600 * 1000 }
 );
@@ -46,16 +40,19 @@ export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
   const pgStore = connectPg(session);
 
+  if (!process.env.DATABASE_URL) {
+    throw new Error("[AUTH] DATABASE_URL must be set.");
+  }
+  if (!process.env.SESSION_SECRET) {
+    throw new Error("[AUTH] SESSION_SECRET must be set.");
+  }
+
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
     createTableIfMissing: false,
     ttl: sessionTtl,
     tableName: "sessions",
   });
-
-  if (!process.env.SESSION_SECRET) {
-    throw new Error("[AUTH] SESSION_SECRET must be set.");
-  }
 
   return session({
     secret: process.env.SESSION_SECRET,
@@ -64,7 +61,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // behind Railway/HTTPS
+      secure: process.env.NODE_ENV === "production", // local dev can be false
       maxAge: sessionTtl,
     },
   });
@@ -81,7 +78,9 @@ function updateUserSession(
 }
 
 export async function setupAuth(app: Express) {
+  // needed on Railway behind proxy for secure cookies + correct req.protocol
   app.set("trust proxy", 1);
+
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
@@ -110,34 +109,29 @@ export async function setupAuth(app: Express) {
     verified(null, user);
   };
 
-  // Keep track of registered strategies
-  const registeredStrategies = new Set<string>();
-
-  // Helper function to ensure strategy exists for a domain
-  const ensureStrategy = (domain: string) => {
-    const strategyName = `replitauth:${domain}`;
-
-    if (!registeredStrategies.has(strategyName)) {
-      const strategy = new Strategy(
-        {
-          name: strategyName,
-          config,
-          scope: "openid email profile offline_access",
-          callbackURL: `https://${domain}/api/callback`,
-        },
-        verify
-      );
-
-      passport.use(strategy);
-      registeredStrategies.add(strategyName);
-    }
-  };
-
-  // (your file likely continues here)
-}
-
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
+
+  // Keep track of registered strategies (one per domain)
+  const registeredStrategies = new Set<string>();
+
+  const ensureStrategy = (domain: string) => {
+    const strategyName = `replitauth:${domain}`;
+    if (registeredStrategies.has(strategyName)) return;
+
+    const strategy = new Strategy(
+      {
+        name: strategyName,
+        config,
+        scope: "openid email profile offline_access",
+        callbackURL: `https://${domain}/api/callback`,
+      },
+      verify
+    );
+
+    passport.use(strategy);
+    registeredStrategies.add(strategyName);
+  };
 
   app.get("/api/login", (req, res, next) => {
     ensureStrategy(req.hostname);
@@ -157,31 +151,42 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     req.logout(() => {
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
-        }).href
-      );
+      const clientId = (process.env.OIDC_CLIENT_ID || process.env.REPL_ID || "").trim();
+
+      // Fallback redirect base
+      const baseUrl =
+        process.env.APP_URL ||
+        `${req.protocol}://${req.get("host")}`;
+
+      try {
+        // If provider supports RP-initiated logout, build it
+        const endSessionUrl = client.buildEndSessionUrl(config, {
+          client_id: clientId,
+          post_logout_redirect_uri: baseUrl,
+        }).href;
+
+        res.redirect(endSessionUrl);
+      } catch {
+        // If provider doesn't support end_session, just bounce home
+        res.redirect(baseUrl);
+      }
     });
   });
+}
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  if (!req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   const now = Math.floor(Date.now() / 1000);
-  if (now <= user.expires_at) {
-    return next();
-  }
+  if (now <= user.expires_at) return next();
 
   const refreshToken = user.refresh_token;
   if (!refreshToken) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
@@ -189,8 +194,7 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
     updateUserSession(user, tokenResponse);
     return next();
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+  } catch {
+    return res.status(401).json({ message: "Unauthorized" });
   }
 };
