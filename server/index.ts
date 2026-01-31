@@ -29,16 +29,58 @@ console.log("[ENV] DATABASE_URL =", process.env.DATABASE_URL ? "SET" : "MISSING"
 console.log("[ENV] STRIPE_SECRET_KEY =", process.env.STRIPE_SECRET_KEY ? "SET" : "MISSING");
 
 /* ------------------------------------------------------------------ */
+/*  Middleware (must come BEFORE routes)                               */
+/* ------------------------------------------------------------------ */
+// Capture raw body for Stripe webhooks (and anything else that needs it)
+app.use(
+  express.json({
+    verify: (req, _res, buf) => {
+      // Express passes req as IncomingMessage; we augmented the type above
+      (req as unknown as { rawBody?: unknown }).rawBody = buf;
+    },
+  })
+);
+
+app.use(express.urlencoded({ extended: false }));
+
+/* ------------------------------------------------------------------ */
 /*  Startup                                                            */
 /* ------------------------------------------------------------------ */
 async function start() {
   /* -------------------------------------------------------------- */
-  /*  Stripe (OPTIONAL — Railway only)                               */
+  /*  Stripe (OPTIONAL — only when keys exist)                       */
   /* -------------------------------------------------------------- */
   if (process.env.STRIPE_SECRET_KEY) {
     try {
       console.log("[STRIPE] Initializing StripeSync");
-      getStripeSync(); // internally guarded
+
+      // getStripeSync is likely async and may return null
+      const stripeSync = await getStripeSync();
+
+      if (!stripeSync) {
+        console.log("[STRIPE] StripeSync unavailable; skipping.");
+      } else {
+        // Only do webhook/backfill if the helper exposes these methods
+        // (these calls are safe even if undefined)
+        const domain =
+          process.env.RAILWAY_STATIC_URL ||
+          process.env.APP_URL ||
+          process.env.REPLIT_DOMAINS?.split(",")[0];
+
+        if (!domain) {
+          console.warn("[STRIPE] No domain found for webhook base URL; skipping webhook setup.");
+        } else {
+          const webhookBaseUrl = domain.startsWith("http") ? domain : `https://${domain}`;
+          await stripeSync.findOrCreateManagedWebhook?.(
+            `${webhookBaseUrl}/api/stripe/webhook`
+          );
+        }
+
+        // Backfill should never crash startup
+        stripeSync.syncBackfill?.().catch((e: unknown) => {
+          console.error("[STRIPE] syncBackfill failed:", e);
+        });
+      }
     } catch (err) {
       console.error("[STRIPE] Failed to initialize:", err);
     }
@@ -51,17 +93,16 @@ async function start() {
   /* -------------------------------------------------------------- */
   if (process.env.NODE_ENV === "production") {
     // ✅ Production = static files only (NO vite import)
+    // Register API routes first; static last (safer)
+    registerRoutes(app);
     serveStatic(app);
   } else {
     // ✅ Dev only — dynamic import so it never bundles into prod
     const { setupVite } = await import("./vite");
     await setupVite(app, httpServer);
-  }
 
-  /* -------------------------------------------------------------- */
-  /*  Routes                                                         */
-  /* -------------------------------------------------------------- */
-  registerRoutes(app);
+    registerRoutes(app);
+  }
 
   /* -------------------------------------------------------------- */
   /*  Start listening                                                */
