@@ -6,7 +6,9 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 
 // Dev-only Vite middleware (must NOT run on Railway prod)
-import { setupVite } from "./vite";
+  } else {
+    await setupVite(app, httpServer);
+  }
 
 // StripeSync + migrations (Replit-only package, but we will ONLY call when configured)
 import { runMigrations } from "stripe-replit-sync";
