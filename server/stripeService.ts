@@ -57,3 +57,5 @@ export class StripeService {
     return stripe.products.retrieve(productId);
   }
 }
+
+export const stripeService = new StripeService();
