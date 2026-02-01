@@ -12,6 +12,10 @@ export class StripeService {
 
   async createCheckoutSession(customerId: string, priceId: string, successUrl: string, cancelUrl: string) {
     const stripe = await getUncachableStripeClient();
+if (!stripe) {
+  throw new Error("STRIPE_NOT_CONFIGURED");
+}
+    const stripe = await getUncachableStripeClient();
     return await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
