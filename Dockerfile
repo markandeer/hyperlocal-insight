@@ -1,6 +1,7 @@
 # ---------- Build stage ----------
 FROM node:20-alpine AS build
 WORKDIR /app
+ENV NODE_OPTIONS="--enable-source-maps --trace-uncaught"
 
 # Install all deps (including dev, needed to build)
 COPY package.json package-lock.json ./
