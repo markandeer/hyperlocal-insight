@@ -1,7 +1,6 @@
 # ---------- Build stage ----------
 FROM node:20-alpine AS build
 WORKDIR /app
-ENV NODE_OPTIONS="--enable-source-maps --trace-uncaught"
 
 # Install all deps (including dev, needed to build)
 COPY package.json package-lock.json ./
@@ -18,6 +17,7 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+ENV NODE_OPTIONS="--enable-source-maps --trace-uncaught"
 
 # Install only production deps
 COPY package.json package-lock.json ./
@@ -28,5 +28,4 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/server ./server
 COPY --from=build /app/shared ./shared
 
-# Railway provides PORT automatically
 CMD ["npm", "run", "start"]
