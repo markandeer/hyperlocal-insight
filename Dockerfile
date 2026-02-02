@@ -18,6 +18,8 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--enable-source-maps --trace-uncaught"
+ENV NODE_OPTIONS="--enable-source-maps --trace-uncaught --trace-warnings"
+
 
 # Install only production deps
 COPY package.json package-lock.json ./
